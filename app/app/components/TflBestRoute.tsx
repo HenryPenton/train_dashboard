@@ -44,7 +44,7 @@ export default function TflBestRoute(props: TflRouteProps) {
   if (!data) return <div className="text-white">No route data available.</div>;
 
   return (
-    <div className="bg-[#23272f] rounded-lg p-6 w-full max-w-md shadow-lg">
+    <div className="bg-[#23272f] rounded-lg p-6 shadow-lg">
       <h2 className="text-xl font-semibold text-white mb-2">Best Route</h2>
       <div className="text-white mb-1">
         <span className="font-bold">From:</span> {props.from.placeName}

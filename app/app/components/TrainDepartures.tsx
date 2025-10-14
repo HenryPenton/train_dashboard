@@ -49,8 +49,8 @@ export default function TrainDepartures(props: TrainDepartureProps) {
   }, []);
 
   return (
-    <section className="flex-1 min-w-[320px] bg-[#23262f] rounded-[12px] p-6 text-[#f1f1f1] shadow-[0_2px_12px_0_rgba(0,0,0,0.25)] max-[900px]:p-4">
-      <h2>Train Departures</h2>
+  <section className="flex-1 bg-[#23262f] rounded-[12px] p-6 text-[#f1f1f1] shadow-[0_2px_12px_0_rgba(0,0,0,0.25)]">
+      <h2 className="text-xl font-semibold text-white mb-2">Train Departures</h2>
       <div style={{ marginBottom: 16 }}>
         <span>
           Departures from <strong>{props.fromStation.stationName}</strong>
@@ -72,7 +72,7 @@ export default function TrainDepartures(props: TrainDepartureProps) {
               {departures.map((dep, i) => (
                 <li
                   key={i}
-                  className="mb-4 text-[1.08rem] bg-[#23262f] rounded-[8px] p-[12px_14px] shadow-[0_1px_4px_0_rgba(0,0,0,0.13)]"
+                  className="mb-4 text-[1.08rem] bg-[#23262f] rounded-[8px] p-[12px_0] shadow-[0_1px_4px_0_rgba(0,0,0,0.13)]"
                 >
                   <strong>{dep.origin}</strong> →{" "}
                   <strong>{dep.destination}</strong>

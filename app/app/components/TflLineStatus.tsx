@@ -31,8 +31,8 @@ export default function TflLineStatus() {
   }, []);
 
   return (
-    <section className="flex-1 min-w-[320px] bg-[#23262f] rounded-[12px] p-6 text-[#f1f1f1] shadow-[0_2px_12px_0_rgba(0,0,0,0.25)] max-[900px]:p-4">
-      <h2>TFL Line Status</h2>
+    <section className="bg-[#23262f] rounded-[12px] p-6 text-[#f1f1f1] shadow-[0_2px_12px_0_rgba(0,0,0,0.25)]">
+      <h2 className="text-xl font-semibold text-white mb-2">TFL Line Status</h2>
       {tflLoading && <div>Loading TFL line statuses...</div>}
       {tflError && (
         <div className="text-[#ff4d4f] bg-[#2a1a1a] p-2 rounded mb-2">
