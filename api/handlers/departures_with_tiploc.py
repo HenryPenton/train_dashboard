@@ -1,6 +1,6 @@
 import httpx
 from fastapi import HTTPException
-from departures_utils import process_departures_response
+from utils.departures_utils import process_departures_response
 
 async def get_departures_with_tiploc_handler(station_code: str, destination_tiploc: str):
     """

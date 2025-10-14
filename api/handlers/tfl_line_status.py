@@ -1,6 +1,6 @@
 import httpx
 from fastapi import HTTPException
-from tfl_utils import simplify_tfl_line_status
+from utils.tfl_utils import simplify_tfl_line_status
 
 async def get_tfl_line_status_handler():
     """
