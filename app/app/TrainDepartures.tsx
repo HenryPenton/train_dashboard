@@ -33,7 +33,7 @@ export default function TrainDepartures(props: TrainDepartureProps) {
           );
         } else {
           res = await fetch(
-            `/api/departures/${props.fromStation.stationCode}/`
+            `/api/departures/${props.fromStation.stationCode}`
           );
         }
         if (!res.ok) throw new Error(`API error: ${res.status}`);

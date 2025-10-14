@@ -3,7 +3,6 @@ import { getBaseUrl } from "../utils/endpointLocation";
 
 export async function GET() {
   try {
-    console.log(getBaseUrl());
     const res = await fetch(`http://${getBaseUrl()}:8000/tfl/line-status`);
     if (!res.ok) {
       return NextResponse.json(

@@ -18,7 +18,6 @@ export async function GET(
       `http://${getBaseUrl()}:8000/tfl/best-route/${from}/${to}`
     );
     if (!res.ok) {
-      console.log(res);
       return NextResponse.json(
         { error: "Failed to fetch best route" },
         { status: 500 }
