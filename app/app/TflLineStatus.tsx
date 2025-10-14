@@ -6,7 +6,9 @@ type TflLineStatusType = {
 };
 
 export default function TflLineStatus() {
-  const [tflStatuses, setTflStatuses] = useState<TflLineStatusType[] | null>(null);
+  const [tflStatuses, setTflStatuses] = useState<TflLineStatusType[] | null>(
+    null
+  );
   const [tflLoading, setTflLoading] = useState(false);
   const [tflError, setTflError] = useState("");
 
@@ -15,7 +17,7 @@ export default function TflLineStatus() {
       setTflLoading(true);
       setTflError("");
       try {
-        const res = await fetch("/tfl/line-status");
+        const res = await fetch("/api/line-status");
         if (!res.ok) throw new Error(`API error: ${res.status}`);
         const data = await res.json();
         setTflStatuses(data);
@@ -32,17 +34,31 @@ export default function TflLineStatus() {
     <section className="flex-1 min-w-[320px] bg-[#23262f] rounded-[12px] p-6 text-[#f1f1f1] shadow-[0_2px_12px_0_rgba(0,0,0,0.25)] max-[900px]:p-4">
       <h2>TFL Line Status</h2>
       {tflLoading && <div>Loading TFL line statuses...</div>}
-      {tflError && <div className="text-[#ff4d4f] bg-[#2a1a1a] p-2 rounded mb-2">{tflError}</div>}
+      {tflError && (
+        <div className="text-[#ff4d4f] bg-[#2a1a1a] p-2 rounded mb-2">
+          {tflError}
+        </div>
+      )}
       {tflStatuses && (
         <ul>
           {tflStatuses.map((line, i) => {
             let statusClass = "";
-            if (line.status === "Good Service") statusClass = "text-[#4ade80] font-semibold";
-            else if (line.status && line.status.toLowerCase().includes("minor delay")) statusClass = "text-[#fbbf24] font-semibold";
-            else if (line.status && line.status !== "Good Service") statusClass = "text-[#f87171] font-semibold";
+            if (line.status === "Good Service")
+              statusClass = "text-[#4ade80] font-semibold";
+            else if (
+              line.status &&
+              line.status.toLowerCase().includes("minor delay")
+            )
+              statusClass = "text-[#fbbf24] font-semibold";
+            else if (line.status && line.status !== "Good Service")
+              statusClass = "text-[#f87171] font-semibold";
             return (
-              <li key={i} className="mb-3 text-[1.08rem]" style={{letterSpacing: '0.01em'}}>
-                <strong>{line.name}</strong>: {" "}
+              <li
+                key={i}
+                className="mb-3 text-[1.08rem]"
+                style={{ letterSpacing: "0.01em" }}
+              >
+                <strong>{line.name}</strong>:{" "}
                 <span className={statusClass}>{line.status || "Unknown"}</span>
               </li>
             );

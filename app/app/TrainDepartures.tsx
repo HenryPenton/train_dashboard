@@ -19,7 +19,7 @@ export default function TrainDepartures() {
       setError("");
       setDepartures(null);
       try {
-        const res = await fetch(`/departures/RDG/PADTON`);
+        const res = await fetch(`/api/departures`);
         if (!res.ok) throw new Error(`API error: ${res.status}`);
         const data = await res.json();
         setDepartures(data);
@@ -41,7 +41,11 @@ export default function TrainDepartures() {
         </span>
         {loading && <span style={{ marginLeft: 8 }}>Loading...</span>}
       </div>
-      {error && <div className="text-[#ff4d4f] bg-[#2a1a1a] p-2 rounded mb-2">{error}</div>}
+      {error && (
+        <div className="text-[#ff4d4f] bg-[#2a1a1a] p-2 rounded mb-2">
+          {error}
+        </div>
+      )}
       {departures && (
         <div>
           {departures.length === 0 ? (
@@ -57,7 +61,8 @@ export default function TrainDepartures() {
                   <strong>{dep.destination}</strong>
                   <br />
                   <span>
-                    Scheduled: {dep.scheduled || "-"} | Platform: {dep.platform || "-"}
+                    Scheduled: {dep.scheduled || "-"} | Platform:{" "}
+                    {dep.platform || "-"}
                     {typeof dep.delay === "number" && (
                       <>
                         {" | Delay: "}

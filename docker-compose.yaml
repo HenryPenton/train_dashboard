@@ -1,4 +1,3 @@
-version: "3.9"
 services:
   app:
     container_name: train_dashboard_app

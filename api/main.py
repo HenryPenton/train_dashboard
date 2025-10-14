@@ -33,7 +33,6 @@ async def get_departures(station_code: str):
     station_code: 3-letter CRS code (e.g., 'KGX' for King's Cross)
     destination_tiploc: tiploc code to filter destinations
     """
-    print('here')
     url = f"{REALTIME_TRAINS_API_BASE}/search/{station_code}"
     try:
         async with httpx.AsyncClient() as client:
@@ -62,7 +61,6 @@ async def get_departures_with_tiploc(station_code: str, destination_tiploc: str)
             response = await client.get(url, auth=(REALTIME_TRAINS_API_USER, REALTIME_TRAINS_API_PASS))
             response.raise_for_status()
             data = response.json()
-            print(data)
             processed = process_departures_response(data, destination_tiploc=destination_tiploc)
             return processed
     except httpx.HTTPStatusError as e:
@@ -81,7 +79,7 @@ async def get_tfl_line_status():
         async with httpx.AsyncClient() as client:
             response = await client.get(url)
             response.raise_for_status()
-            data = response.json()
+            data = response.json() # List of line status objects
             simplified = simplify_tfl_line_status(data)
             return simplified
     except httpx.HTTPStatusError as e:
@@ -91,13 +89,11 @@ async def get_tfl_line_status():
 
 
 # Best route endpoint: Tooting Broadway to Paddington
-@app.get("/tfl/best-route")
-async def get_best_route():
+@app.get("/tfl/best-route/{from_station}/{to_station}")
+async def get_best_route(from_station:str, to_station:str):
     """
     Suggest the best current route from Tooting Broadway to Paddington using the TFL Journey Planner API.
     """
-    from_station = "940GZZLUTBY"  # Tooting Broadway Naptan ID
-    to_station = "940GZZLUPAC"    # Paddington Naptan ID
     # Alternatively, use station names: "Tooting Broadway" and "Paddington"
     url = f"https://api.tfl.gov.uk/Journey/JourneyResults/{from_station}/to/{to_station}"
     try:
@@ -130,3 +126,6 @@ async def get_best_route():
         raise HTTPException(status_code=e.response.status_code, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+    #940GZZLUPAC
+    #940GZZLUTBY

@@ -1,6 +1,7 @@
 "use client";
 import TflLineStatus from "./TflLineStatus";
 import TrainDepartures from "./TrainDepartures";
+import TflBestRoute from "./TflBestRoute";
 
 export default function Home() {
   return (
@@ -14,6 +15,7 @@ export default function Home() {
       <div className="flex gap-10 items-start justify-between max-[900px]:flex-col max-[900px]:gap-6">
         <TrainDepartures />
         <TflLineStatus />
+        <TflBestRoute />
       </div>
     </main>
   );
