@@ -1,11 +1,18 @@
 // Next.js API route proxy for /api/best_route
 import { NextResponse } from "next/server";
-import { getBaseUrl } from "../utils/endpointLocation";
+import { getBaseUrl } from "../../../utils/endpointLocation";
 
-export async function GET(request: Request) {
-  // For demo, hardcode from/to stations. In production, accept query params.
-  const from = "940GZZLUTBY";
-  const to = "940GZZLUPAC";
+export async function GET(
+  _request: Request,
+  { params }: { params: { from: string; to: string } }
+) {
+  const { from, to } = params;
+  if (!from || !to) {
+    return NextResponse.json(
+      { error: "Missing required path parameters: from, to" },
+      { status: 400 }
+    );
+  }
   try {
     const res = await fetch(
       `http://${getBaseUrl()}:8000/tfl/best-route/${from}/${to}`

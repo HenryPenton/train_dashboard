@@ -8,7 +8,12 @@ type Departure = {
   delay: number | null;
 };
 
-export default function TrainDepartures() {
+type TrainDepartureProps = {
+  fromStation: { stationName: string; stationCode: string };
+  toStation: { stationName: string; tiploc: string };
+};
+
+export default function TrainDepartures(props: TrainDepartureProps) {
   const [departures, setDepartures] = useState<Departure[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -19,7 +24,9 @@ export default function TrainDepartures() {
       setError("");
       setDepartures(null);
       try {
-        const res = await fetch(`/api/departures`);
+        const res = await fetch(
+          `/api/departures/${props.fromStation.stationCode}/${props.toStation.tiploc}`
+        );
         if (!res.ok) throw new Error(`API error: ${res.status}`);
         const data = await res.json();
         const tenTrains = data.slice(0, 10);
@@ -38,7 +45,8 @@ export default function TrainDepartures() {
       <h2>Train Departures</h2>
       <div style={{ marginBottom: 16 }}>
         <span>
-          Departures from <strong>RDG</strong> to <strong>PADTON</strong>
+          Departures from <strong>{props.fromStation.stationName}</strong> to{" "}
+          <strong>{props.toStation.stationName}</strong>
         </span>
         {loading && <span style={{ marginLeft: 8 }}>Loading...</span>}
       </div>

@@ -126,6 +126,3 @@ async def get_best_route(from_station:str, to_station:str):
         raise HTTPException(status_code=e.response.status_code, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-    
-    #940GZZLUPAC
-    #940GZZLUTBY
