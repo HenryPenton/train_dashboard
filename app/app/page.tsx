@@ -25,7 +25,7 @@ export default function Home() {
         LIVE TRAIN &amp; TUBE STATUS
       </h1>
 
-      <div className="flex w-full gap-10 justify-between flex-col">
+      <div className="flex w-full flex-row gap-10 flex-wrap justify-around box-border">
         <div className="flex flex-col gap-6 min-w-[600px] max-w-[600px]">
           <TrainDepartures
             toStation={{
