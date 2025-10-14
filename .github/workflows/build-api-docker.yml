@@ -11,9 +11,6 @@ on:
 jobs:
   build-api-image:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: api
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -30,7 +27,7 @@ jobs:
       - name: Build and push multi-arch Docker image
         uses: docker/build-push-action@v6
         with:
-          context: .
+          context: ./api
           push: false
           tags: test/train-dashboard-api:latest
           platforms: linux/amd64,linux/arm64
