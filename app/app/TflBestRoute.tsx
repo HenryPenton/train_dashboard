@@ -46,7 +46,31 @@ export default function TflBestRoute() {
         <span className="font-bold">To:</span> {data.destination}
       </div>
       <div className="text-white mb-1">
-        <span className="font-bold">Route:</span> {data.route.join(" → ")}
+        <span className="font-bold">Route:</span>
+        <div className="ml-2 mt-1 flex flex-col gap-1">
+          {data.route.map((stage, idx) => {
+            // Try to extract the method (e.g., Tube) from the start of the string
+            const match = stage.match(/^(\w+):\s*(.*)$/);
+            const method = match ? match[1] : null;
+            const rest = match ? match[2] : stage;
+            let color = 'text-cyan-300';
+            if (method) {
+              if (method.toLowerCase().includes('tube')) color = 'text-yellow-300';
+              else if (method.toLowerCase().includes('bus')) color = 'text-red-400';
+              else if (method.toLowerCase().includes('walk')) color = 'text-green-400';
+              else if (method.toLowerCase().includes('overground')) color = 'text-orange-400';
+              else if (method.toLowerCase().includes('train')) color = 'text-blue-400';
+            }
+            return (
+              <div key={idx} className="pl-2 border-l-2 border-cyan-300 flex items-baseline gap-2">
+                {method && (
+                  <span className={`text-lg font-bold ${color}`}>{method}:</span>
+                )}
+                <span className="text-base">{rest}</span>
+              </div>
+            );
+          })}
+        </div>
       </div>
       <div className="text-white mb-1">
         <span className="font-bold">Duration:</span> {data.duration} min

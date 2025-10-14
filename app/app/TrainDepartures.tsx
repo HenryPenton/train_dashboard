@@ -22,7 +22,8 @@ export default function TrainDepartures() {
         const res = await fetch(`/api/departures`);
         if (!res.ok) throw new Error(`API error: ${res.status}`);
         const data = await res.json();
-        setDepartures(data);
+        const tenTrains = data.slice(0, 10);
+        setDepartures(tenTrains);
       } catch (err: any) {
         setError(err.message);
       } finally {
