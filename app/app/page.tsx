@@ -12,7 +12,13 @@ export default function Home() {
       >
         LIVE TRAIN &amp; TUBE STATUS
       </h1>
-      <div className="flex gap-10 items-start justify-between max-[900px]:flex-col max-[900px]:gap-6">
+  <div
+    className="flex gap-10 items-start justify-between
+      max-[1650px]:flex-col max-[1650px]:gap-10 max-[1650px]:w-full max-[1650px]:mx-0
+      max-[1200px]:gap-6 max-[1200px]:w-[95%] max-[1200px]:mx-auto"
+  >
+  <div className="flex w-full gap-10 max-[1200px]:flex-col max-[1200px]:gap-6 max-[1200px]:w-full max-[1650px]:w-full max-[1650px]:mx-0">
+      <div className="w-full">
         <TrainDepartures
           toStation={{
             tiploc: "PADTON",
@@ -20,19 +26,22 @@ export default function Home() {
           }}
           fromStation={{ stationCode: "RDG", stationName: "Reading" }}
         />
-
-        <TflLineStatus />
-        <div className="flex flex-col gap-4 w-full max-w-md">
-          <TflBestRoute
-            to={{ placeName: "Paddington", naptan: "940GZZLUPAC" }}
-            from={{ placeName: "Tooting", naptan: "940GZZLUTBY" }}
-          />
-          <TflBestRoute
-            from={{ placeName: "Paddington", naptan: "940GZZLUPAC" }}
-            to={{ placeName: "Tooting", naptan: "940GZZLUTBY" }}
-          />
-        </div>
       </div>
+      <div className="flex flex-col gap-4 w-full max-w-md max-[1200px]:w-full max-[1200px]:mx-0">
+        <TflBestRoute
+          to={{ placeName: "Paddington", naptan: "940GZZLUPAC" }}
+          from={{ placeName: "Tooting", naptan: "940GZZLUTBY" }}
+        />
+        <TflBestRoute
+          from={{ placeName: "Paddington", naptan: "940GZZLUPAC" }}
+          to={{ placeName: "Tooting", naptan: "940GZZLUTBY" }}
+        />
+      </div>
+      <div className="w-full">
+        <TflLineStatus />
+      </div>
+    </div>
+  </div>
     </main>
   );
 }
