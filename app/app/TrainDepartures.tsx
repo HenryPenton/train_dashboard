@@ -54,8 +54,8 @@ export default function TrainDepartures(props: TrainDepartureProps) {
       <h2>Train Departures</h2>
       <div style={{ marginBottom: 16 }}>
         <span>
-          Departures from <strong>{props.fromStation.stationName}</strong> to{" "}
-          <strong>{toStation && toStation.stationName}</strong>
+          Departures from <strong>{props.fromStation.stationName}</strong>
+          <strong>{toStation && ` to ${toStation.stationName}`}</strong>
         </span>
         {loading && <span style={{ marginLeft: 8 }}>Loading...</span>}
       </div>
