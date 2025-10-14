@@ -4,6 +4,7 @@ type Departure = {
   origin: string;
   destination: string;
   scheduled: string | null;
+  actual: string | null;
   platform: string | null;
   delay: number | null;
 };
@@ -32,9 +33,7 @@ export default function TrainDepartures(props: TrainDepartureProps) {
             `/api/departures/${props.fromStation.stationCode}/${toStation.tiploc}`
           );
         } else {
-          res = await fetch(
-            `/api/departures/${props.fromStation.stationCode}`
-          );
+          res = await fetch(`/api/departures/${props.fromStation.stationCode}`);
         }
         if (!res.ok) throw new Error(`API error: ${res.status}`);
         const data = await res.json();
@@ -79,7 +78,19 @@ export default function TrainDepartures(props: TrainDepartureProps) {
                   <strong>{dep.destination}</strong>
                   <br />
                   <span>
-                    Scheduled: {dep.scheduled || "-"} | Platform:{" "}
+                    Departs:{" "}
+                    {(() => {
+                      if (!dep.actual) return dep.scheduled || "-";
+                      if (dep.actual !== dep.scheduled) {
+                        return (
+                          <span className="text-[#ff4d4f] font-semibold">
+                            {dep.actual}
+                          </span>
+                        );
+                      }
+                      return dep.scheduled || "-";
+                    })()}{" "}
+                    {" | Platform: "}
                     {dep.platform || "-"}
                     {typeof dep.delay === "number" && (
                       <>
