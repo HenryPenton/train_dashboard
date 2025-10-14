@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 type Departure = {
   origin: string;
@@ -10,10 +10,11 @@ type Departure = {
 
 type TrainDepartureProps = {
   fromStation: { stationName: string; stationCode: string };
-  toStation: { stationName: string; tiploc: string };
+  toStation?: { stationName: string; tiploc: string };
 };
 
 export default function TrainDepartures(props: TrainDepartureProps) {
+  const { toStation } = props;
   const [departures, setDepartures] = useState<Departure[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -24,9 +25,17 @@ export default function TrainDepartures(props: TrainDepartureProps) {
       setError("");
       setDepartures(null);
       try {
-        const res = await fetch(
-          `/api/departures/${props.fromStation.stationCode}/${props.toStation.tiploc}`
-        );
+        const hasTiploc = toStation && toStation.tiploc;
+        let res;
+        if (hasTiploc) {
+          res = await fetch(
+            `/api/departures/${props.fromStation.stationCode}/${toStation.tiploc}`
+          );
+        } else {
+          res = await fetch(
+            `/api/departures/${props.fromStation.stationCode}/`
+          );
+        }
         if (!res.ok) throw new Error(`API error: ${res.status}`);
         const data = await res.json();
         const tenTrains = data.slice(0, 10);
@@ -46,7 +55,7 @@ export default function TrainDepartures(props: TrainDepartureProps) {
       <div style={{ marginBottom: 16 }}>
         <span>
           Departures from <strong>{props.fromStation.stationName}</strong> to{" "}
-          <strong>{props.toStation.stationName}</strong>
+          <strong>{toStation && toStation.stationName}</strong>
         </span>
         {loading && <span style={{ marginLeft: 8 }}>Loading...</span>}
       </div>
