@@ -1,9 +1,22 @@
 "use client";
-import TflLineStatus from "./TflLineStatus";
-import TrainDepartures from "./TrainDepartures";
-import TflBestRoute from "./TflBestRoute";
+
+import TflLineStatus from "./components/TflLineStatus";
+import TrainDepartures from "./components/TrainDepartures";
+import TflBestRoute from "./components/TflBestRoute";
+import LastRefreshed from "./components/LastRefreshed";
+
+import { useEffect } from "react";
 
 export default function Home() {
+  // Auto-refresh the page every 5 minutes
+  useEffect(() => {
+    const interval = setInterval(() => {
+      window.location.reload();
+    }, 5 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+
   return (
     <main className="w-full min-h-screen p-8 bg-[#181818] font-mono text-[#f8f8f2]">
       <h1
@@ -45,6 +58,7 @@ export default function Home() {
           </div>
         </div>
       </div>
+      <LastRefreshed />
     </main>
   );
 }
