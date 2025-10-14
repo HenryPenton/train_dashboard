@@ -26,7 +26,7 @@ export default function Home() {
       </h1>
 
       <div className="flex w-full flex-row gap-10 flex-wrap justify-around box-border">
-        <div className="flex flex-col gap-6 min-w-[600px] max-w-[600px]">
+        <div className="flex flex-col gap-6 min-w-[320px] max-w-[600px]">
           <TrainDepartures
             toStation={{
               tiploc: "PADTON",
@@ -38,7 +38,7 @@ export default function Home() {
             fromStation={{ stationCode: "PAD", stationName: "Paddington" }}
           />
         </div>
-        <div className="flex flex-col gap-6 min-w-[600px] max-w-[600px]">
+        <div className="flex flex-col gap-6 min-w-[320px] max-w-[600px]">
           <TflBestRoute
             to={{ placeName: "Paddington", naptan: "940GZZLUPAC" }}
             from={{ placeName: "Tooting", naptan: "940GZZLUTBY" }}
@@ -48,7 +48,7 @@ export default function Home() {
             to={{ placeName: "Tooting", naptan: "940GZZLUTBY" }}
           />
         </div>
-        <div className="flex flex-col min-w-[600px] max-w-[600px]">
+        <div className="flex flex-col min-w-[320px] max-w-[600px]">
           <TflLineStatus />
         </div>
       </div>
