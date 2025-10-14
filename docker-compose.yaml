@@ -1,0 +1,17 @@
+version: "3.9"
+services:
+  app:
+    container_name: train_dashboard_app
+    build:
+      context: ./app
+    depends_on:
+      - api
+    ports:
+      - "3000:3000"
+
+  api:
+    container_name: train_dashboard_api
+    build:
+      context: ./api
+    env_file:
+      - ./api/.env
