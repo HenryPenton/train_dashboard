@@ -9,7 +9,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 WORKDIR /app
 
 # Install system dependencies
-RUN apk update && apk add --no-cache gcc musl-dev libffi-dev
+RUN apk update && apk upgrade
 
 # Install pip dependencies
 COPY requirements.txt ./

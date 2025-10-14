@@ -1,41 +1,25 @@
 
-# # ---- Build Stage ----
-# FROM node:24-alpine AS builder
-# WORKDIR /app
-# COPY package.json pnpm-lock.yaml ./
-# RUN npm install -g pnpm && pnpm install --frozen-lockfile
-# COPY . .
-# RUN pnpm build
-
-# # ---- Production Stage ----
-# FROM node:24-alpine AS runner
-# WORKDIR /app
-
-# # Only copy the built output and minimal files
-# COPY --from=builder /app/.next ./.next
-# COPY --from=builder /app/public ./public
-# COPY --from=builder /app/package.json ./package.json
-# COPY --from=builder /app/pnpm-lock.yaml ./pnpm-lock.yaml
-# COPY --from=builder /app/node_modules ./node_modules
-# COPY --from=builder /app/next.config.* ./
-# COPY --from=builder /app/tailwind.config.js ./
-# COPY --from=builder /app/postcss.config.* ./
-
-# EXPOSE 3000
-# CMD ["pnpm", "start"]
-
-#
-FROM node:24-alpine
-
+# ---- Build Stage ----
+FROM alpine AS builder
+RUN apk add --no-cache nodejs npm curl \
+    && npm install -g pnpm
 WORKDIR /app
 
 COPY package.json pnpm-lock.yaml ./
-RUN npm install -g pnpm && pnpm install --frozen-lockfile
-
+RUN pnpm install --frozen-lockfile
 COPY . .
-
 RUN pnpm build
+RUN rm -rf node_modules
+RUN pnpm install --prod --frozen-lockfile
 
+# ---- Production Stage ----
+FROM alpine AS runner
+RUN adduser -D appuser && apk add --no-cache nodejs
+WORKDIR /app
+# Only copy the built output and minimal files
+COPY --from=builder /app/.next/standalone ./server
+
+USER appuser
 EXPOSE 3000
+CMD ["node", "server/server.js"]
 
-CMD ["pnpm", "start"]
