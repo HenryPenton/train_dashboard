@@ -3,9 +3,9 @@ import { getBaseUrl } from "../../utils/endpointLocation";
 
 export async function GET(
   _request: Request,
-  { params }: { params: { from: string; to: string } }
+  { params }: { params: Promise<{ from: string; to: string }> }
 ) {
-  const { from } = params;
+  const { from } = await params;
   if (!from) {
     return NextResponse.json(
       { error: "Missing required path parameters: from" },
