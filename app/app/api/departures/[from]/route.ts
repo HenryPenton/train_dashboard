@@ -3,7 +3,7 @@ import { getBaseUrl } from "../../utils/endpointLocation";
 
 export async function GET(
   _request: Request,
-  { params }: { params: Promise<{ from: string; to: string }> }
+  { params }: { params: Promise<{ from: string }> }
 ) {
   const { from } = await params;
   if (!from) {
