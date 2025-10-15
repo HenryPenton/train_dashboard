@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-api-image:
+  build-app-image:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
