@@ -171,3 +171,4 @@ poetry.toml
 pyrightconfig.json
 
 .env
+config.json
