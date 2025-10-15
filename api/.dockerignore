@@ -2,3 +2,4 @@
 .gitignore
 readme.md
 venv
+config.json
