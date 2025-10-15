@@ -60,15 +60,6 @@ export default function Home() {
 
   return (
     <main className="w-full min-h-screen p-8 bg-[#181818] font-mono text-[#f8f8f2]">
-      <section className="mb-8 bg-[#23262f] rounded-[12px] p-6 text-[#f1f1f1] shadow-[0_2px_12px_0_rgba(0,0,0,0.25)] max-w-[600px] mx-auto">
-        <h2 className="text-xl font-semibold text-white mb-2">Config</h2>
-        {configLoading && <div>Loading config...</div>}
-        {configError && (
-          <div className="text-[#ff4d4f] bg-[#2a1a1a] p-2 rounded mb-2">
-            {configError}
-          </div>
-        )}
-      </section>
       <h1
         className="text-center text-cyan-300 text-4xl font-bold tracking-widest mb-10 drop-shadow-[0_0_2px_white,0_0_8px_#00ffe7] font-mono border-b-4 border-yellow-200 pb-4"
         style={{ letterSpacing: "0.15em" }}
