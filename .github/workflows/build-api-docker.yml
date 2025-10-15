@@ -28,6 +28,6 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./api
-          push: false
+          push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/train-dashboard-api:latest
           platforms: linux/amd64,linux/arm64
