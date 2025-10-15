@@ -29,5 +29,5 @@ jobs:
         with:
           context: ./app
           push: false
-          tags: test/train-dashboard-app:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/train-dashboard-app:latest
           platforms: linux/amd64,linux/arm64
