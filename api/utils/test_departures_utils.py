@@ -5,8 +5,8 @@ def test_process_departures_response_basic():
         "services": [
             {
                 "locationDetail": {
-                    "origin": [{"description": "Reading"}],
-                    "destination": [{"description": "London Paddington", "tiploc": "PADTON"}],
+                    "origin": [{"description": "xxx"}],
+                    "destination": [{"description": "yyy", "tiploc": "ccc"}],
                     "gbttBookedDeparture": "1200",
                     "platform": "7",
                     "realtimeDeparture": "1205"
@@ -14,8 +14,8 @@ def test_process_departures_response_basic():
             },
             {
                 "locationDetail": {
-                    "origin": [{"description": "Reading"}],
-                    "destination": [{"description": "Oxford", "tiploc": "OXFD"}],
+                    "origin": [{"description": "xxx"}],
+                    "destination": [{"description": "bbb", "tiploc": "aaa"}],
                     "gbttBookedDeparture": "1210",
                     "platform": "8",
                     "realtimeDeparture": "1210"
@@ -26,15 +26,17 @@ def test_process_departures_response_basic():
     result = process_departures_response(response_json)
     assert result == [
         {
-            "origin": "Reading",
-            "destination": "London Paddington",
+            'actual': '1205',
+            "origin": "xxx",
+            "destination": "yyy",
             "scheduled": "1200",
             "platform": "7",
             "delay": 5
         },
         {
-            "origin": "Reading",
-            "destination": "Oxford",
+            'actual': '1210',
+            "origin": "xxx",
+            "destination": "bbb",
             "scheduled": "1210",
             "platform": "8",
             "delay": 0
@@ -46,8 +48,8 @@ def test_process_departures_response_with_tiploc():
         "services": [
             {
                 "locationDetail": {
-                    "origin": [{"description": "Reading"}],
-                    "destination": [{"description": "London Paddington", "tiploc": "PADTON"}],
+                    "origin": [{"description": "aaa"}],
+                    "destination": [{"description": "bbb", "tiploc": "TEST_TIPLOC"}],
                     "gbttBookedDeparture": "1200",
                     "platform": "7",
                     "realtimeDeparture": "1205"
@@ -55,8 +57,8 @@ def test_process_departures_response_with_tiploc():
             },
             {
                 "locationDetail": {
-                    "origin": [{"description": "Reading"}],
-                    "destination": [{"description": "Oxford", "tiploc": "OXFD"}],
+                    "origin": [{"description": "aaa"}],
+                    "destination": [{"description": "Oxford", "tiploc": "ccc"}],
                     "gbttBookedDeparture": "1210",
                     "platform": "8",
                     "realtimeDeparture": "1210"
@@ -64,11 +66,12 @@ def test_process_departures_response_with_tiploc():
             }
         ]
     }
-    result = process_departures_response(response_json, destination_tiploc="PADTON")
+    result = process_departures_response(response_json, destination_tiploc="TEST_TIPLOC")
     assert result == [
         {
-            "origin": "Reading",
-            "destination": "London Paddington",
+            "actual": "1205",
+            "origin": "aaa",
+            "destination": "bbb",
             "scheduled": "1200",
             "platform": "7",
             "delay": 5
