@@ -4,7 +4,6 @@ import TflLineStatus from "./components/TflLineStatus";
 import TrainDepartures from "./components/TrainDepartures";
 import TflBestRoute from "./components/TflBestRoute";
 import LastRefreshed from "./components/LastRefreshed";
-
 import { useEffect } from "react";
 
 export default function Home() {
@@ -29,23 +28,41 @@ export default function Home() {
         <div className="flex flex-col gap-6 min-w-[320px] max-w-[600px]">
           <TrainDepartures
             toStation={{
-              tiploc: "PADTON",
-              stationName: "London Paddington",
+              tiploc: process.env.NEXT_PUBLIC_TRAIN_TO_ONE_TIPLOC || "",
+              stationName: process.env.NEXT_PUBLIC_TRAIN_TO_ONE || "",
             }}
-            fromStation={{ stationCode: "RDG", stationName: "Reading" }}
+            fromStation={{
+              stationCode: process.env.NEXT_PUBLIC_TRAIN_FROM_ONE_CODE || "",
+              stationName: process.env.NEXT_PUBLIC_TRAIN_FROM_ONE || "",
+            }}
           />
           <TrainDepartures
-            fromStation={{ stationCode: "PAD", stationName: "Paddington" }}
+            fromStation={{
+              stationCode: process.env.NEXT_PUBLIC_TRAIN_FROM_TWO_CODE || "",
+              stationName: process.env.NEXT_PUBLIC_TRAIN_FROM_TWO || "",
+            }}
           />
         </div>
         <div className="flex flex-col gap-6 min-w-[320px] max-w-[600px]">
           <TflBestRoute
-            to={{ placeName: "Paddington", naptan: "940GZZLUPAC" }}
-            from={{ placeName: "Tooting", naptan: "940GZZLUTBY" }}
+            to={{
+              placeName: process.env.NEXT_PUBLIC_BEST_ROUTE_TWO || "",
+              naptan: process.env.NEXT_PUBLIC_BEST_ROUTE_TWO_NAPTAN || "",
+            }}
+            from={{
+              placeName: process.env.NEXT_PUBLIC_BEST_ROUTE_ONE || "",
+              naptan: process.env.NEXT_PUBLIC_BEST_ROUTE_ONE_NAPTAN || "",
+            }}
           />
           <TflBestRoute
-            from={{ placeName: "Paddington", naptan: "940GZZLUPAC" }}
-            to={{ placeName: "Tooting", naptan: "940GZZLUTBY" }}
+            from={{
+              placeName: process.env.NEXT_PUBLIC_BEST_ROUTE_TWO || "",
+              naptan: process.env.NEXT_PUBLIC_BEST_ROUTE_TWO_NAPTAN || "",
+            }}
+            to={{
+              placeName: process.env.NEXT_PUBLIC_BEST_ROUTE_ONE || "",
+              naptan: process.env.NEXT_PUBLIC_BEST_ROUTE_ONE_NAPTAN || "",
+            }}
           />
         </div>
         <div className="flex flex-col min-w-[320px] max-w-[600px]">
