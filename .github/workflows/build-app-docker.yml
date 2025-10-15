@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - 'api/**'
+      - 'app/**'
       - '.github/workflows/build-app-docker.yml'
   workflow_dispatch:
 
