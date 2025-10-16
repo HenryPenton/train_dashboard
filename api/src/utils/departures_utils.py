@@ -45,6 +45,8 @@ def process_departures_response(response_json):
     Returns a simplified list of dicts with origin, destination, scheduled, platform, and delay.
     """
     services = response_json.get('services', [])
+    if len(services) == 0:
+        return []
     simplified = []
     for dep in services:
         loc = dep.get("locationDetail", {})
@@ -53,6 +55,9 @@ def process_departures_response(response_json):
         scheduled = get_scheduled(loc)
         platform = get_platform(loc)
         real = get_real(loc)
+        if not (origin and destination and scheduled and platform and real):
+            continue
+        # Skip this service if any required property is missing
         delay = get_delay(scheduled, real)
         actual = get_actual(scheduled, delay)
         simplified.append({
