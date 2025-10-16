@@ -1,3 +1,6 @@
+from src.utils.check_group_of_properties_exist import check_group_of_properties_exist
+
+
 def get_origin(loc):
     origins = loc.get("origin", [])
     if len(origins) == 0:
@@ -83,19 +86,10 @@ def process_departures_response(response_json) -> list[dict]:
         actual = get_actual(scheduled, delay)
 
         # Skip this service if any required property is missing
-        if any(
-            property is None
-            for property in [
-                origin,
-                destination,
-                scheduled,
-                platform,
-                real,
-                delay,
-                status,
-                actual,
-            ]
-        ):
+        has_all_properties = check_group_of_properties_exist(
+            origin, destination, scheduled, platform, real, delay, status, actual
+        )
+        if not has_all_properties:
             continue
 
         simplified.append(
