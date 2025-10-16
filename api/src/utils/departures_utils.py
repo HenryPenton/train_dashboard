@@ -29,21 +29,35 @@ def get_delay(scheduled, real):
         return real_min - sched_min
     return None
 
-def get_actual(scheduled, delay):
+# System cannot currently work out if a train is Late if it crosses midnight
+# e.g. Scheduled 23:59, Actual 00:04 is 5 minutes
+def get_status(delay: int):
+    if delay is None:
+        return None
+    if delay > 0:
+        return 'Late'
+    if delay < 0:
+        return 'Early'
+    if delay == 0:
+        return 'On time'
+
+def get_actual(scheduled:int, delay: int):
     sched_min = parse_time(scheduled)
     if sched_min is not None:
-        actual_min = sched_min + (delay if delay is not None else 0)
+        delay_to_add = delay if delay is not None else 0
+        actual_min = sched_min + delay_to_add
         actual_h = actual_min // 60
         actual_m = actual_min % 60
         return f"{actual_h:02d}{actual_m:02d}"
     return None
 
-def process_departures_response(response_json):
+def process_departures_response(response_json) -> list[dict]:
     """
     Process and filter the departures response JSON from the Real Time Trains API.
     If destination_tiploc is provided, only return departures with a destination matching that tiploc.
     Returns a simplified list of dicts with origin, destination, scheduled, platform, and delay.
     """
+    
     services = response_json.get('services', [])
     if len(services) == 0:
         return []
@@ -55,17 +69,21 @@ def process_departures_response(response_json):
         scheduled = get_scheduled(loc)
         platform = get_platform(loc)
         real = get_real(loc)
-        if not (origin and destination and scheduled and platform and real):
-            continue
-        # Skip this service if any required property is missing
+
         delay = get_delay(scheduled, real)
+        status = get_status(delay)
         actual = get_actual(scheduled, delay)
+        
+        # Skip this service if any required property is missing
+        if not (origin and destination and platform and real and status and actual and (delay is not None)):
+            continue
+
         simplified.append({
             "origin": origin,
             "destination": destination,
-            "scheduled": scheduled,
             "platform": platform,
             "delay": delay,
+            "status": status,
             "actual": actual
         })
     return simplified

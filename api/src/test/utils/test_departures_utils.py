@@ -1,4 +1,4 @@
-from src.utils.departures_utils import process_departures_response, get_origin, get_destination, get_scheduled, get_platform, get_real, parse_time
+from src.utils.departures_utils import get_actual, get_status, process_departures_response, get_origin, get_destination, get_scheduled, get_platform, get_real, parse_time
 
 def test_process_departures_response_empty():
     assert process_departures_response({"services": []}) == []
@@ -27,6 +27,14 @@ def test_get_scheduled():
     loc = {}
     assert get_scheduled(loc) is None
 
+def test_get_actual():
+    actual = get_actual("1234", 5)
+    assert actual == "1239"
+    actual = get_actual("1234", None)
+    assert actual == "1234"
+    actual = get_actual(None, 5)
+    assert actual is None
+
 def test_get_platform():
     loc = {"platform": "5"}
     assert get_platform(loc) == "5"
@@ -40,8 +48,16 @@ def test_get_real():
     assert get_real(loc) is None
 
 def test_parse_time():
+    assert parse_time("0030") == 30
     assert parse_time("0930") == 570
     assert parse_time("2359") == 1439
     assert parse_time("") is None
     assert parse_time(None) is None
     assert parse_time("093012") == 570
+
+
+def test_get_status():
+    assert get_status(-5) == 'Early'
+    assert get_status(0) == 'On time'
+    assert get_status(5) == 'Late'
+    assert get_status(None) == None

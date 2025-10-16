@@ -3,10 +3,10 @@ import { useEffect, useState } from "react";
 type Departure = {
   origin: string;
   destination: string;
-  scheduled: string | null;
-  actual: string | null;
-  platform: string | null;
-  delay: number | null;
+  actual: string;
+  platform: string;
+  delay: number;
+  status: "Early" | "On time" | "Late";
 };
 
 type TrainDepartureProps = {
@@ -18,7 +18,7 @@ export default function TrainDepartures(props: TrainDepartureProps) {
   const [departures, setDepartures] = useState<Departure[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  
+
   useEffect(() => {
     const fetchDepartures = async () => {
       setLoading(true);
@@ -81,15 +81,26 @@ export default function TrainDepartures(props: TrainDepartureProps) {
                   <span>
                     Departs:{" "}
                     {(() => {
-                      if (!dep.actual) return dep.scheduled || "-";
-                      if (dep.actual !== dep.scheduled) {
-                        return (
-                          <span className="text-[#ff4d4f] font-semibold">
-                            {dep.actual}
-                          </span>
-                        );
+                      switch (dep.status) {
+                        case "Early":
+                          return (
+                            <span className="text-[#4ade80] font-semibold">
+                              {dep.actual}
+                            </span>
+                          );
+                        case "On time":
+                          return (
+                            <span className="text-[#4ade80] font-semibold">
+                              {dep.actual}
+                            </span>
+                          );
+                        case "Late":
+                          return (
+                            <span className="text-[#ff4d4f] font-semibold">
+                              {dep.actual}
+                            </span>
+                          );
                       }
-                      return dep.scheduled || "-";
                     })()}{" "}
                     {" | Platform: "}
                     {dep.platform || "-"}
@@ -100,9 +111,7 @@ export default function TrainDepartures(props: TrainDepartureProps) {
                           className={
                             dep.delay > 0
                               ? "text-[#ff4d4f] font-semibold"
-                              : dep.delay < 0
-                              ? "text-[#4ade80] font-semibold"
-                              : "text-[#f1f1f1] font-semibold"
+                              : "text-[#4ade80] font-semibold"
                           }
                         >
                           {dep.delay === 0 ? "On time" : `${dep.delay} min`}
