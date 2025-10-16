@@ -39,18 +39,22 @@ export default function TrainDepartures(props: TrainDepartureProps) {
         const data = await res.json();
         const tenTrains = data.slice(0, 10);
         setDepartures(tenTrains);
-      } catch (err: any) {
-        setError(err.message);
+      } catch (e: unknown) {
+        const message = e instanceof Error ? e.message : "Unknown error";
+
+        setError(message);
       } finally {
         setLoading(false);
       }
     };
     fetchDepartures();
-  }, []);
+  }, [props.fromStation.stationCode, toStation]);
 
   return (
-  <section className="flex-1 bg-[#23262f] rounded-[12px] p-6 text-[#f1f1f1] shadow-[0_2px_12px_0_rgba(0,0,0,0.25)]">
-      <h2 className="text-xl font-semibold text-white mb-2">Train Departures</h2>
+    <section className="flex-1 bg-[#23262f] rounded-[12px] p-6 text-[#f1f1f1] shadow-[0_2px_12px_0_rgba(0,0,0,0.25)]">
+      <h2 className="text-xl font-semibold text-white mb-2">
+        Train Departures
+      </h2>
       <div style={{ marginBottom: 16 }}>
         <span>
           Departures from <strong>{props.fromStation.stationName}</strong>

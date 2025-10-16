@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 interface BestRouteData {
   origin: string;
@@ -30,14 +30,16 @@ export default function TflBestRoute(props: TflRouteProps) {
         if (!res.ok) throw new Error("Failed to fetch best route");
         const json = await res.json();
         setData(json);
-      } catch (err: any) {
-        setError(err.message || "Unknown error");
+      } catch (e: unknown) {
+        const message = e instanceof Error ? e.message : "Unknown error";
+
+        setError(message);
       } finally {
         setLoading(false);
       }
     }
     fetchBestRoute();
-  }, []);
+  }, [props.from.naptan, props.to.naptan]);
 
   if (loading) return <div className="text-white">Loading best route...</div>;
   if (error) return <div className="text-red-400">Error: {error}</div>;

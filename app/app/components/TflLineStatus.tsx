@@ -21,8 +21,9 @@ export default function TflLineStatus() {
         if (!res.ok) throw new Error(`API error: ${res.status}`);
         const data = await res.json();
         setTflStatuses(data);
-      } catch (err: any) {
-        setTflError(err.message);
+      } catch (e: unknown) {
+        const message = e instanceof Error ? e.message : "Unknown error";
+        setTflError(message);
       } finally {
         setTflLoading(false);
       }
