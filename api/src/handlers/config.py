@@ -5,7 +5,7 @@ from pathlib import Path
 
 router = APIRouter()
 
-CONFIG_PATH = Path(__file__).parent.parent / "config.json"
+CONFIG_PATH = Path(__file__).parent.parent.parent / "config.json"
 
 @router.get("/config")
 def get_config():
