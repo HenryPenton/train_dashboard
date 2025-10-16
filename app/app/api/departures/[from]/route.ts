@@ -13,7 +13,7 @@ export async function GET(
     );
   }
   try {
-    const res = await fetch(`http://${getBaseUrl()}:8000/departures/${from}`);
+    const res = await fetch(`${process.env.SERVER_URL}/departures/${from}`);
     if (!res.ok) {
       return NextResponse.json(
         { error: "Failed to fetch departures" },

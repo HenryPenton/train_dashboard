@@ -3,7 +3,7 @@ import { getBaseUrl } from "../utils/endpointLocation";
 
 export async function GET() {
   try {
-    const res = await fetch(`http://${getBaseUrl()}:8000/tfl/line-status`);
+    const res = await fetch(`${process.env.SERVER_URL}/tfl/line-status`);
     if (!res.ok) {
       return NextResponse.json(
         { error: "Failed to fetch TFL line status" },

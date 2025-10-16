@@ -4,7 +4,7 @@ import { getBaseUrl } from "../utils/endpointLocation";
 export async function GET() {
   try {
     // Replace with your actual FastAPI backend URL if needed
-    const apiUrl = `http://${getBaseUrl()}:8000/config`;
+    const apiUrl = `${process.env.SERVER_URL}/config`;
     const res = await fetch(apiUrl);
     if (!res.ok) {
       return NextResponse.json(

@@ -11,19 +11,21 @@ from handlers.best_route import get_best_route_handler
 from handlers.config import router as config_router
 
 load_dotenv()
-
+origins=[os.getenv("APP_URL", "http://localhost:3000")]
+print("Allowed origins:", origins)
 app = FastAPI()
-app.include_router(config_router)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[os.getenv("APP_URL", "http://localhost:3000")],
-    allow_credentials=True,
+    allow_origins=origins,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"]
 )
 REALTIME_TRAINS_API_BASE = "https://api.rtt.io/api/v1/json"
 REALTIME_TRAINS_API_USER = os.getenv("RTT_API_USER", "your_username")
 REALTIME_TRAINS_API_PASS = os.getenv("RTT_API_PASS", "your_password")
+
+app.include_router(config_router)
 
 @app.get("/")
 def read_root():

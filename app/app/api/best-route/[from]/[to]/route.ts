@@ -15,7 +15,7 @@ export async function GET(
   }
   try {
     const res = await fetch(
-      `http://${getBaseUrl()}:8000/tfl/best-route/${from}/${to}`
+      `${process.env.SERVER_URL}/tfl/best-route/${from}/${to}`
     );
     if (!res.ok) {
       return NextResponse.json(
