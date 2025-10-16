@@ -11,32 +11,26 @@ type Departure = {
 
 type TrainDepartureProps = {
   fromStation: { stationName: string; stationCode: string };
-  toStation?: { stationName: string; tiploc: string };
+  toStation: { stationName: string; stationCode: string };
 };
 
 export default function TrainDepartures(props: TrainDepartureProps) {
-  const { toStation } = props;
   const [departures, setDepartures] = useState<Departure[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
+  
   useEffect(() => {
     const fetchDepartures = async () => {
       setLoading(true);
       setError("");
       setDepartures(null);
       try {
-        const hasTiploc = toStation && toStation.tiploc;
-        let res;
-        if (hasTiploc) {
-          res = await fetch(
-            `/api/departures/${props.fromStation.stationCode}/${toStation.tiploc}`
-          );
-        } else {
-          res = await fetch(`/api/departures/${props.fromStation.stationCode}`);
-        }
-        if (!res.ok) throw new Error(`API error: ${res.status}`);
-        const data = await res.json();
+        const result = await fetch(
+          `/api/departures/${props.fromStation.stationCode}/to/${props.toStation.stationCode}`
+        );
+
+        if (!result.ok) throw new Error(`API error: ${result.status}`);
+        const data = await result.json();
         const tenTrains = data.slice(0, 10);
         setDepartures(tenTrains);
       } catch (e: unknown) {
@@ -48,7 +42,7 @@ export default function TrainDepartures(props: TrainDepartureProps) {
       }
     };
     fetchDepartures();
-  }, [props.fromStation.stationCode, toStation]);
+  }, [props.fromStation.stationCode, props.toStation.stationCode]);
 
   return (
     <section className="flex-1 bg-[#23262f] rounded-[12px] p-6 text-[#f1f1f1] shadow-[0_2px_12px_0_rgba(0,0,0,0.25)]">
@@ -57,8 +51,11 @@ export default function TrainDepartures(props: TrainDepartureProps) {
       </h2>
       <div style={{ marginBottom: 16 }}>
         <span>
-          Departures from <strong>{props.fromStation.stationName}</strong>
-          <strong>{toStation && ` to ${toStation.stationName}`}</strong>
+          Departures from{" "}
+          <strong>
+            {props.fromStation.stationName} to{" "}
+            {`${props.toStation.stationName}`}
+          </strong>
         </span>
         {loading && <span style={{ marginLeft: 8 }}>Loading...</span>}
       </div>

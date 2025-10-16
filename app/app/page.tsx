@@ -16,8 +16,8 @@ type BestRoute = {
 type DepartureConfig = {
   origin: string;
   originCode: string;
-  destination?: string;
-  destinationTiploc?: string;
+  destination: string;
+  destinationCode: string;
 };
 
 type ConfigType = {
@@ -59,29 +59,19 @@ export default function Home() {
       <div className="flex w-full flex-row gap-10 flex-wrap justify-around box-border">
         <div className="flex flex-col gap-6 min-w-[320px] max-w-[600px]">
           {config &&
-            config.departures.map((route, i) => {
-              return route.destinationTiploc && route.destination ? (
-                <TrainDepartures
-                  key={i}
-                  toStation={{
-                    tiploc: route.destinationTiploc,
-                    stationName: route.destination,
-                  }}
-                  fromStation={{
-                    stationCode: route.originCode,
-                    stationName: route.origin,
-                  }}
-                />
-              ) : (
-                <TrainDepartures
-                  key={i}
-                  fromStation={{
-                    stationCode: route.originCode,
-                    stationName: route.origin,
-                  }}
-                />
-              );
-            })}
+            config.departures.map((route, i) => (
+              <TrainDepartures
+                key={i}
+                toStation={{
+                  stationCode: route.destinationCode,
+                  stationName: route.destination,
+                }}
+                fromStation={{
+                  stationCode: route.originCode,
+                  stationName: route.origin,
+                }}
+              />
+            ))}
         </div>
         <div className="flex flex-col gap-6 min-w-[320px] max-w-[600px]">
           {config &&

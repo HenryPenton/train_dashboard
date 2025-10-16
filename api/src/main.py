@@ -1,12 +1,9 @@
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from src.handlers.tfl_line_status import get_tfl_line_status_handler
 from src.handlers.departures import get_departures_handler
 import os
 from dotenv import load_dotenv
-from src.handlers.departures_with_tiploc import get_departures_with_tiploc_handler
-
 from src.handlers.best_route import get_best_route_handler
 from src.handlers.config import router as config_router
 
@@ -31,16 +28,10 @@ app.include_router(config_router)
 def read_root():
     return {"message": "Hello, FastAPI!"}
 
-# Departures handler
-@app.get("/departures/{station_code}")
-async def get_departures(station_code: str):
-    return await get_departures_handler(station_code)
-
-# Departures with tiploc handler
-@app.get("/departures/{station_code}/{destination_tiploc}")
-async def get_departures_with_tiploc(station_code: str, destination_tiploc: str):
-    return await get_departures_with_tiploc_handler(station_code, destination_tiploc)
-
+# Departures new handler
+@app.get("/departures/{origin_station_code}/to/{destination_station_code}")
+async def get_departures(origin_station_code: str,destination_station_code):
+    return await get_departures_handler(origin_station_code,destination_station_code)
 
 # TFL Line Status Endpoint
 @app.get("/tfl/line-status")

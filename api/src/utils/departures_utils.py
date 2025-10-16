@@ -38,13 +38,7 @@ def get_actual(scheduled, delay):
         return f"{actual_h:02d}{actual_m:02d}"
     return None
 
-def match_destination(destinations, destination_tiploc):
-    for dest in destinations:
-        if not destination_tiploc or dest.get("tiploc") == destination_tiploc:
-            return True
-    return False
-
-def process_departures_response(response_json, destination_tiploc=None):
+def process_departures_response(response_json):
     """
     Process and filter the departures response JSON from the Real Time Trains API.
     If destination_tiploc is provided, only return departures with a destination matching that tiploc.
@@ -53,9 +47,6 @@ def process_departures_response(response_json, destination_tiploc=None):
     services = response_json.get('services', [])
     simplified = []
     for dep in services:
-        destinations = dep.get("locationDetail", {}).get("destination", [])
-        if not match_destination(destinations, destination_tiploc):
-            continue
         loc = dep.get("locationDetail", {})
         origin = get_origin(loc)
         destination = get_destination(loc)
