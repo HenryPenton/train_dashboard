@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getBaseUrl } from "../../utils/endpointLocation";
+
 
 export async function GET(
   _request: Request,

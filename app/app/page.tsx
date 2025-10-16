@@ -26,8 +26,6 @@ type ConfigType = {
 };
 export default function Home() {
   const [config, setConfig] = useState<ConfigType | null>(null);
-  const [configLoading, setConfigLoading] = useState(false);
-  const [configError, setConfigError] = useState("");
 
   // Auto-refresh the page every 5 minutes
   useEffect(() => {
@@ -39,9 +37,6 @@ export default function Home() {
 
   // Fetch config from /api/config on mount
   useEffect(() => {
-    setConfigLoading(true);
-    setConfigError("");
-    setConfig(null);
     fetch("/api/config")
       .then((res) => {
         if (!res.ok) throw new Error(`API error: ${res.status}`);
@@ -49,12 +44,6 @@ export default function Home() {
       })
       .then((data) => {
         setConfig(data);
-      })
-      .catch((err) => {
-        setConfigError(err.message);
-      })
-      .finally(() => {
-        setConfigLoading(false);
       });
   }, []);
 

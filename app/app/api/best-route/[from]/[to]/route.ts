@@ -1,6 +1,5 @@
 // Next.js API route proxy for /api/best_route
 import { NextResponse } from "next/server";
-import { getBaseUrl } from "../../../utils/endpointLocation";
 
 export async function GET(
   _request: Request,

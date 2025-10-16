@@ -1,5 +1,5 @@
 // tailwind.config.js
-export default {
+const tailwindConfig = {
   content: [
     './app/**/*.{js,ts,jsx,tsx}',
     './components/**/*.{js,ts,jsx,tsx}',
@@ -12,3 +12,4 @@ export default {
   },
   plugins: [],
 };
+export default tailwindConfig;
