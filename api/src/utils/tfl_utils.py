@@ -1,3 +1,6 @@
+from collections import Counter
+
+
 def summarise_best_route(best):
     """
     Summarise the best journey returned by the TFL Journey Planner API.
@@ -24,7 +27,8 @@ def summarise_best_route(best):
 
 def simplify_tfl_line_status(response_json):
     """
-    Simplify the TFL line status response to an array of objects with line name and status severity description.
+    Simplify the TFL line status response to an array of objects with line name and concatenated status severity descriptions.
+    If a status appears multiple times, format as 'status xN'.
     Args:
         response_json (list): The JSON response from the TFL API (list of lines).
     Returns:
@@ -33,9 +37,20 @@ def simplify_tfl_line_status(response_json):
     simplified = []
     for line in response_json:
         name = line.get("name")
-        status = None
         statuses = line.get("lineStatuses", [])
         if statuses:
-            status = statuses[0].get("statusSeverityDescription")
-            simplified.append({"name": name, "status": status})
+            status_list = [
+                s.get("statusSeverityDescription")
+                for s in statuses
+                if s.get("statusSeverityDescription")
+            ]
+            counts = Counter(status_list)
+            status_parts = []
+            for status, count in counts.items():
+                if count > 1:
+                    status_parts.append(f"{status} x{count}")
+                else:
+                    status_parts.append(status)
+            status_str = ", ".join(status_parts)
+            simplified.append({"name": name, "status": status_str})
     return simplified
