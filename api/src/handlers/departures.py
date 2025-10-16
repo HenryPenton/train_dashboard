@@ -1,7 +1,7 @@
 import httpx
 from fastapi import HTTPException
 from src.utils.departures_utils import process_departures_response
-from src.rttclient.rttclient import RTTClient
+from src.clients.rttclient import RTTClient
 
 
 async def get_departures_handler(

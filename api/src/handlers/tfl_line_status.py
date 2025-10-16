@@ -1,6 +1,6 @@
 from src.utils.tfl_utils import simplify_tfl_line_status
 from fastapi import HTTPException
-from src.rttclient.tflclient import TFLClient
+from src.clients.tflclient import TFLClient
 import httpx
 
 
