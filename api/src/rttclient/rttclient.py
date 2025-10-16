@@ -2,6 +2,7 @@ import httpx
 from fastapi import HTTPException
 import os
 
+
 class RTTClient:
     def __init__(self, client: httpx.AsyncClient):
         """
@@ -22,8 +23,7 @@ class RTTClient:
         url = f"https://api.rtt.io/api/v1/json/search/{from_station}/to/{to_station}"
         try:
             response = await self.client.get(
-                url,
-                auth=(REALTIME_TRAINS_API_USER, REALTIME_TRAINS_API_PASS)
+                url, auth=(REALTIME_TRAINS_API_USER, REALTIME_TRAINS_API_PASS)
             )
             response.raise_for_status()
             return response.json()

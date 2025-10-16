@@ -12,7 +12,7 @@ async def get_tfl_line_status_handler():
         async with httpx.AsyncClient() as client:
             response = await client.get(url)
             response.raise_for_status()
-            data = response.json() # List of line status objects
+            data = response.json()  # List of line status objects
             simplified = simplify_tfl_line_status(data)
             return simplified
     except httpx.HTTPStatusError as e:

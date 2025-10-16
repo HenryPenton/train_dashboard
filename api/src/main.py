@@ -8,7 +8,7 @@ from src.handlers.best_route import get_best_route_handler
 from src.handlers.config import router as config_router
 
 load_dotenv()
-origins=[os.getenv("APP_URL", "http://localhost:3000")]
+origins = [os.getenv("APP_URL", "http://localhost:3000")]
 print("Allowed origins:", origins)
 app = FastAPI()
 app.add_middleware(
@@ -16,7 +16,7 @@ app.add_middleware(
     allow_origins=origins,
     allow_credentials=False,
     allow_methods=["*"],
-    allow_headers=["*"]
+    allow_headers=["*"],
 )
 REALTIME_TRAINS_API_BASE = "https://api.rtt.io/api/v1/json"
 REALTIME_TRAINS_API_USER = os.getenv("RTT_API_USER", "your_username")
@@ -24,19 +24,23 @@ REALTIME_TRAINS_API_PASS = os.getenv("RTT_API_PASS", "your_password")
 
 app.include_router(config_router)
 
+
 @app.get("/")
 def read_root():
     return {"message": "Hello, FastAPI!"}
 
+
 # Departures new handler
 @app.get("/departures/{origin_station_code}/to/{destination_station_code}")
-async def get_departures(origin_station_code: str,destination_station_code):
-    return await get_departures_handler(origin_station_code,destination_station_code)
+async def get_departures(origin_station_code: str, destination_station_code):
+    return await get_departures_handler(origin_station_code, destination_station_code)
+
 
 # TFL Line Status Endpoint
 @app.get("/tfl/line-status")
 async def get_tfl_line_status():
     return await get_tfl_line_status_handler()
+
 
 # Best route endpoint
 @app.get("/tfl/best-route/{from_station}/{to_station}")

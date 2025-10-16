@@ -1,5 +1,3 @@
-# tfl_utils.py
-
 def simplify_tfl_line_status(response_json):
     """
     Simplify the TFL line status response to an array of objects with line name and status severity description.
@@ -15,8 +13,5 @@ def simplify_tfl_line_status(response_json):
         statuses = line.get("lineStatuses", [])
         if statuses:
             status = statuses[0].get("statusSeverityDescription")
-            simplified.append({
-                "name": name,
-                "status": status
-            })
+            simplified.append({"name": name, "status": status})
     return simplified
