@@ -1,4 +1,4 @@
-from utils.departures_utils import process_departures_response
+from src.utils.departures_utils import process_departures_response
 
 def test_process_departures_response_basic():
     response_json = {

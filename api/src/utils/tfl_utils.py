@@ -11,13 +11,12 @@ def simplify_tfl_line_status(response_json):
     simplified = []
     for line in response_json:
         name = line.get("name")
-        # statusSeverityDescription is usually in line['lineStatuses'][0]['statusSeverityDescription']
         status = None
         statuses = line.get("lineStatuses", [])
         if statuses:
             status = statuses[0].get("statusSeverityDescription")
-        simplified.append({
-            "name": name,
-            "status": status
-        })
+            simplified.append({
+                "name": name,
+                "status": status
+            })
     return simplified
