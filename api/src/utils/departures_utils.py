@@ -1,10 +1,14 @@
 def get_origin(loc):
     origins = loc.get("origin", [])
+    if len(origins) == 0:
+        return None
     return ", ".join([origin.get("description", "") for origin in origins])
 
 
 def get_destination(loc):
     destinations = loc.get("destination", [])
+    if len(destinations) == 0:
+        return None
     return ", ".join(
         [destination.get("description", "") for destination in destinations]
     )
@@ -79,14 +83,18 @@ def process_departures_response(response_json) -> list[dict]:
         actual = get_actual(scheduled, delay)
 
         # Skip this service if any required property is missing
-        if not (
-            origin
-            and destination
-            and platform
-            and real
-            and status
-            and actual
-            and (delay is not None)
+        if any(
+            property is None
+            for property in [
+                origin,
+                destination,
+                scheduled,
+                platform,
+                real,
+                delay,
+                status,
+                actual,
+            ]
         ):
             continue
 
