@@ -59,8 +59,7 @@ def process_departures_response(response_json) -> list[dict]:
     """
     
     services = response_json.get('services', [])
-    if len(services) == 0:
-        return []
+
     simplified = []
     for dep in services:
         loc = dep.get("locationDetail", {})
