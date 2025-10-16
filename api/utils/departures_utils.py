@@ -1,4 +1,48 @@
-# departures_utils.py
+def get_origin(loc):
+    origins = loc.get("origin", [])
+    return ", ".join([origin.get("description", "") for origin in origins])
+
+def get_destination(loc):
+    destinations = loc.get("destination", [])
+    return ", ".join([destination.get("description", "") for destination in destinations])
+
+def get_scheduled(loc):
+    return loc.get("gbttBookedDeparture")
+
+def get_platform(loc):
+    return loc.get("platform")
+
+def get_real(loc):
+    return loc.get("realtimeDeparture")
+
+def parse_time(t):
+    if not t:
+        return None
+    if len(t) in (4, 6):
+        return int(t[:2]) * 60 + int(t[2:4])
+    return None
+
+def get_delay(scheduled, real):
+    sched_min = parse_time(scheduled)
+    real_min = parse_time(real)
+    if sched_min is not None and real_min is not None:
+        return real_min - sched_min
+    return None
+
+def get_actual(scheduled, delay):
+    sched_min = parse_time(scheduled)
+    if sched_min is not None:
+        actual_min = sched_min + (delay if delay is not None else 0)
+        actual_h = actual_min // 60
+        actual_m = actual_min % 60
+        return f"{actual_h:02d}{actual_m:02d}"
+    return None
+
+def match_destination(destinations, destination_tiploc):
+    for dest in destinations:
+        if not destination_tiploc or dest.get("tiploc") == destination_tiploc:
+            return True
+    return False
 
 def process_departures_response(response_json, destination_tiploc=None):
     """
@@ -10,39 +54,16 @@ def process_departures_response(response_json, destination_tiploc=None):
     simplified = []
     for dep in services:
         destinations = dep.get("locationDetail", {}).get("destination", [])
-        match = False
-        for dest in destinations:
-            if not destination_tiploc or dest.get("tiploc") == destination_tiploc:
-                match = True
-                break
-        if not match:
+        if not match_destination(destinations, destination_tiploc):
             continue
         loc = dep.get("locationDetail", {})
-        origin = ", ".join([o.get("description", "") for o in loc.get("origin", [])])
-        destination = ", ".join([d.get("description", "") for d in loc.get("destination", [])])
-        scheduled = loc.get("gbttBookedDeparture")
-        platform = loc.get("platform")
-        real = loc.get("realtimeDeparture")
-        delay = None
-        actual = None
-        if scheduled:
-            def parse_time(t):
-                if len(t) == 4:
-                    return int(t[:2]) * 60 + int(t[2:4])
-                if len(t) == 6:
-                    return int(t[:2]) * 60 + int(t[2:4])
-                return None
-            sched_min = parse_time(scheduled)
-            real_min = parse_time(real) if real else None
-            if sched_min is not None and real_min is not None:
-                delay = real_min - sched_min
-            # Calculate actual as scheduled + delay (if delay is not None)
-            if sched_min is not None:
-                actual_min = sched_min + (delay if delay is not None else 0)
-                # Format back to HHMM string
-                actual_h = actual_min // 60
-                actual_m = actual_min % 60
-                actual = f"{actual_h:02d}{actual_m:02d}"
+        origin = get_origin(loc)
+        destination = get_destination(loc)
+        scheduled = get_scheduled(loc)
+        platform = get_platform(loc)
+        real = get_real(loc)
+        delay = get_delay(scheduled, real)
+        actual = get_actual(scheduled, delay)
         simplified.append({
             "origin": origin,
             "destination": destination,
