@@ -1,5 +1,11 @@
+__pycache__
+.coverage
 .env
 .gitignore
-readme.md
-venv
+.pytest_cache
 config.json
+Dockerfile
+readme.md
+**/*/test_*.py
+venv
+test

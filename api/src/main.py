@@ -1,14 +1,14 @@
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from handlers.tfl_line_status import get_tfl_line_status_handler
-from handlers.departures import get_departures_handler
+from src.handlers.tfl_line_status import get_tfl_line_status_handler
+from src.handlers.departures import get_departures_handler
 import os
 from dotenv import load_dotenv
-from handlers.departures_with_tiploc import get_departures_with_tiploc_handler
+from src.handlers.departures_with_tiploc import get_departures_with_tiploc_handler
 
-from handlers.best_route import get_best_route_handler
-from handlers.config import router as config_router
+from src.handlers.best_route import get_best_route_handler
+from src.handlers.config import router as config_router
 
 load_dotenv()
 origins=[os.getenv("APP_URL", "http://localhost:3000")]
