@@ -1,18 +1,17 @@
 from src.utils.tfl_utils import simplify_tfl_line_status
-import httpx
 from fastapi import HTTPException
+from src.rttclient.tflclient import TFLClient
+import httpx
 
 
 async def get_tfl_line_status_handler():
     """
     Get the status of all TFL lines from the TFL API, simplified.
     """
-    url = "https://api.tfl.gov.uk/Line/Mode/tube,overground,dlr,elizabeth-line,tram/status"
     try:
         async with httpx.AsyncClient() as client:
-            response = await client.get(url)
-            response.raise_for_status()
-            data = response.json()  # List of line status objects
+            tfl_client = TFLClient(client)
+            data = await tfl_client.get_all_lines_status()
             simplified = simplify_tfl_line_status(data)
             return simplified
     except httpx.HTTPStatusError as e:

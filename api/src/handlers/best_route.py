@@ -1,20 +1,16 @@
-import httpx
 from fastapi import HTTPException
+from src.rttclient.tflclient import TFLClient
+import httpx
 
 
 async def get_best_route_handler(from_station: str, to_station: str):
     """
-    Suggest the best current route from one station to another using the
-    TFL Journey Planner API.
+    Suggest the best current route from one station to another using the TFL Journey Planner API via TFLClient.
     """
-    url = (
-        f"https://api.tfl.gov.uk/Journey/JourneyResults/{from_station}/to/{to_station}"
-    )
     try:
         async with httpx.AsyncClient() as client:
-            response = await client.get(url)
-            response.raise_for_status()
-            data = response.json()
+            tfl_client = TFLClient(client)
+            data = await tfl_client.get_best_route(from_station, to_station)
             journeys = data.get("journeys", [])
             if not journeys:
                 return {"error": "No journeys found"}
