@@ -1,5 +1,6 @@
 from fastapi import HTTPException
 from src.clients.tflclient import TFLClient
+from src.utils.tfl_utils import summarise_best_route
 import httpx
 
 
@@ -15,21 +16,7 @@ async def get_best_route_handler(from_station: str, to_station: str):
             if not journeys:
                 return {"error": "No journeys found"}
             best = journeys[0]
-            summary = {
-                "duration": best.get("duration"),
-                "arrival": best.get("arrivalDateTime"),
-                "legs": [
-                    {
-                        "mode": leg.get("mode", {}).get("name"),
-                        "instruction": leg.get("instruction", {}).get("summary"),
-                        "departure": leg.get("departurePoint", {}).get("commonName"),
-                        "arrival": leg.get("arrivalPoint", {}).get("commonName"),
-                        "line": leg.get("routeOptions", [{}])[0].get("name"),
-                    }
-                    for leg in best.get("legs", [])
-                ],
-            }
-            return summary
+            return summarise_best_route(best)
     except httpx.HTTPStatusError as e:
         raise HTTPException(status_code=e.response.status_code, detail=str(e))
     except Exception as e:
