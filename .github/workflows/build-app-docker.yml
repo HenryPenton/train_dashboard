@@ -43,10 +43,12 @@ jobs:
           key: ${{ env.npm_dependencies_cache_key }}
 
       - name: install dependencies
+        working-directory: app
         if: steps.cache_dependencies.outputs.cache-hit != 'true'
         run: pnpm install --frozen-lockfile
 
       - name: Cache npm dependencies
+        working-directory: app
         if: steps.cache_dependencies.outputs.cache-hit != 'true'
         uses: actions/cache/save@v4
         with:
