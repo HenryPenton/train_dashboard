@@ -11,9 +11,6 @@ from src.utils.departures_utils import (
 )
 
 
-
-import pytest
-
 class TestProcessDeparturesResponse:
     def test_empty(self):
         assert process_departures_response({"services": []}) == []
@@ -23,7 +20,6 @@ class TestProcessDeparturesResponse:
         result = process_departures_response(response_json)
         print(result)
         assert result == []
-
 
 
 class TestGetOrigin:
@@ -38,7 +34,6 @@ class TestGetOrigin:
     def test_no_origins(self):
         loc = {"origin": []}
         assert get_origin(loc) is None
-
 
 
 class TestGetDestination:
@@ -64,7 +59,6 @@ class TestGetDestination:
         assert get_destination(loc) is None
 
 
-
 class TestGetScheduled:
     def test_with_value(self):
         loc = {"gbttBookedDeparture": "1234"}
@@ -73,7 +67,6 @@ class TestGetScheduled:
     def test_without_value(self):
         loc = {}
         assert get_scheduled(loc) is None
-
 
 
 class TestGetActual:
@@ -90,7 +83,6 @@ class TestGetActual:
         assert actual is None
 
 
-
 class TestGetPlatform:
     def test_with_platform(self):
         loc = {"platform": "5"}
@@ -101,7 +93,6 @@ class TestGetPlatform:
         assert get_platform(loc) is None
 
 
-
 class TestGetReal:
     def test_with_real(self):
         loc = {"realtimeDeparture": "1240"}
@@ -110,7 +101,6 @@ class TestGetReal:
     def test_without_real(self):
         loc = {}
         assert get_real(loc) is None
-
 
 
 class TestParseTime:
@@ -131,7 +121,6 @@ class TestParseTime:
 
     def test_long(self):
         assert parse_time("093012") == 570
-
 
 
 class TestGetStatus:
