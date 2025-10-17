@@ -17,13 +17,22 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
+
+      - name: Use Node.js 24
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: latest
 
       - name: Generate cache keys
         id: cache_keys
         working-directory: app
         run: |
-          echo "npm_dependencies_cache_key=CI-test-and-build-npm-dependencies-$(sha256sum pnpm-lock.yaml | cut -d' ' -f1)" >> $GITHUB_OUTPUT
+          echo "npm_dependencies_cache_key=CI-test-and-build-npm-dependencies-$(sha256sum pnpm-lock.yaml | cut -d' ' -f1)" >> $GITHUB_ENV
 
       - name: Restore cached npm dependencies
         id: cache_dependencies
@@ -31,7 +40,7 @@ jobs:
         with:
           path: |
             **/node_modules
-          key: ${{ steps.cache_keys.outputs.npm_dependencies_cache_key }}
+          key: ${{ env.npm_dependencies_cache_key }}
 
       - name: install dependencies
         if: steps.cache_dependencies.outputs.cache-hit != 'true'
@@ -43,7 +52,7 @@ jobs:
         with:
           path: |
             **/node_modules
-          key: ${{ steps.cache_keys.outputs.npm_dependencies_cache_key }}
+          key: ${{ env.npm_dependencies_cache_key }}
 
       - run: |
           pnpm test
