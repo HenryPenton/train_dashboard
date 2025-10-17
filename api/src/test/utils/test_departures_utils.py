@@ -1,4 +1,4 @@
-from src.utils.departures_utils import (
+from src.utils.rail_utils import (
     get_actual,
     get_status,
     process_departures_response,
