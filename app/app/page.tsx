@@ -21,8 +21,8 @@ type DepartureConfig = {
 };
 
 type ConfigType = {
-  best_routes: BestRoute[];
-  departures: DepartureConfig[];
+  tfl_best_routes: BestRoute[];
+  rail_departures: DepartureConfig[];
 };
 export default function Home() {
   const [config, setConfig] = useState<ConfigType | null>(null);
@@ -59,7 +59,7 @@ export default function Home() {
       <div className="flex w-full flex-row gap-10 flex-wrap justify-around box-border">
         <div className="flex flex-col gap-6 min-w-[320px] max-w-[600px]">
           {config &&
-            config.departures.map((route, i) => (
+            config.rail_departures.map((route, i) => (
               <TrainDepartures
                 key={i}
                 toStation={{
@@ -75,7 +75,7 @@ export default function Home() {
         </div>
         <div className="flex flex-col gap-6 min-w-[320px] max-w-[600px]">
           {config &&
-            config.best_routes.map((route, i) => {
+            config.tfl_best_routes.map((route, i) => {
               return (
                 <TflBestRoute
                   key={i}
