@@ -2,13 +2,6 @@ from collections import Counter
 
 
 def summarise_best_route(best):
-    """
-    Summarise the best journey returned by the TFL Journey Planner API.
-    Args:
-        best (dict): The best journey object from the TFL API.
-    Returns:
-        dict: Summary with duration, arrival, and legs info.
-    """
     return {
         "duration": best.get("duration"),
         "arrival": best.get("arrivalDateTime"),
@@ -26,14 +19,6 @@ def summarise_best_route(best):
 
 
 def simplify_tfl_line_status(response_json):
-    """
-    Simplify the TFL line status response to an array of objects with line name and concatenated status severity descriptions.
-    If a status appears multiple times, format as 'status xN'.
-    Args:
-        response_json (list): The JSON response from the TFL API (list of lines).
-    Returns:
-        list: List of dicts with 'name' and 'status' keys.
-    """
     simplified = []
     for line in response_json:
         name = line.get("name")
