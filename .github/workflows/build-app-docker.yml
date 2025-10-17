@@ -48,7 +48,6 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Cache npm dependencies
-        working-directory: app
         if: steps.cache_dependencies.outputs.cache-hit != 'true'
         uses: actions/cache/save@v4
         with:
