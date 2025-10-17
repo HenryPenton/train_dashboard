@@ -23,7 +23,7 @@ jobs:
         id: cache_keys
         working-directory: app
         run: |
-          npm_dependencies_cache_key=CI-test-and-build-npm-dependencies-${{ hashFiles('pnpm-lock.yaml') }}
+          npm_dependencies_cache_key=CI-test-and-build-npm-dependencies-${{ hashFiles('app/pnpm-lock.yaml') }}
 
       - name: Restore cached npm dependencies
         id: cache_dependencies
