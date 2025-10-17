@@ -4,7 +4,7 @@ from src.handlers.tfl_handlers import (
     get_tfl_line_status_handler,
     get_best_route_handler,
 )
-from src.handlers.departures import get_departures_handler
+from src.handlers.rail_handlers import get_departures_handler
 import os
 from dotenv import load_dotenv
 from src.handlers.config import router as config_router
