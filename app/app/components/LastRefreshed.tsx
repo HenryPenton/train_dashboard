@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 
 export default function LastRefreshed() {
-  // Memoize the time so it doesn't change on re-render
   const lastRefreshed = useMemo(() => {
     const now = new Date();
     return now.toLocaleTimeString([], {
