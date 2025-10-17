@@ -16,7 +16,7 @@ describe("TflBestRoute", () => {
         "Bus: 176 to Liverpool Street",
       ],
       duration: 22,
-      status: "Good Service",
+      status: "OK",
     };
 
     jest.spyOn(global, "fetch").mockImplementation(async () => {
@@ -35,29 +35,32 @@ describe("TflBestRoute", () => {
 
     // Wait for the dummy data to be rendered
     await waitFor(() => {
-      expect(screen.getByText(/Best Route/)).toBeInTheDocument();
-
-      // Check for the 'From:' region with aria-label and origin
-      const fromRegion = screen.getByRole("region", { name: /Origin/i });
-      expect(fromRegion).toHaveTextContent("From: Paddington");
-
-      // Check for the 'To:' region with aria-label and destination
-      const toRegion = screen.getByRole("region", { name: /Destination/i });
-      expect(toRegion).toHaveTextContent("To: Liverpool Street");
-
-      expect(screen.getByText(/Paddington/)).toBeInTheDocument();
-      expect(screen.getAllByText(/Liverpool Street/)).toHaveLength(2);
-
-      expect(screen.getByText(/22 min/)).toBeInTheDocument();
-      expect(screen.getByText(/Good Service/)).toBeInTheDocument();
-
-      expect(screen.getByText(/176 to Liverpool Street/)).toBeInTheDocument();
       expect(
-        screen.getByText(/Bakerloo line to Oxford Circus/)
+        screen.getByRole("heading", { name: /Best Route/ })
       ).toBeInTheDocument();
 
-      expect(screen.getByText(/Bus:/)).toBeInTheDocument();
-      expect(screen.getByText(/Tube:/)).toBeInTheDocument();
+      // Check for the 'From:' and 'To:' text content
+      expect(screen.getByLabelText("Origin")).toHaveTextContent(
+        "From: Paddington"
+      );
+      expect(screen.getByLabelText("Destination")).toHaveTextContent(
+        "To: Liverpool Street"
+      );
+
+      // Check for duration and status by aria-label
+      expect(screen.getByLabelText("Journey duration")).toHaveTextContent(
+        "Duration: 22 min"
+      );
+      expect(screen.getByLabelText("Journey status")).toHaveTextContent(
+        "Status: OK"
+      );
+
+      expect(screen.getByLabelText("Journey leg 1")).toHaveTextContent(
+        "Tube: Bakerloo line to Oxford Circus"
+      );
+      expect(screen.getByLabelText("Journey leg 2")).toHaveTextContent(
+        "Bus: 176 to Liverpool Street"
+      );
     });
   });
 });

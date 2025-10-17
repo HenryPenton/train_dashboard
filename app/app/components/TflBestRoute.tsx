@@ -54,17 +54,16 @@ export default function TflBestRoute(props: TflRouteProps) {
       >
         Best Route
       </h2>
-      <div className="text-white mb-1" role="region" aria-label="Origin">
+      <div className="text-white mb-1" aria-label="Origin">
         <span className="font-bold">From:</span> {props.from.placeName}
       </div>
-      <div className="text-white mb-1" role="region" aria-label="Destination">
+      <div className="text-white mb-1" aria-label="Destination">
         <span className="font-bold">To:</span> {props.to.placeName}
       </div>
       <div className="text-white mb-1">
         <span className="font-bold">Route:</span>
         <div className="ml-2 mt-1 flex flex-col gap-1">
           {data.route.map((stage, idx) => {
-            // Extract method (e.g., Tube, Elizabeth line) from the start of the string (allow hyphens and spaces)
             const match = stage.match(/^([\w\s-]+):\s*(.*)$/i);
             const method = match ? match[1] : null;
             const rest = match ? match[2] : stage;
@@ -86,10 +85,11 @@ export default function TflBestRoute(props: TflRouteProps) {
               <div
                 key={idx}
                 className="pl-2 border-l-2 border-cyan-300 flex items-baseline gap-2"
+                aria-label={`Journey leg ${idx + 1}`}
               >
                 {method && (
                   <span className={`text-lg font-bold ${color}`}>
-                    {method}:
+                    {method}:{" "}
                   </span>
                 )}
                 <span className="text-base">{rest}</span>
@@ -98,10 +98,10 @@ export default function TflBestRoute(props: TflRouteProps) {
           })}
         </div>
       </div>
-      <div className="text-white mb-1">
+      <div className="text-white mb-1" aria-label="Journey duration">
         <span className="font-bold">Duration:</span> {data.duration} min
       </div>
-      <div className="text-white mb-1">
+      <div className="text-white mb-1" aria-label="Journey status">
         <span className="font-bold">Status:</span> {data.status}
       </div>
     </div>
