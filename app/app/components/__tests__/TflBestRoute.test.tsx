@@ -33,13 +33,11 @@ describe("TflBestRoute", () => {
       />
     );
 
-    // Wait for the dummy data to be rendered
     await waitFor(() => {
       expect(
         screen.getByRole("heading", { name: /Best Route/ })
       ).toBeInTheDocument();
 
-      // Check for the 'From:' and 'To:' text content
       expect(screen.getByLabelText("Origin")).toHaveTextContent(
         "From: Paddington"
       );
@@ -47,7 +45,6 @@ describe("TflBestRoute", () => {
         "To: Liverpool Street"
       );
 
-      // Check for duration and status by aria-label
       expect(screen.getByLabelText("Journey duration")).toHaveTextContent(
         "Duration: 22 min"
       );

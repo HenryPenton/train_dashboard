@@ -62,41 +62,7 @@ export default function TflBestRoute(props: TflRouteProps) {
       </div>
       <div className="text-white mb-1">
         <span className="font-bold">Route:</span>
-        <div className="ml-2 mt-1 flex flex-col gap-1">
-          {data.route.map((stage, idx) => {
-            const match = stage.match(/^([\w\s-]+):\s*(.*)$/i);
-            const method = match ? match[1] : null;
-            const rest = match ? match[2] : stage;
-            let color = "text-cyan-300";
-            if (method) {
-              const lowercaseMethod = method.toLowerCase();
-              if (lowercaseMethod.includes("tube")) color = "text-yellow-300";
-              else if (lowercaseMethod.includes("elizabeth"))
-                color = "text-purple-400";
-              else if (lowercaseMethod.includes("bus")) color = "text-red-400";
-              else if (lowercaseMethod.includes("walk"))
-                color = "text-green-400";
-              else if (lowercaseMethod.includes("overground"))
-                color = "text-orange-400";
-              else if (lowercaseMethod.includes("train"))
-                color = "text-blue-400";
-            }
-            return (
-              <div
-                key={idx}
-                className="pl-2 border-l-2 border-cyan-300 flex items-baseline gap-2"
-                aria-label={`Journey leg ${idx + 1}`}
-              >
-                {method && (
-                  <span className={`text-lg font-bold ${color}`}>
-                    {method}:{" "}
-                  </span>
-                )}
-                <span className="text-base">{rest}</span>
-              </div>
-            );
-          })}
-        </div>
+        <div className="ml-2 mt-1 flex flex-col gap-1">{routeLegs(data)}</div>
       </div>
       <div className="text-white mb-1" aria-label="Journey duration">
         <span className="font-bold">Duration:</span> {data.duration} min
@@ -106,4 +72,50 @@ export default function TflBestRoute(props: TflRouteProps) {
       </div>
     </div>
   );
+}
+
+function routeLegs(data: BestRouteData) {
+  return data.route.map((stage, idx) => {
+    const match = stage.match(/^([\w\s-]+):\s*(.*)$/i);
+    const method = match ? match[1] : null;
+    const rest = match ? match[2] : stage;
+    let color = "text-cyan-300";
+    if (method) {
+      const lowercaseMethod = method.toLowerCase();
+      switch (lowercaseMethod) {
+        case "tube":
+          color = "text-yellow-300";
+          break;
+        case "elizabeth":
+          color = "text-purple-400";
+          break;
+        case "bus":
+          color = "text-red-400";
+          break;
+        case "walk":
+          color = "text-green-400";
+          break;
+        case "overground":
+          color = "text-orange-400";
+          break;
+        case "train":
+          color = "text-blue-400";
+          break;
+        default:
+          color = "text-cyan-300";
+      }
+    }
+    return (
+      <div
+        key={idx}
+        className="pl-2 border-l-2 border-cyan-300 flex items-baseline gap-2"
+        aria-label={`Journey leg ${idx + 1}`}
+      >
+        {method && (
+          <span className={`text-lg font-bold ${color}`}>{method}: </span>
+        )}
+        <span className="text-base">{rest}</span>
+      </div>
+    );
+  });
 }

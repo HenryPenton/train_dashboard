@@ -40,32 +40,36 @@ export default function TflLineStatus() {
           {tflError}
         </div>
       )}
-      {tflStatuses && (
-        <ul>
-          {tflStatuses.map((line, i) => {
-            let statusClass = "";
-            if (line.status === "Good Service")
-              statusClass = "text-[#4ade80] font-semibold";
-            else if (
-              line.status &&
-              line.status.toLowerCase().includes("minor delay")
-            )
-              statusClass = "text-[#fbbf24] font-semibold";
-            else if (line.status && line.status !== "Good Service")
-              statusClass = "text-[#f87171] font-semibold";
-            return (
-              <li
-                key={i}
-                className="mb-3 text-[1.08rem]"
-                style={{ letterSpacing: "0.01em" }}
-              >
-                <strong>{line.name}</strong>:{" "}
-                <span className={statusClass}>{line.status || "Unknown"}</span>
-              </li>
-            );
-          })}
-        </ul>
-      )}
+      {tflStatuses && renderTflLineStatusList(tflStatuses)}
     </section>
+  );
+}
+
+function renderTflLineStatusList(tflStatuses: TflLineStatusType[]) {
+  return (
+    <ul>
+      {tflStatuses.map((line, i) => {
+        let statusClass = "";
+        if (line.status === "Good Service")
+          statusClass = "text-[#4ade80] font-semibold";
+        else if (
+          line.status &&
+          line.status.toLowerCase().includes("minor delay")
+        )
+          statusClass = "text-[#fbbf24] font-semibold";
+        else if (line.status && line.status !== "Good Service")
+          statusClass = "text-[#f87171] font-semibold";
+        return (
+          <li
+            key={i}
+            className="mb-3 text-[1.08rem]"
+            style={{ letterSpacing: "0.01em" }}
+          >
+            <strong>{line.name}</strong>:{" "}
+            <span className={statusClass}>{line.status || "Unknown"}</span>
+          </li>
+        );
+      })}
+    </ul>
   );
 }

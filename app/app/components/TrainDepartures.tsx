@@ -79,30 +79,7 @@ export default function TrainDepartures(props: TrainDepartureProps) {
                   <strong>{dep.destination}</strong>
                   <br />
                   <span>
-                    Departs:{" "}
-                    {(() => {
-                      switch (dep.status) {
-                        case "Early":
-                          return (
-                            <span className="text-[#4ade80] font-semibold">
-                              {dep.actual}
-                            </span>
-                          );
-                        case "On time":
-                          return (
-                            <span className="text-[#4ade80] font-semibold">
-                              {dep.actual}
-                            </span>
-                          );
-                        case "Late":
-                          return (
-                            <span className="text-[#ff4d4f] font-semibold">
-                              {dep.actual}
-                            </span>
-                          );
-                      }
-                    })()}{" "}
-                    {" | Platform: "}
+                    Departs: {renderDepartureStatus(dep)} {" | Platform: "}
                     {dep.platform || "-"}
                     {typeof dep.delay === "number" && (
                       <>
@@ -127,4 +104,16 @@ export default function TrainDepartures(props: TrainDepartureProps) {
       )}
     </section>
   );
+}
+function renderDepartureStatus(dep: Departure) {
+  switch (dep.status) {
+    case "Early":
+      return <span className="text-[#4ade80] font-semibold">{dep.actual}</span>;
+    case "On time":
+      return <span className="text-[#4ade80] font-semibold">{dep.actual}</span>;
+    case "Late":
+      return <span className="text-[#ff4d4f] font-semibold">{dep.actual}</span>;
+    default:
+      return null;
+  }
 }
