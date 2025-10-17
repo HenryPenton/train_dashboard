@@ -1,11 +1,14 @@
 name: Build API Docker Image
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
 
 on:
   push:
     branches: [main]
     paths:
-      - 'api/**'
-      - '.github/workflows/build-api-docker.yml'
+      - "api/**"
+      - ".github/workflows/build-api-docker.yml"
   workflow_dispatch:
 
 jobs:
