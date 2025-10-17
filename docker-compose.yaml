@@ -5,6 +5,8 @@ services:
       context: ./app
     depends_on:
       - api
+    env_file:
+      - .env
     ports:
       - "3000:3000"
 
@@ -12,5 +14,7 @@ services:
     container_name: train_dashboard_api
     build:
       context: ./api
+    volumes:
+      - ./config.json:/app/config.json
     env_file:
-      - ./api/.env
+      - .env
