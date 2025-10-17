@@ -51,22 +51,14 @@ function renderTflLineStatusList(tflStatuses: TflLineStatusType[]) {
       {tflStatuses.map((line, i) => {
         let statusClass = "";
         const status = line.status ? line.status.toLowerCase() : "";
-        switch (status) {
-          case "suspend":
-          case "closure":
-          case "closed":
-            statusClass = "text-[#f87171] font-semibold"; // red
-            break;
-          case "minor delay":
-            statusClass = "text-[#fbbf24] font-semibold"; // orange
-            break;
-          case "good service":
-            statusClass = "text-[#4ade80] font-semibold"; // green
-            break;
-
-          default:
-            statusClass = "text-[#f87171] font-semibold"; // red for other negatives
-            statusClass = "";
+        if (status.includes("suspend") || status.includes("closure") || status.includes("closed")) {
+          statusClass = "text-[#f87171] font-semibold"; // red
+        } else if (status.includes("minor delay")) {
+          statusClass = "text-[#fbbf24] font-semibold"; // orange
+        } else if (line.status === "Good Service") {
+          statusClass = "text-[#4ade80] font-semibold"; // green
+        } else if (line.status && line.status !== "Good Service") {
+          statusClass = "text-[#f87171] font-semibold"; // red for other negatives
         }
         return (
           <li
@@ -74,7 +66,7 @@ function renderTflLineStatusList(tflStatuses: TflLineStatusType[]) {
             className="mb-3 text-[1.08rem]"
             style={{ letterSpacing: "0.01em" }}
           >
-            <strong>{line.name}</strong>:{" "}
+            <strong>{line.name}</strong>: {" "}
             <span className={statusClass}>{line.status || "Unknown"}</span>
           </li>
         );

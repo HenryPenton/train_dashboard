@@ -11,7 +11,7 @@ from src.handlers.config import router as config_router
 
 load_dotenv()
 origins = [os.getenv("APP_URL", "http://localhost:3000")]
-print("Allowed origins:", origins)
+
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,

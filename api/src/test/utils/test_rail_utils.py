@@ -18,7 +18,6 @@ class TestProcessDeparturesResponse:
     def test_missing_fields(self):
         response_json = {"services": [{}]}
         result = process_departures_response(response_json)
-        print(result)
         assert result == []
 
 
