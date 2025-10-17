@@ -21,6 +21,7 @@ jobs:
 
       - name: Generate cache keys
         id: cache_keys
+        working-directory: app
         run: |
           npm_dependencies_cache_key=CI-test-and-build-npm-dependencies-${{ hashFiles('pnpm-lock.yaml') }}
 
