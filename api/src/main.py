@@ -27,11 +27,6 @@ REALTIME_TRAINS_API_PASS = os.getenv("RTT_API_PASS", "your_password")
 app.include_router(config_router)
 
 
-@app.get("/")
-def read_root():
-    return {"message": "Hello, FastAPI!"}
-
-
 # Departures new handler
 @app.get("/rail/departures/{origin_station_code}/to/{destination_station_code}")
 async def get_departures(origin_station_code: str, destination_station_code):
