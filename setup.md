@@ -8,7 +8,7 @@ This file contains route and departure configuration for the train dashboard API
 
 ```json
 {
-  "best_routes": [
+  "tfl_best_routes": [
     {
       "origin": "<Origin Station Name>",
       "originNaptan": "<Origin Naptan Code>",
@@ -17,7 +17,7 @@ This file contains route and departure configuration for the train dashboard API
     }
     // ... more routes
   ],
-  "departures": [
+  "rail_departures": [
     {
       "origin": "<Origin Station Name>",
       "originCode": "<Origin Station Code>",
@@ -31,16 +31,16 @@ This file contains route and departure configuration for the train dashboard API
 
 ### Field Descriptions
 
-#### best_routes
+#### tfl_best_routes
 
 - `origin`: Name of the origin station
 - `originNaptan`: Naptan code for the origin station
 - `destination`: Name of the destination station
 - `destinationNaptan`: Naptan code for the destination station
 
-#### departures
+#### rail_departures
 
-Codes for stations can be either __CRS__ codes (eg PAD for London Paddington) or __TIPLOC__ codes (PADTON) - in the case of Paddington, the __CRS__ code would include Crossrail and GWR trains
+Codes for stations can be either __CRS__ codes (e.g. PAD for London Paddington) or __TIPLOC__ codes (PADTON) - in the case of Paddington, the __CRS__ code would include Crossrail and GWR trains
 
 - `origin`: Name of the origin station
 - `originCode`: Station code for the origin station
