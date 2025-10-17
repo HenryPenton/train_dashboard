@@ -4,18 +4,9 @@ A full-stack web application for live train and tube status, route planning, and
 
 ## Overview
 
-- **Frontend (app/):**
+**Frontend (app/):** Next.js, React, Tailwind CSS. Responsive dashboard UI for train departures, tube line status, and best route suggestions. Fetches live data from the FastAPI backend.
 
-  - Built with Next.js, React, and Tailwind CSS
-  - Responsive dashboard UI for train departures, tube line status, and best route suggestions
-  - Fetches live data from the FastAPI backend
-
-- **Backend (api/):**
-
-  - Built with FastAPI (Python)
-  - Modular endpoints for train departures, tube line status, best route
-  - Integrates with Real Time Trains and TFL APIs
-  - Returns simplified, frontend-friendly JSON responses
+**Backend (api/):** FastAPI (Python). Modular endpoints for train departures, tube line status, best route. Integrates with Real Time Trains and TFL APIs. Returns simplified, frontend-friendly JSON responses.
 
 ## Features
 
@@ -37,34 +28,96 @@ train_dashboard/
 ├── README.md    # Project documentation
 ```
 
-## Getting Started
+## Setup & Configuration
+
+### Docker Images
+
+Pre-built docker images for both the API and app are available at:
+
+- `henrypenton/train-dashboard-api`
+- `henrypenton/train-dashboard-app`
+
+### Configuration File (`api/config.json`)
+
+This file contains route and departure configuration for the train dashboard.
+
+**Example Structure:**
+
+```json
+{
+  "tfl_best_routes": [
+    {
+      "origin": "<Origin Station Name>",
+      "originNaptan": "<Origin Naptan Code>",
+      "destination": "<Destination Station Name>",
+      "destinationNaptan": "<Destination Naptan Code>"
+    }
+    // ... more routes
+  ],
+  "rail_departures": [
+    {
+      "origin": "<Origin Station Name>",
+      "originCode": "<Origin Station Code>",
+      "destination": "<Destination Station Name>",
+      "destinationCode": "<Destination Station Code>"
+    }
+    // ... more departures
+  ]
+}
+```
+
+**Field Descriptions:**
+
+_tfl_best_routes_
+
+- `origin`: Name of the origin station
+- `originNaptan`: Naptan code for the origin station
+- `destination`: Name of the destination station
+- `destinationNaptan`: Naptan code for the destination station
+
+_rail_departures_
+
+Codes for stations can be either **CRS** codes (e.g. PAD for London Paddington) or **TIPLOC** codes (PADTON). For Paddington, the **CRS** code includes Crossrail and GWR trains.
+
+- `origin`: Name of the origin station
+- `originCode`: Station code for the origin station
+- `destination`: Name of the destination station
+- `destinationCode`: Station code for the destination station
+
+### Real Time Trains API Credentials
+
+To use live train departures, obtain an API username and password from Real Time Trains (RTT): https://www.realtimetrains.co.uk/about/developer
+Add your credentials to `.env` as `RTT_API_USER` and `RTT_API_PASS`. See `.env.template` for an example.
+
+### Config File Use
+
+Mount the config file as a volume, as shown in the example `docker-compose.yaml`.
+
+## Development - Getting Started
 
 1. **Clone the repository:**
 
-   ```sh
-   git clone https://github.com/HenryPenton/train_dashboard.git
-   cd train_dashboard
-   ```
+```sh
+git clone https://github.com/HenryPenton/train_dashboard.git
+cd train_dashboard
+```
 
-2. **Run with Docker Compose:**
+2. **Manual Development:**
 
-   ```sh
-   docker-compose up --build
-   ```
+- Frontend: `cd app && pnpm install && pnpm dev`
+- Backend:
 
-   - Frontend: http://localhost:3000
-   - Backend: http://localhost:8000
+```sh
+cd api
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+fastapi dev src/main.py
+```
 
-3. **Manual Development:**
-   - Frontend: `cd app && pnpm install && pnpm dev`
-   - Backend:
-     ```sh
-     cd api
-     python3 -m venv venv
-     source venv/bin/activate
-     pip install -r requirements.txt
-     fastapi dev src/main.py
-     ```
+3. **Usage:**
+- Frontend: http://localhost:3000
+- Backend: http://localhost:8000
 
 ## API Endpoints
 
