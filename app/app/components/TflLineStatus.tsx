@@ -50,15 +50,24 @@ function renderTflLineStatusList(tflStatuses: TflLineStatusType[]) {
     <ul>
       {tflStatuses.map((line, i) => {
         let statusClass = "";
-        if (line.status === "Good Service")
-          statusClass = "text-[#4ade80] font-semibold";
-        else if (
-          line.status &&
-          line.status.toLowerCase().includes("minor delay")
-        )
-          statusClass = "text-[#fbbf24] font-semibold";
-        else if (line.status && line.status !== "Good Service")
-          statusClass = "text-[#f87171] font-semibold";
+        const status = line.status ? line.status.toLowerCase() : "";
+        switch (status) {
+          case "suspend":
+          case "closure":
+          case "closed":
+            statusClass = "text-[#f87171] font-semibold"; // red
+            break;
+          case "minor delay":
+            statusClass = "text-[#fbbf24] font-semibold"; // orange
+            break;
+          case "good service":
+            statusClass = "text-[#4ade80] font-semibold"; // green
+            break;
+
+          default:
+            statusClass = "text-[#f87171] font-semibold"; // red for other negatives
+            statusClass = "";
+        }
         return (
           <li
             key={i}
