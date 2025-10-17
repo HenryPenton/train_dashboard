@@ -5,11 +5,13 @@ A full-stack web application for live train and tube status, route planning, and
 ## Overview
 
 - **Frontend (app/):**
+
   - Built with Next.js, React, and Tailwind CSS
   - Responsive dashboard UI for train departures, tube line status, and best route suggestions
   - Fetches live data from the FastAPI backend
 
 - **Backend (api/):**
+
   - Built with FastAPI (Python)
   - Modular endpoints for train departures, tube line status, best route
   - Integrates with Real Time Trains and TFL APIs
@@ -38,26 +40,35 @@ train_dashboard/
 ## Getting Started
 
 1. **Clone the repository:**
+
    ```sh
    git clone https://github.com/HenryPenton/train_dashboard.git
    cd train_dashboard
    ```
 
 2. **Run with Docker Compose:**
+
    ```sh
    docker-compose up --build
    ```
+
    - Frontend: http://localhost:3000
    - Backend: http://localhost:8000
 
 3. **Manual Development:**
    - Frontend: `cd app && pnpm install && pnpm dev`
-   - Backend: `cd api && pip install -r requirements.txt && uvicorn main:app`
+   - Backend:
+     ```sh
+     cd api
+     python3 -m venv venv
+     source venv/bin/activate
+     pip install -r requirements.txt
+     fastapi dev src/main.py
+     ```
 
 ## API Endpoints
 
-- `/departures/{station_code}`: Get train departures
-- `/departures/{station_code}/{destination_tiploc}`: Get filtered departures
+- `/rail/departures/{origin_station_code}/to/{destination_station_code}`: Get train departures between two stations
 - `/tfl/line-status`: Get tube line status
 - `/tfl/best-route/{from_station}/{to_station}`: Get best route
 - `/config`: Get config JSON
