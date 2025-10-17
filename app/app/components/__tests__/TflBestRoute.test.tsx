@@ -37,8 +37,13 @@ describe("TflBestRoute", () => {
     await waitFor(() => {
       expect(screen.getByText(/Best Route/)).toBeInTheDocument();
 
-      expect(screen.getByText(/From:/)).toBeInTheDocument();
-      expect(screen.getByText(/To:/)).toBeInTheDocument();
+      // Check for the 'From:' region with aria-label and origin
+      const fromRegion = screen.getByRole("region", { name: /Origin/i });
+      expect(fromRegion).toHaveTextContent("From: Paddington");
+
+      // Check for the 'To:' region with aria-label and destination
+      const toRegion = screen.getByRole("region", { name: /Destination/i });
+      expect(toRegion).toHaveTextContent("To: Liverpool Street");
 
       expect(screen.getByText(/Paddington/)).toBeInTheDocument();
       expect(screen.getAllByText(/Liverpool Street/)).toHaveLength(2);

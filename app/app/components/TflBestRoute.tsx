@@ -48,10 +48,10 @@ export default function TflBestRoute(props: TflRouteProps) {
   return (
     <div className="bg-[#23272f] rounded-lg p-6 shadow-lg">
       <h2 className="text-xl font-semibold text-white mb-2">Best Route</h2>
-      <div className="text-white mb-1">
+      <div className="text-white mb-1" role="region" aria-label="Origin">
         <span className="font-bold">From:</span> {props.from.placeName}
       </div>
-      <div className="text-white mb-1">
+      <div className="text-white mb-1" role="region" aria-label="Destination">
         <span className="font-bold">To:</span> {props.to.placeName}
       </div>
       <div className="text-white mb-1">
