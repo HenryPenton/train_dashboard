@@ -54,7 +54,14 @@ Codes for stations can be either __CRS__ codes (e.g. PAD for London Paddington) 
 - `destination`: Name of the destination station
 - `destinationCode`: Station code for the destination station
 
-Add as many route and departure objects as needed for your application. Ensure all codes and names are valid and correspond to real stations.
+
+## Real Time Trains API Credentials
+
+To use the live train departures feature, you must obtain an API username and password from the Real Time Trains (RTT) API. Register for an account and request API access at: https://www.realtimetrains.co.uk/about/developer
+
+Add your credentials to the `.env` file as `RTT_API_USER` and `RTT_API_PASS`.
+
+
 
 # Config file use
 The config file should be mounted as a volume as shown in the example docker compose file
