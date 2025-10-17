@@ -1,5 +1,12 @@
 # Project Setup Guide
 
+## Docker images
+
+Pre-built docker images for both the api and app are available at:
+henrypenton/train-dashboard-api
+henrypenton/train-dashboard-app
+
+
 ## Configuration File (`api/config.json`)
 
 This file contains route and departure configuration for the train dashboard API. You must provide valid station names and codes for your use case. Do not use the example values below in production—replace them with your own data.
@@ -48,3 +55,6 @@ Codes for stations can be either __CRS__ codes (e.g. PAD for London Paddington) 
 - `destinationCode`: Station code for the destination station
 
 Add as many route and departure objects as needed for your application. Ensure all codes and names are valid and correspond to real stations.
+
+# Config file use
+The config file should be mounted as a volume as shown in the example docker compose file

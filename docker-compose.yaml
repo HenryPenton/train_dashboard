@@ -3,6 +3,7 @@ services:
     container_name: train_dashboard_app
     build:
       context: ./app
+      dockerfile: Dockerfile
     depends_on:
       - api
     env_file:
@@ -14,7 +15,10 @@ services:
     container_name: train_dashboard_api
     build:
       context: ./api
+      dockerfile: Dockerfile
     volumes:
       - ./config.json:/app/config.json
     env_file:
       - .env
+    ports:
+      - "8000:8000"
