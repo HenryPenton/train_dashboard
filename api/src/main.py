@@ -1,10 +1,12 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from src.handlers.tfl_line_status import get_tfl_line_status_handler
+from src.handlers.tfl_handlers import (
+    get_tfl_line_status_handler,
+    get_best_route_handler,
+)
 from src.handlers.departures import get_departures_handler
 import os
 from dotenv import load_dotenv
-from src.handlers.best_route import get_best_route_handler
 from src.handlers.config import router as config_router
 
 load_dotenv()
