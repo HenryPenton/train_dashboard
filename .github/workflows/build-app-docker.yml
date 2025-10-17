@@ -12,9 +12,50 @@ on:
   workflow_dispatch:
 
 jobs:
+  test-app:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Generate cache keys
+        id: cache_keys
+        run: |
+          npm_dependencies_cache_key=CI-test-and-build-npm-dependencies-${{ hashFiles('pnpm-lock.yaml') }}
+
+      - name: Restore cached npm dependencies
+        id: cache_dependencies
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            **/node_modules
+          key: ${{ env.npm_dependencies_cache_key }}
+
+      - name: install dependencies
+        if: steps.cache_dependencies.outputs.cache-hit != 'true'
+        run: pnpm install --frozen-lockfile
+
+      - name: Cache npm dependencies
+        if: steps.cache_dependencies.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            **/node_modules
+          key: ${{ env.npm_dependencies_cache_key }}
+
+      - run: |
+          pnpm test
+
+      - name: Run unit tests
+        run: |
+          cd app
+          pnpm test
+
   build-app-image:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    needs: test-app
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
