@@ -23,7 +23,7 @@ jobs:
         id: cache_keys
         working-directory: app
         run: |
-          npm_dependencies_cache_key=CI-test-and-build-npm-dependencies-${{ hashFiles('app/pnpm-lock.yaml') }}
+          echo "npm_dependencies_cache_key=CI-test-and-build-npm-dependencies-$(sha256sum pnpm-lock.yaml | cut -d' ' -f1)" >> $GITHUB_OUTPUT
 
       - name: Restore cached npm dependencies
         id: cache_dependencies
@@ -31,7 +31,7 @@ jobs:
         with:
           path: |
             **/node_modules
-          key: ${{ env.npm_dependencies_cache_key }}
+          key: ${{ steps.cache_keys.outputs.npm_dependencies_cache_key }}
 
       - name: install dependencies
         if: steps.cache_dependencies.outputs.cache-hit != 'true'
@@ -43,7 +43,7 @@ jobs:
         with:
           path: |
             **/node_modules
-          key: ${{ env.npm_dependencies_cache_key }}
+          key: ${{ steps.cache_keys.outputs.npm_dependencies_cache_key }}
 
       - run: |
           pnpm test
