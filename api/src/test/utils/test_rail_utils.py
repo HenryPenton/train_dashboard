@@ -1,13 +1,13 @@
 from src.utils.rail_utils import (
     get_actual,
-    get_status,
-    process_departures_response,
-    get_origin,
     get_destination,
-    get_scheduled,
+    get_origin,
     get_platform,
     get_real,
+    get_scheduled,
+    get_status,
     parse_time,
+    process_departures_response,
 )
 
 

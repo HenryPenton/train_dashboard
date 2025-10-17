@@ -1,5 +1,5 @@
 from fastapi import HTTPException
-from src.clients.tflclient import TFLClient
+from src.hex.adapters.clients.tflclient import TFLClient
 from src.utils.tfl_utils import summarise_best_route, simplify_tfl_line_status
 import httpx
 
