@@ -13,7 +13,7 @@ export async function GET(
   }
   try {
     const res = await fetch(
-      `${process.env.SERVER_URL}/departures/${from}/to/${to}`
+      `${process.env.SERVER_URL}/rail/departures/${from}/to/${to}`
     );
     if (!res.ok) {
       return NextResponse.json(

@@ -33,7 +33,7 @@ def read_root():
 
 
 # Departures new handler
-@app.get("/departures/{origin_station_code}/to/{destination_station_code}")
+@app.get("/rail/departures/{origin_station_code}/to/{destination_station_code}")
 async def get_departures(origin_station_code: str, destination_station_code):
     return await get_departures_handler(origin_station_code, destination_station_code)
 

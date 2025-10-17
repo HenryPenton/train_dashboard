@@ -8,16 +8,12 @@ A full-stack web application for live train and tube status, route planning, and
   - Built with Next.js, React, and Tailwind CSS
   - Responsive dashboard UI for train departures, tube line status, and best route suggestions
   - Fetches live data from the FastAPI backend
-  - Includes custom components for departures, line status, best route, and last refreshed time
-  - Dockerized for production deployment
 
 - **Backend (api/):**
   - Built with FastAPI (Python)
   - Modular endpoints for train departures, tube line status, best route
   - Integrates with Real Time Trains and TFL APIs
   - Returns simplified, frontend-friendly JSON responses
-  - Dockerized for production deployment
-  - Includes CORS configuration for secure frontend-backend communication
 
 ## Features
 
