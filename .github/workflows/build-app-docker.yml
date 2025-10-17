@@ -55,13 +55,9 @@ jobs:
             **/node_modules
           key: ${{ env.npm_dependencies_cache_key }}
 
-      - run: |
-          pnpm test
-
       - name: Run unit tests
-        run: |
-          cd app
-          pnpm test
+        working-directory: app
+        run: pnpm test
 
   build-app-image:
     runs-on: ubuntu-latest
