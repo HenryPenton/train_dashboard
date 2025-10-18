@@ -1,4 +1,4 @@
-from src.domain.tfl.best_route import BestRoute
+from src.domain.tfl.routes import BestRoute
 
 
 class TestBestRoute:

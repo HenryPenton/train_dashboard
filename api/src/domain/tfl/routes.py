@@ -19,3 +19,14 @@ class BestRoute:
             "arrival": self.arrival,
             "legs": self.legs,
         }
+
+
+class AllRoutes:
+    def __init__(self, journeys: list[dict]):
+        self.journeys = journeys
+
+    def get_best(self) -> dict:
+        if not self.journeys:
+            return {"error": "No journeys found"}
+        best = self.journeys[0]
+        return BestRoute(best).as_dict()

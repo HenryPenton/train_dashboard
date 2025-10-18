@@ -1,4 +1,4 @@
-from src.domain.rail.departures.rail_departures import (
+from src.domain.rail.departures.rail import (
     RailDeparture,
 )
 
