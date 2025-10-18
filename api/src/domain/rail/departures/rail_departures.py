@@ -3,7 +3,7 @@ from src.shared.utils.check_group_of_properties_exist import (
 )
 
 
-class Departure:
+class RailDeparture:
     def __init__(self, location_detail: dict):
         self.origin = self._get_origin(location_detail)
         self.destination = self._get_destination(location_detail)
@@ -103,20 +103,20 @@ class Departure:
         }
 
 
-class Departures:
+class RailDepartures:
     def __init__(self, all_services: dict):
         self.departures = self._extract_departures(all_services)
 
     @staticmethod
-    def _extract_departures(all_services: dict) -> list[Departure]:
+    def _extract_departures(all_services: dict) -> list[RailDeparture]:
         services = all_services.get("services", [])
         departures = []
         for dep in services:
             loc = dep.get("locationDetail", {})
-            departure = Departure(loc)
+            departure = RailDeparture(loc)
             if departure.is_valid():
                 departures.append(departure)
         return departures
 
-    def get_departures(self) -> list[Departure]:
+    def get_departures(self) -> list[RailDeparture]:
         return self.departures

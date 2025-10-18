@@ -1,5 +1,5 @@
-from src.domain.rail.departures.Departures import (
-    Departure,
+from src.domain.rail.departures.rail_departures import (
+    RailDeparture,
 )
 
 
@@ -12,7 +12,7 @@ class TestDeparture:
             "platform": "5",
             "realtimeDeparture": "0935",
         }
-        dep = Departure(loc)
+        dep = RailDeparture(loc)
         expected = {
             "origin": "Reading",
             "destination": "London Paddington",
@@ -31,7 +31,7 @@ class TestDeparture:
             "platform": "5",
             "realtimeDeparture": "0935",
         }
-        dep = Departure(loc)
+        dep = RailDeparture(loc)
         expected = {
             "origin": "Reading, Oxford",
             "destination": "London Paddington",
@@ -53,7 +53,7 @@ class TestDeparture:
             "platform": "5",
             "realtimeDeparture": "0935",
         }
-        dep = Departure(loc)
+        dep = RailDeparture(loc)
         expected = {
             "origin": "Reading",
             "destination": "London Paddington, Birmingham",
@@ -72,7 +72,7 @@ class TestDeparture:
             "platform": "5",
             "realtimeDeparture": "0929",
         }
-        dep = Departure(loc)
+        dep = RailDeparture(loc)
         expected = {
             "origin": "Reading",
             "destination": "London Paddington",
@@ -91,7 +91,7 @@ class TestDeparture:
             "platform": "5",
             "realtimeDeparture": "0930",
         }
-        dep = Departure(loc)
+        dep = RailDeparture(loc)
         expected = {
             "origin": "Reading",
             "destination": "London Paddington",
@@ -110,7 +110,7 @@ class TestDeparture:
             "platform": None,
             "realtimeDeparture": None,
         }
-        dep = Departure(loc)
+        dep = RailDeparture(loc)
         expected = {
             "origin": None,
             "destination": None,
@@ -130,7 +130,7 @@ class TestDeparture:
             "platform": None,
             "realtimeDeparture": None,
         }
-        dep = Departure(loc)
+        dep = RailDeparture(loc)
         expected = {
             "origin": None,
             "destination": None,
