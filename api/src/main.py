@@ -4,12 +4,12 @@ from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from src.handlers.config import router as config_router
-from src.hex.adapters.handlers.tfl_handlers import (
+from src.adapters.handlers.config import router as config_router
+from src.adapters.handlers.tfl_handlers import (
     get_best_route_handler,
     get_tfl_line_status_handler,
 )
-from src.hex.adapters.handlers.rail_handlers import get_departures_handler
+from src.adapters.handlers.rail_handlers import get_departures_handler
 
 load_dotenv()
 origins = [os.getenv("APP_URL", "http://localhost:3000")]

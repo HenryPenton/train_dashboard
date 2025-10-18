@@ -1,5 +1,5 @@
-from src.hex.adapters.clients.rttclient import RTTClient
-from src.hex.domain.rail_utils import process_departures_response
+from src.adapters.clients.rttclient import RTTClient
+from src.domain.rail_utils import process_departures_response
 
 
 class RailService:

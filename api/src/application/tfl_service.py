@@ -1,5 +1,5 @@
-from src.hex.adapters.clients.tflclient import TFLClient
-from src.hex.domain.tfl_utils import summarise_best_route, simplify_tfl_line_status
+from src.adapters.clients.tflclient import TFLClient
+from src.domain.tfl_utils import summarise_best_route, simplify_tfl_line_status
 
 
 class TFLService:

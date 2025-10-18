@@ -1,20 +1,16 @@
-import json
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
-from pathlib import Path
+from src.application.config_service import ConfigService
 
 router = APIRouter()
-
-CONFIG_PATH = Path(__file__).parent.parent.parent / "config.json"
 
 
 @router.get("/config")
 def get_config():
-    if not CONFIG_PATH.exists():
-        raise HTTPException(status_code=404, detail="Config file not found")
     try:
-        with open(CONFIG_PATH, "r") as f:
-            config_data = json.load(f)
+        config_data = ConfigService.get_config()
         return JSONResponse(content=config_data)
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="Config file not found")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

@@ -1,5 +1,6 @@
 import unittest
-from src.utils.check_group_of_properties_exist import check_group_of_properties_exist
+
+from src.shared.utils.check_group_of_properties_exist import check_group_of_properties_exist
 
 
 class TestCheckGroupOfPropertiesExist(unittest.TestCase):

@@ -1,4 +1,4 @@
-from src.utils.check_group_of_properties_exist import check_group_of_properties_exist
+from src.shared.utils.check_group_of_properties_exist import check_group_of_properties_exist
 
 
 def get_origin(loc):

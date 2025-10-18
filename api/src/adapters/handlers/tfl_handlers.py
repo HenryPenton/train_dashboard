@@ -1,8 +1,8 @@
 import httpx
 from fastapi import HTTPException
 
-from src.hex.adapters.clients.tflclient import TFLClient
-from src.hex.application.tfl_service import TFLService
+from src.adapters.clients.tflclient import TFLClient
+from src.application.tfl_service import TFLService
 
 tfl_client: TFLClient = TFLClient(httpx.AsyncClient())
 tfl_service = TFLService(tfl_client)

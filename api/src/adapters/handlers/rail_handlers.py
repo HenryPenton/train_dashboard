@@ -1,8 +1,8 @@
 import httpx
 from fastapi import HTTPException
 
-from src.hex.adapters.clients.rttclient import RTTClient
-from src.hex.application.rail_service import RailService
+from src.adapters.clients.rttclient import RTTClient
+from src.application.rail_service import RailService
 
 rtt_client: RTTClient = RTTClient(httpx.AsyncClient())
 rail_service = RailService(rtt_client)
