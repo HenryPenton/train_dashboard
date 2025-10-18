@@ -47,7 +47,7 @@ jobs:
 
       - name: ls
         run: |
-          ls -la
+          ls -la ~/
 
       # - name: Cache python dependencies
       #   if: steps.cache_dependencies.outputs.cache-hit != 'true'
