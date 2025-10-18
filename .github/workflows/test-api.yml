@@ -36,6 +36,7 @@ jobs:
         with:
           path: |
             ~/.cache/pip
+            ~/api/.pytest_cache
           key: ${{ env.python_dependencies_cache_key }}
 
       - name: Install dependencies
@@ -50,6 +51,7 @@ jobs:
         with:
           path: |
             ~/.cache/pip
+            ~/api/.pytest_cache
           key: ${{ env.python_dependencies_cache_key }}
 
       - name: Run tests
