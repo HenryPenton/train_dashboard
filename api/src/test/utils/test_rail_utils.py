@@ -1,4 +1,4 @@
-from src.utils.rail_utils import (
+from src.hex.domain.rail_utils import (
     get_actual,
     get_destination,
     get_origin,

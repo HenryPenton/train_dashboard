@@ -1,9 +1,11 @@
 import httpx
 from fastapi import HTTPException
-from src.utils.rail_utils import process_departures_response
+
 from src.hex.adapters.clients.rttclient import RTTClient
+from src.hex.application.rail_service import RailService
 
 rtt_client: RTTClient = RTTClient(httpx.AsyncClient())
+rail_service = RailService(rtt_client)
 
 
 async def get_departures_handler(
@@ -14,11 +16,9 @@ async def get_departures_handler(
     """
 
     try:
-        data = await rtt_client.get_departures(
+        return await rail_service.get_departures(
             origin_station_code, destination_station_code
         )
-        processed = process_departures_response(data)
-        return processed
     except HTTPException as e:
         raise e
     except Exception as e:

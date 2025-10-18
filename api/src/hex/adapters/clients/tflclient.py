@@ -1,6 +1,7 @@
 import httpx
 from fastapi import HTTPException
 
+
 class TFLClient:
     def __init__(self, client: httpx.AsyncClient):
         """
@@ -25,7 +26,6 @@ class TFLClient:
             raise HTTPException(status_code=e.response.status_code, detail=str(e))
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
-
 
     async def get_all_lines_status(self):
         """

@@ -1,4 +1,4 @@
-from src.utils.tfl_utils import simplify_tfl_line_status, summarise_best_route
+from src.hex.domain.tfl_utils import simplify_tfl_line_status, summarise_best_route
 
 
 class TestSimplifyTflLineStatus:
