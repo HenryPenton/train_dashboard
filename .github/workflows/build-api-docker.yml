@@ -4,11 +4,6 @@ concurrency:
   cancel-in-progress: false
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - "api/**"
-      - ".github/workflows/build-api-docker.yml"
   workflow_dispatch:
 
 jobs:
