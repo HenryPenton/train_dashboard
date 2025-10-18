@@ -32,11 +32,30 @@ export default function TflLineStatus() {
   }, []);
 
   return (
-    <section className="bg-[#23262f] rounded-[12px] p-6 text-[#f1f1f1] shadow-[0_2px_12px_0_rgba(0,0,0,0.25)]">
-      <h2 className="text-xl font-semibold text-white mb-2">TFL Line Status</h2>
-      {tflLoading && <div>Loading TFL line statuses...</div>}
+    <section
+      className="bg-[#23262f] rounded-[12px] p-6 text-[#f1f1f1] shadow-[0_2px_12px_0_rgba(0,0,0,0.25)]"
+      aria-label="TFL Line Status Section"
+      role="region"
+    >
+      <h2
+        className="text-xl font-semibold text-white mb-2"
+        role="heading"
+        aria-level={2}
+        aria-label="TFL Line Status Heading"
+      >
+        TFL Line Status
+      </h2>
+      {tflLoading && (
+        <div role="status" aria-label="Loading TFL line statuses">
+          Loading TFL line statuses...
+        </div>
+      )}
       {tflError && (
-        <div className="text-[#ff4d4f] bg-[#2a1a1a] p-2 rounded mb-2">
+        <div
+          className="text-[#ff4d4f] bg-[#2a1a1a] p-2 rounded mb-2"
+          role="alert"
+          aria-label="TFL line status error"
+        >
           {tflError}
         </div>
       )}
@@ -47,11 +66,15 @@ export default function TflLineStatus() {
 
 function renderTflLineStatusList(tflStatuses: TflLineStatusType[]) {
   return (
-    <ul>
+    <ul role="list">
       {tflStatuses.map((line, i) => {
         let statusClass = "";
         const status = line.status ? line.status.toLowerCase() : "";
-        if (status.includes("suspend") || status.includes("closure") || status.includes("closed")) {
+        if (
+          status.includes("suspend") ||
+          status.includes("closure") ||
+          status.includes("closed")
+        ) {
           statusClass = "text-[#f87171] font-semibold"; // red
         } else if (status.includes("minor delay")) {
           statusClass = "text-[#fbbf24] font-semibold"; // orange
@@ -65,9 +88,16 @@ function renderTflLineStatusList(tflStatuses: TflLineStatusType[]) {
             key={i}
             className="mb-3 text-[1.08rem]"
             style={{ letterSpacing: "0.01em" }}
+            role="listitem"
+            aria-label={`Line ${line.name}`}
           >
-            <strong>{line.name}</strong>: {" "}
-            <span className={statusClass}>{line.status || "Unknown"}</span>
+            <strong aria-label={`Line name ${line.name}`}>{line.name}</strong>:{" "}
+            <span
+              className={statusClass}
+              aria-label={`Line status ${line.status || "Unknown"}`}
+            >
+              {line.status || "Unknown"}
+            </span>
           </li>
         );
       })}
