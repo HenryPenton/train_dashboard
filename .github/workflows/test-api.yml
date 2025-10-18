@@ -45,19 +45,15 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: ls
+      - name: Cache python dependencies
+        if: steps.cache_dependencies.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ~/.cache/pip
+          key: ${{ env.python_dependencies_cache_key }}
+
+      - name: Run tests
+        working-directory: api
         run: |
-          ls -la ~/
-
-      # - name: Cache python dependencies
-      #   if: steps.cache_dependencies.outputs.cache-hit != 'true'
-      #   uses: actions/cache/save@v4
-      #   with:
-      #     path: |
-      #       ~/.cache/pip
-      #     key: ${{ env.python_dependencies_cache_key }}
-
-      # - name: Run tests
-      #   working-directory: api
-      #   run: |
-      #     pytest
+          pytest
