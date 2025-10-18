@@ -13,7 +13,7 @@ class BestRoute:
             for leg in best.get("legs", [])
         ]
 
-    def as_dict(self):
+    def as_dict(self) -> dict:
         return {
             "duration": self.duration,
             "arrival": self.arrival,
