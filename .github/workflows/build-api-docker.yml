@@ -7,28 +7,51 @@ on:
   workflow_dispatch:
 
 jobs:
-  test-api:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+  runs-on: ubuntu-latest
+  timeout-minutes: 10
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
 
-      - name: Install dependencies
-        working-directory: api
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+    - name: Generate cache keys
+      id: cache_keys
+      working-directory: api
+      run: |
+        echo "python_dependencies_cache_key=CI-test-and-python-dependencies-$(sha256sum requirements.txt | cut -d' ' -f1)" >> $GITHUB_ENV
 
-      - name: Run tests
-        working-directory: api
-        run: |
-          pytest
+    - name: Restore cached python dependencies
+      id: cache_dependencies
+      uses: actions/cache/restore@v4
+      with:
+        path: |
+          ~/.cache/pip
+          ~/api/.pytest_cache
+        key: ${{ env.python_dependencies_cache_key }}
+
+    - name: Install dependencies
+      working-directory: api
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Run tests
+      working-directory: api
+      run: |
+        pytest
+
+    - name: Cache python dependencies
+      if: steps.cache_dependencies.outputs.cache-hit != 'true'
+      uses: actions/cache/save@v4
+      with:
+        path: |
+          ~/.cache/pip
+          ~/api/.pytest_cache
+        key: ${{ env.python_dependencies_cache_key }}
 
   build-api-image:
     runs-on: ubuntu-latest
