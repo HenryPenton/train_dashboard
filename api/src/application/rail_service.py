@@ -1,5 +1,5 @@
 from src.adapters.clients.rttclient import RTTClient
-from api.src.domain.rail.departures.rail_departures import RailDepartures
+from src.domain.rail.departures.rail_departures import RailDepartures
 
 
 class RailService:

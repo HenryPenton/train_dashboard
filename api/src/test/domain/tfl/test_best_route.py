@@ -1,60 +1,7 @@
-from src.domain.tfl_utils import simplify_tfl_line_status, summarise_best_route
+from src.domain.tfl.best_route import BestRoute
 
 
-class TestSimplifyTflLineStatus:
-    def test_one_status(self):
-        response_json = [
-            {
-                "name": "Victoria",
-                "lineStatuses": [{"statusSeverityDescription": "Good Service"}],
-            },
-        ]
-        result = simplify_tfl_line_status(response_json)
-        assert result == [
-            {"name": "Victoria", "status": "Good Service"},
-        ]
-
-    def test_two_statuses(self):
-        response_json = [
-            {
-                "name": "Northern",
-                "lineStatuses": [
-                    {"statusSeverityDescription": "Minor Delays"},
-                    {"statusSeverityDescription": "Part Suspended"},
-                ],
-            },
-        ]
-        result = simplify_tfl_line_status(response_json)
-        assert result == [
-            {"name": "Northern", "status": "Minor Delays, Part Suspended"},
-        ]
-
-    def test_two_same_statuses(self):
-        response_json = [
-            {
-                "name": "Mildmay",
-                "lineStatuses": [
-                    {"statusSeverityDescription": "Part Closure"},
-                    {"statusSeverityDescription": "Part Closure"},
-                    {"statusSeverityDescription": "Good Service"},
-                ],
-            },
-        ]
-        result = simplify_tfl_line_status(response_json)
-        assert result == [
-            {"name": "Mildmay", "status": "Part Closure x2, Good Service"},
-        ]
-
-    def test_empty(self):
-        assert simplify_tfl_line_status([]) == []
-
-    def test_missing_fields_omitted(self):
-        response_json = [{}, {"name": "Piccadilly"}]
-        result = simplify_tfl_line_status(response_json)
-        assert result == []
-
-
-class TestSummariseBestRoute:
+class TestBestRoute:
     def test_basic_journey(self):
         best = {
             "duration": 45,
@@ -69,7 +16,7 @@ class TestSummariseBestRoute:
                 }
             ],
         }
-        result = summarise_best_route(best)
+        result = BestRoute(best).as_dict()
         assert result == {
             "duration": 45,
             "arrival": "2025-10-17T09:45:00",
@@ -105,7 +52,7 @@ class TestSummariseBestRoute:
                 },
             ],
         }
-        result = summarise_best_route(best)
+        result = BestRoute(best).as_dict()
         assert result == {
             "duration": 60,
             "arrival": "2025-10-17T10:00:00",
@@ -141,7 +88,7 @@ class TestSummariseBestRoute:
                 }
             ],
         }
-        result = summarise_best_route(best)
+        result = BestRoute(best).as_dict()
         assert result == {
             "duration": None,
             "arrival": None,
@@ -177,7 +124,7 @@ class TestSummariseBestRoute:
                 },
             ],
         }
-        result = summarise_best_route(best)
+        result = BestRoute(best).as_dict()
         assert result == {
             "duration": 30,
             "arrival": "2025-10-17T08:30:00",
