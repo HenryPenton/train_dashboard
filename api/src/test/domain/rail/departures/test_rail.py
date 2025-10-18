@@ -21,7 +21,7 @@ class TestDeparture:
             "status": "Late",
             "actual": "0935",
         }
-        assert dep.as_dict() == expected
+        assert dep.get_rail_departure() == expected
 
     def test_full_departure_multi_origin(self):
         loc = {
@@ -40,7 +40,7 @@ class TestDeparture:
             "status": "Late",
             "actual": "0935",
         }
-        assert dep.as_dict() == expected
+        assert dep.get_rail_departure() == expected
 
     def test_full_departure_multi_destination(self):
         loc = {
@@ -62,7 +62,7 @@ class TestDeparture:
             "status": "Late",
             "actual": "0935",
         }
-        assert dep.as_dict() == expected
+        assert dep.get_rail_departure() == expected
 
     def test_full_departure_early(self):
         loc = {
@@ -81,7 +81,7 @@ class TestDeparture:
             "status": "Early",
             "actual": "0929",
         }
-        assert dep.as_dict() == expected
+        assert dep.get_rail_departure() == expected
 
     def test_full_departure_on_time(self):
         loc = {
@@ -100,7 +100,7 @@ class TestDeparture:
             "status": "On time",
             "actual": "0930",
         }
-        assert dep.as_dict() == expected
+        assert dep.get_rail_departure() == expected
 
     def test_as_departure_missing_fields(self):
         loc = {
@@ -119,7 +119,7 @@ class TestDeparture:
             "status": None,
             "actual": None,
         }
-        assert dep.as_dict() == expected
+        assert dep.get_rail_departure() == expected
         assert not dep.is_valid()
 
     def test_non_standard_time_format(self):
@@ -139,5 +139,5 @@ class TestDeparture:
             "status": None,
             "actual": None,
         }
-        assert dep.as_dict() == expected
+        assert dep.get_rail_departure() == expected
         assert not dep.is_valid()

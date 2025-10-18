@@ -16,7 +16,7 @@ class TestBestRoute:
                 }
             ],
         }
-        result = BestRoute(best).as_dict()
+        result = BestRoute(best).get_best_route_summary()
         assert result == {
             "duration": 45,
             "arrival": "2025-10-17T09:45:00",
@@ -52,7 +52,7 @@ class TestBestRoute:
                 },
             ],
         }
-        result = BestRoute(best).as_dict()
+        result = BestRoute(best).get_best_route_summary()
         assert result == {
             "duration": 60,
             "arrival": "2025-10-17T10:00:00",
@@ -88,7 +88,7 @@ class TestBestRoute:
                 }
             ],
         }
-        result = BestRoute(best).as_dict()
+        result = BestRoute(best).get_best_route_summary()
         assert result == {
             "duration": None,
             "arrival": None,
@@ -124,7 +124,7 @@ class TestBestRoute:
                 },
             ],
         }
-        result = BestRoute(best).as_dict()
+        result = BestRoute(best).get_best_route_summary()
         assert result == {
             "duration": 30,
             "arrival": "2025-10-17T08:30:00",

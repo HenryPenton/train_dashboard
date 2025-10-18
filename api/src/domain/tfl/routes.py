@@ -13,7 +13,7 @@ class BestRoute:
             for leg in best.get("legs", [])
         ]
 
-    def as_dict(self) -> dict:
+    def get_best_route_summary(self) -> dict:
         return {
             "duration": self.duration,
             "arrival": self.arrival,
@@ -29,4 +29,4 @@ class AllRoutes:
         if not self.journeys:
             return {"error": "No journeys found"}
         best = self.journeys[0]
-        return BestRoute(best).as_dict()
+        return BestRoute(best).get_best_route_summary()

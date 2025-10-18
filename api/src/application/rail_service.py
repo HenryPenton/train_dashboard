@@ -12,5 +12,5 @@ class RailService:
         data = await self.client.get_departures(
             origin_station_code, destination_station_code
         )
-        departures = RailDepartures(data).get_departures()
+        departures = RailDepartures(data).get_all_rail_departures()
         return departures

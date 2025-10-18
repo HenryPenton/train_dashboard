@@ -92,7 +92,7 @@ class RailDeparture:
             self.actual,
         )
 
-    def as_dict(self):
+    def get_rail_departure(self):
         return {
             "origin": self.origin,
             "destination": self.destination,
@@ -118,5 +118,5 @@ class RailDepartures:
                 departures.append(departure)
         return departures
 
-    def get_departures(self) -> list[RailDeparture]:
+    def get_all_rail_departures(self) -> list[RailDeparture]:
         return self.departures
