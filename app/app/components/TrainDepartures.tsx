@@ -17,12 +17,12 @@ type TrainDepartureProps = {
 export default function TrainDepartures(props: TrainDepartureProps) {
   const [departures, setDepartures] = useState<Departure[] | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     const fetchDepartures = async () => {
       setLoading(true);
-      setError("");
+      setError(false);
       setDepartures(null);
       try {
         const result = await fetch(
@@ -33,10 +33,8 @@ export default function TrainDepartures(props: TrainDepartureProps) {
         const data = await result.json();
         const tenTrains = data.slice(0, 10);
         setDepartures(tenTrains);
-      } catch (e: unknown) {
-        const message = e instanceof Error ? e.message : "Unknown error";
-
-        setError(message);
+      } catch {
+        setError(true);
       } finally {
         setLoading(false);
       }
@@ -61,7 +59,7 @@ export default function TrainDepartures(props: TrainDepartureProps) {
       </div>
       {error && (
         <div className="text-[#ff4d4f] bg-[#2a1a1a] p-2 rounded mb-2">
-          {error}
+          Could not find any services for the configured route.
         </div>
       )}
       {departures && (
