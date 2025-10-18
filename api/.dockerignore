@@ -9,3 +9,4 @@ readme.md
 **/*/test_*.py
 venv
 test
+conftest.py
