@@ -12,7 +12,7 @@ export async function GET() {
       );
     }
     const data = await res.json();
-    console.log("Config data fetched:", data);
+
     return NextResponse.json(data);
   } catch {
     return NextResponse.json(
