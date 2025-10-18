@@ -9,6 +9,7 @@ class TFLClient:
         :param client: Injected httpx.AsyncClient instance for making async HTTP requests.
         """
         self.client = client
+        self.api_root = "https://api.tfl.gov.uk"
 
     async def get_best_route(self, from_station: str, to_station: str):
         """
@@ -17,7 +18,7 @@ class TFLClient:
         :param to_station: Destination station name or code
         :return: JSON response from TFL API
         """
-        url = f"https://api.tfl.gov.uk/Journey/JourneyResults/{from_station}/to/{to_station}"
+        url = f"{self.api_root}/Journey/JourneyResults/{from_station}/to/{to_station}"
         try:
             response = await self.client.get(url)
             response.raise_for_status()
@@ -32,7 +33,7 @@ class TFLClient:
         Fetch the status of all major TFL lines (tube, overground, dlr, elizabeth-line, tram).
         :return: JSON response from TFL API
         """
-        url = "https://api.tfl.gov.uk/Line/Mode/tube,overground,dlr,elizabeth-line,tram/status"
+        url = f"{self.api_root}/Line/Mode/tube,overground,dlr,elizabeth-line,tram/status"
         try:
             response = await self.client.get(url)
             response.raise_for_status()
