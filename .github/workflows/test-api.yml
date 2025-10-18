@@ -45,6 +45,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Run tests
+        working-directory: api
+        run: |
+          pytest
+
       - name: Cache python dependencies
         if: steps.cache_dependencies.outputs.cache-hit != 'true'
         uses: actions/cache/save@v4
@@ -53,8 +58,3 @@ jobs:
             ~/.cache/pip
             ~/api/.pytest_cache
           key: ${{ env.python_dependencies_cache_key }}
-
-      - name: Run tests
-        working-directory: api
-        run: |
-          pytest
