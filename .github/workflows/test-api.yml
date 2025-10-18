@@ -26,7 +26,7 @@ jobs:
 
       - name: Generate cache keys
         id: cache_keys
-        working-directory: app
+        working-directory: api
         run: |
           echo "python_dependencies_cache_key=CI-test-and-python-dependencies-$(sha256sum requirements.txt | cut -d' ' -f1)" >> $GITHUB_ENV
 
