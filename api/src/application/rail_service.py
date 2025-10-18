@@ -1,5 +1,5 @@
 from src.adapters.clients.rttclient import RTTClient
-from src.domain.rail_utils import process_departures_response
+from src.domain.rail.departures.Departures import Departures
 
 
 class RailService:
@@ -12,4 +12,5 @@ class RailService:
         data = await self.client.get_departures(
             origin_station_code, destination_station_code
         )
-        return process_departures_response(data)
+        departures = Departures(data).get_departures()
+        return departures
