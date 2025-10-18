@@ -115,8 +115,9 @@ class RailDepartures:
             loc = dep.get("locationDetail", {})
             departure = RailDeparture(loc)
             if departure.is_valid():
-                departures.append(departure)
+                departures.append(departure.get_rail_departure())
+
         return departures
 
-    def get_all_rail_departures(self) -> list[RailDeparture]:
+    def get_all_rail_departures(self) -> list[dict]:
         return self.departures
