@@ -8,7 +8,7 @@ class TestLineStatus:
             "lineStatuses": [{"statusSeverityDescription": "Good Service", "statusSeverity": 10}],
         }
 
-        result = LineStatus(line).as_dict()
+        result = LineStatus(line).get_status()
         assert result == {
             "name": "Victoria",
             "status": "Good Service",
@@ -24,7 +24,7 @@ class TestLineStatus:
             ],
         }
 
-        result = LineStatus(line).as_dict()
+        result = LineStatus(line).get_status()
 
         assert result == {
             "name": "Northern",
@@ -42,7 +42,7 @@ class TestLineStatus:
             ],
         }
 
-        result = LineStatus(line).as_dict()
+        result = LineStatus(line).get_status()
         assert result == {
             "name": "Mildmay",
             "status": "Part Closure x2, Good Service",
@@ -50,12 +50,12 @@ class TestLineStatus:
         }
 
     def test_empty(self):
-        assert LineStatus({}).as_dict() is None
+        assert LineStatus({}).get_status() is None
 
 
 class TestLineStatuses:
     def test_empty(self):
-        assert LineStatuses([]).as_list() == []
+        assert LineStatuses([]).get_line_statuses() == []
 
     def test_one_line(self):
         response_json = [
@@ -64,7 +64,7 @@ class TestLineStatuses:
                 "lineStatuses": [{"statusSeverityDescription": "Good Service", "statusSeverity": 10}],
             },
         ]
-        result = LineStatuses(response_json).as_list()
+        result = LineStatuses(response_json).get_line_statuses()
         assert result == [
             {
                 "name": "Victoria",
@@ -89,7 +89,7 @@ class TestLineStatuses:
                 ],
             },
         ]
-        result = LineStatuses(response_json).as_list()
+        result = LineStatuses(response_json).get_line_statuses()
         assert result == [
             {
                 "name": "Northern",
@@ -116,5 +116,5 @@ class TestLineStatuses:
                 "lineStatuses": [{"statusSeverityDescription": "Good Service"}],
             },
         ]
-        result = LineStatuses(response_json).as_list()
+        result = LineStatuses(response_json).get_line_statuses()
         assert result == []

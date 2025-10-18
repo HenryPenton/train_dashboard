@@ -47,7 +47,7 @@ class LineStatus:
             status_str = ", ".join(status_parts)
             return status_str
 
-    def as_dict(self) -> dict:
+    def get_status(self) -> dict:
         has_required_properties = check_group_of_properties_exist(
             self.name, self.status, self.statusSeverity
         )
@@ -67,11 +67,11 @@ class LineStatuses:
     def _extract_statuses(response_json: list[dict]) -> list[dict]:
         lines_statuses: list[dict] = []
         for line in response_json:
-            line_status_dict = LineStatus(line).as_dict()
+            line_status_dict = LineStatus(line).get_status()
             if line_status_dict:
                 lines_statuses.append(line_status_dict)
 
         return lines_statuses
 
-    def as_list(self) -> list[dict]:
+    def get_line_statuses(self) -> list[dict]:
         return self.line_statuses
