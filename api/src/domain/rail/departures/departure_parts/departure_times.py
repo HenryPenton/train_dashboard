@@ -11,7 +11,7 @@ class RailDepartureTimes:
         self.scheduled_departure = self._get_scheduled_departure(location_detail)
         self.real_departure = self._get_real_departure(location_detail)
 
-        self.actual = self._get_actual(self.real_departure, self.scheduled_departure)
+        self.actual = self.real_departure or self.scheduled_departure
 
         self.duration = self._get_duration(
             self.real_departure,
@@ -29,8 +29,20 @@ class RailDepartureTimes:
         self.status = self._get_status(self.delay)
 
     @staticmethod
-    def _get_actual(real_departure, scheduled_departure):
-        return real_departure or scheduled_departure
+    def _get_scheduled_arrival(loc):
+        return loc.get("gbttBookedArrival")
+
+    @staticmethod
+    def _get_scheduled_departure(loc):
+        return loc.get("gbttBookedDeparture")
+
+    @staticmethod
+    def _get_real_arrival(loc):
+        return loc.get("realtimeArrival")
+
+    @staticmethod
+    def _get_real_departure(loc):
+        return loc.get("realtimeDeparture")
 
     @staticmethod
     def _adjust_duration_for_overnight(duration):
@@ -49,7 +61,6 @@ class RailDepartureTimes:
             before_midnight = 1440 - booked_min
             after_midnight = real_min
             delay = before_midnight + after_midnight
-            print(delay)
         return delay
 
     @staticmethod
@@ -73,22 +84,6 @@ class RailDepartureTimes:
         if dep_min is not None and arr_min is not None:
             return arr_min - dep_min
         return None
-
-    @staticmethod
-    def _get_scheduled_arrival(loc):
-        return loc.get("gbttBookedArrival")
-
-    @staticmethod
-    def _get_scheduled_departure(loc):
-        return loc.get("gbttBookedDeparture")
-
-    @staticmethod
-    def _get_real_arrival(loc):
-        return loc.get("realtimeArrival")
-
-    @staticmethod
-    def _get_real_departure(loc):
-        return loc.get("realtimeDeparture")
 
     @classmethod
     def _get_delay(cls, scheduled_departure: str, real_departure: str):
