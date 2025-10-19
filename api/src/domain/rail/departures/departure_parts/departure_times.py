@@ -20,12 +20,37 @@ class RailDepartureTimes:
             self.scheduled_arrival,
         )
 
+        self.duration = self._adjust_duration_for_overnight(self.duration)
+
         self.delay = self._get_delay(self.scheduled_departure, self.real_departure)
+        self.delay = self._adjust_delay_for_overnight(
+            self.delay, self.scheduled_departure, self.real_departure
+        )
         self.status = self._get_status(self.delay)
 
     @staticmethod
     def _get_actual(real_departure, scheduled_departure):
         return real_departure or scheduled_departure
+
+    @staticmethod
+    def _adjust_duration_for_overnight(duration):
+        if duration is not None and duration < 0:
+            return duration + 1440  # Add 24 hours in minutes
+        return duration
+
+    @staticmethod
+    def _adjust_delay_for_overnight(delay, booked_departure=None, real_departure=None):
+        # A negative delay can represent one of two things, the train is early, or the train was late
+        # and its lateness took the departure time past midnight. Here we make the possible naive assumption
+        # that a train is never more than 12 hours late or early to deal with this situation (720 minutes).
+        if booked_departure and real_departure and delay < -720:
+            booked_min = twenty_four_hour_string_to_minutes(booked_departure)
+            real_min = twenty_four_hour_string_to_minutes(real_departure)
+            before_midnight = 1440 - booked_min
+            after_midnight = real_min
+            delay = before_midnight + after_midnight
+            print(delay)
+        return delay
 
     @staticmethod
     def _get_duration(
@@ -92,7 +117,6 @@ class RailDepartureTimes:
             self.scheduled_departure,
             self.delay,
             self.status,
-            self.duration,
         )
 
     def get_rail_departure_times(self):
