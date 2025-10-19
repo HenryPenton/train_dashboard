@@ -11,7 +11,7 @@ class TestRailDepartureAggregate:
             "realtimeDeparture": "0935",
         }
         aggregate = RailDepartureAggregate(location_detail)
-        result = aggregate.get_rail_departure_aggregate()
+        result = aggregate.get_rail_departure()
         # Check keys from both times and info
         assert "origin" in result
         assert "destination" in result

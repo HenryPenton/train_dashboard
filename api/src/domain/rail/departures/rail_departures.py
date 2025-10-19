@@ -11,9 +11,9 @@ class RailDepartures:
         departures = []
         for dep in services:
             loc = dep.get("locationDetail", {})
-            departure = RailDepartureAggregate(loc)
-            if departure.is_valid():
-                departures.append(departure.get_rail_departure_aggregate())
+            departure_aggregate = RailDepartureAggregate(loc)
+            if departure_aggregate.is_valid():
+                departures.append(departure_aggregate.get_rail_departure())
 
         return departures
 
