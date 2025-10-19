@@ -94,11 +94,11 @@ class RailDepartureTimes:
     def _get_delay(cls, scheduled_departure: str, real_departure: str):
         sched_min = twenty_four_hour_string_to_minutes(scheduled_departure)
         real_min = twenty_four_hour_string_to_minutes(real_departure)
-        if sched_min is not None:
-            if real_min is not None:
-                return real_min - sched_min
-            return 0
-        return None
+        if sched_min is None:
+            return None
+        if real_min is not None:
+            return real_min - sched_min
+        return 0
 
     @staticmethod
     def _get_status(delay: int):
@@ -113,8 +113,7 @@ class RailDepartureTimes:
 
     def is_valid(self):
         return check_group_of_properties_exist(
-            self.scheduled_arrival,
-            self.scheduled_departure,
+            self.actual,
             self.delay,
             self.status,
         )
