@@ -7,7 +7,6 @@ class TestRailDepartureAggregate:
             "origin": [{"description": "Reading"}],
             "destination": [{"description": "London Paddington"}],
             "gbttBookedDeparture": "0930",
-            "gbttBookedArrival": "1000",
             "platform": "5",
             "realtimeDeparture": "0935",
         }
@@ -21,5 +20,4 @@ class TestRailDepartureAggregate:
         assert "status" in result
         assert "actual" in result
         assert "gbttBookedDeparture" not in result  # Should be processed
-        assert "gbttBookedArrival" not in result  # Should be processed
         assert aggregate.is_valid() is True

@@ -37,6 +37,7 @@ class RailDepartureStationInfo:
         )
 
     def get_rail_departure_station_info(self):
+        print(self.origin, self.destination, self.platform)
         return {
             "origin": self.origin,
             "destination": self.destination,
