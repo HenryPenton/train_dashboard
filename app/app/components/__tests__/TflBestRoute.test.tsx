@@ -28,7 +28,7 @@ describe("TflBestRoute", () => {
 
     render(
       <TflBestRoute
-        from={{ placeName: "Paddington", naptan: "PAD" }}
+        from={{ placeName: "Edgeware Road", naptan: "PAD" }}
         to={{ placeName: "Liverpool Street", naptan: "LST" }}
       />
     );
@@ -39,7 +39,7 @@ describe("TflBestRoute", () => {
       ).toBeInTheDocument();
 
       expect(screen.getByLabelText("Origin")).toHaveTextContent(
-        "From: Paddington"
+        "From: Edgeware Road"
       );
       expect(screen.getByLabelText("Destination")).toHaveTextContent(
         "To: Liverpool Street"
