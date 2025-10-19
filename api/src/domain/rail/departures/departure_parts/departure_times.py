@@ -4,40 +4,17 @@ from src.shared.utils.check_group_of_properties_exist import (
 )
 
 
-class RailDeparture:
+class RailDepartureTimes:
     def __init__(self, location_detail: dict):
-        self.origin = self._get_origin(location_detail)
-        self.destination = self._get_destination(location_detail)
         self.scheduled = self._get_scheduled(location_detail)
-        self.platform = self._get_platform(location_detail)
         self.real = self._get_real(location_detail)
         self.delay = self._get_delay(self.scheduled, self.real)
         self.status = self._get_status(self.delay)
         self.actual = self._get_actual(self.scheduled, self.delay)
 
     @staticmethod
-    def _get_origin(loc):
-        origins = loc.get("origin", [])
-        if len(origins) == 0:
-            return None
-        return ", ".join([origin.get("description", "") for origin in origins])
-
-    @staticmethod
-    def _get_destination(loc):
-        destinations = loc.get("destination", [])
-        if len(destinations) == 0:
-            return None
-        return ", ".join(
-            [destination.get("description", "") for destination in destinations]
-        )
-
-    @staticmethod
     def _get_scheduled(loc):
         return loc.get("gbttBookedDeparture")
-
-    @staticmethod
-    def _get_platform(loc):
-        return loc.get("platform")
 
     @staticmethod
     def _get_real(loc):
@@ -75,21 +52,15 @@ class RailDeparture:
 
     def is_valid(self):
         return check_group_of_properties_exist(
-            self.origin,
-            self.destination,
             self.scheduled,
-            self.platform,
             self.real,
             self.delay,
             self.status,
             self.actual,
         )
 
-    def get_rail_departure(self):
+    def get_rail_departure_times(self):
         return {
-            "origin": self.origin,
-            "destination": self.destination,
-            "platform": self.platform,
             "delay": self.delay,
             "status": self.status,
             "actual": self.actual,

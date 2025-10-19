@@ -1,5 +1,5 @@
-from src.domain.rail.departures.rail_aggregate import (
-    RailAggregate,
+from src.domain.rail.departures.rail_departures import (
+    RailDepartures,
 )
 
 
@@ -63,6 +63,6 @@ class TestMultipleDepartures:
             },
         ]
 
-        results = RailAggregate(data).get_all_rail_departures()
+        results = RailDepartures(data).get_all_rail_departures()
 
         assert results == expected

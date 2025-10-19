@@ -1,9 +1,9 @@
-from src.domain.rail.departures.rail import (
-    RailDeparture,
+from src.domain.rail.departures.departure_parts.departure_times import (
+    RailDepartureTimes,
 )
 
 
-class TestDeparture:
+class TestRailDepartureTimes:
     def test_full_departure(self):
         loc = {
             "origin": [{"description": "Reading"}],
@@ -12,16 +12,13 @@ class TestDeparture:
             "platform": "5",
             "realtimeDeparture": "0935",
         }
-        dep = RailDeparture(loc)
+        dep = RailDepartureTimes(loc)
         expected = {
-            "origin": "Reading",
-            "destination": "London Paddington",
-            "platform": "5",
             "delay": 5,
             "status": "Late",
             "actual": "0935",
         }
-        assert dep.get_rail_departure() == expected
+        assert dep.get_rail_departure_times() == expected
 
     def test_full_departure_multi_origin(self):
         loc = {
@@ -31,16 +28,13 @@ class TestDeparture:
             "platform": "5",
             "realtimeDeparture": "0935",
         }
-        dep = RailDeparture(loc)
+        dep = RailDepartureTimes(loc)
         expected = {
-            "origin": "Reading, Oxford",
-            "destination": "London Paddington",
-            "platform": "5",
             "delay": 5,
             "status": "Late",
             "actual": "0935",
         }
-        assert dep.get_rail_departure() == expected
+        assert dep.get_rail_departure_times() == expected
 
     def test_full_departure_multi_destination(self):
         loc = {
@@ -53,16 +47,13 @@ class TestDeparture:
             "platform": "5",
             "realtimeDeparture": "0935",
         }
-        dep = RailDeparture(loc)
+        dep = RailDepartureTimes(loc)
         expected = {
-            "origin": "Reading",
-            "destination": "London Paddington, Birmingham",
-            "platform": "5",
             "delay": 5,
             "status": "Late",
             "actual": "0935",
         }
-        assert dep.get_rail_departure() == expected
+        assert dep.get_rail_departure_times() == expected
 
     def test_full_departure_early(self):
         loc = {
@@ -72,16 +63,13 @@ class TestDeparture:
             "platform": "5",
             "realtimeDeparture": "0929",
         }
-        dep = RailDeparture(loc)
+        dep = RailDepartureTimes(loc)
         expected = {
-            "origin": "Reading",
-            "destination": "London Paddington",
-            "platform": "5",
             "delay": -1,
             "status": "Early",
             "actual": "0929",
         }
-        assert dep.get_rail_departure() == expected
+        assert dep.get_rail_departure_times() == expected
 
     def test_full_departure_on_time(self):
         loc = {
@@ -91,16 +79,13 @@ class TestDeparture:
             "platform": "5",
             "realtimeDeparture": "0930",
         }
-        dep = RailDeparture(loc)
+        dep = RailDepartureTimes(loc)
         expected = {
-            "origin": "Reading",
-            "destination": "London Paddington",
-            "platform": "5",
             "delay": 0,
             "status": "On time",
             "actual": "0930",
         }
-        assert dep.get_rail_departure() == expected
+        assert dep.get_rail_departure_times() == expected
 
     def test_as_departure_missing_fields(self):
         loc = {
@@ -110,16 +95,13 @@ class TestDeparture:
             "platform": None,
             "realtimeDeparture": None,
         }
-        dep = RailDeparture(loc)
+        dep = RailDepartureTimes(loc)
         expected = {
-            "origin": None,
-            "destination": None,
-            "platform": None,
             "delay": None,
             "status": None,
             "actual": None,
         }
-        assert dep.get_rail_departure() == expected
+        assert dep.get_rail_departure_times() == expected
         assert not dep.is_valid()
 
     def test_non_standard_time_format(self):
@@ -130,14 +112,11 @@ class TestDeparture:
             "platform": None,
             "realtimeDeparture": None,
         }
-        dep = RailDeparture(loc)
+        dep = RailDepartureTimes(loc)
         expected = {
-            "origin": None,
-            "destination": None,
-            "platform": None,
             "delay": None,
             "status": None,
             "actual": None,
         }
-        assert dep.get_rail_departure() == expected
+        assert dep.get_rail_departure_times() == expected
         assert not dep.is_valid()
