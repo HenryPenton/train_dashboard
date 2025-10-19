@@ -1,3 +1,4 @@
+from src.shared.utils.time import twenty_four_hour_string_to_minutes
 from src.shared.utils.check_group_of_properties_exist import (
     check_group_of_properties_exist,
 )
@@ -42,18 +43,10 @@ class RailDeparture:
     def _get_real(loc):
         return loc.get("realtimeDeparture")
 
-    @staticmethod
-    def _parse_time(t: str):
-        if not t:
-            return None
-        if len(t) in (4, 6):
-            return int(t[:2]) * 60 + int(t[2:4])
-        return None
-
     @classmethod
     def _get_delay(cls, scheduled: str, real: str):
-        sched_min = cls._parse_time(scheduled)
-        real_min = cls._parse_time(real)
+        sched_min = twenty_four_hour_string_to_minutes(scheduled)
+        real_min = twenty_four_hour_string_to_minutes(real)
         if sched_min is not None and real_min is not None:
             return real_min - sched_min
         return None
@@ -71,7 +64,7 @@ class RailDeparture:
 
     @classmethod
     def _get_actual(cls, scheduled: int, delay: int):
-        sched_min = cls._parse_time(scheduled)
+        sched_min = twenty_four_hour_string_to_minutes(scheduled)
         if sched_min is not None:
             delay_to_add = delay if delay is not None else 0
             actual_min = sched_min + delay_to_add
