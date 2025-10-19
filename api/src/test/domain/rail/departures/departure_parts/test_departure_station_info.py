@@ -6,41 +6,41 @@ from src.domain.rail.departures.departure_parts.departure_station_info import (
 class TestDepartureStationInfo:
     def test_full_departure(self):
         loc = {
-            "origin": [{"description": "Reading"}],
-            "destination": [{"description": "London Paddington"}],
+            "origin": [{"description": "Station Origin"}],
+            "destination": [{"description": "Station Destination"}],
             "gbttBookedDeparture": "0930",
             "platform": "5",
             "realtimeDeparture": "0935",
         }
         dep = RailDepartureStationInfo(loc)
         expected = {
-            "origin": "Reading",
-            "destination": "London Paddington",
+            "origin": "Station Origin",
+            "destination": "Station Destination",
             "platform": "5",
         }
         assert dep.get_rail_departure_station_info() == expected
 
     def test_full_departure_multi_origin(self):
         loc = {
-            "origin": [{"description": "Reading"}, {"description": "Oxford"}],
-            "destination": [{"description": "London Paddington"}],
+            "origin": [{"description": "Station Origin"}, {"description": "Oxford"}],
+            "destination": [{"description": "Station Destination"}],
             "gbttBookedDeparture": "0930",
             "platform": "5",
             "realtimeDeparture": "0935",
         }
         dep = RailDepartureStationInfo(loc)
         expected = {
-            "origin": "Reading, Oxford",
-            "destination": "London Paddington",
+            "origin": "Station Origin, Oxford",
+            "destination": "Station Destination",
             "platform": "5",
         }
         assert dep.get_rail_departure_station_info() == expected
 
     def test_full_departure_multi_destination(self):
         loc = {
-            "origin": [{"description": "Reading"}],
+            "origin": [{"description": "Station Origin"}],
             "destination": [
-                {"description": "London Paddington"},
+                {"description": "Station Destination"},
                 {"description": "Birmingham"},
             ],
             "gbttBookedDeparture": "0930",
@@ -49,40 +49,40 @@ class TestDepartureStationInfo:
         }
         dep = RailDepartureStationInfo(loc)
         expected = {
-            "origin": "Reading",
-            "destination": "London Paddington, Birmingham",
+            "origin": "Station Origin",
+            "destination": "Station Destination, Birmingham",
             "platform": "5",
         }
         assert dep.get_rail_departure_station_info() == expected
 
     def test_full_departure_early(self):
         loc = {
-            "origin": [{"description": "Reading"}],
-            "destination": [{"description": "London Paddington"}],
+            "origin": [{"description": "Station Origin"}],
+            "destination": [{"description": "Station Destination"}],
             "gbttBookedDeparture": "0930",
             "platform": "5",
             "realtimeDeparture": "0929",
         }
         dep = RailDepartureStationInfo(loc)
         expected = {
-            "origin": "Reading",
-            "destination": "London Paddington",
+            "origin": "Station Origin",
+            "destination": "Station Destination",
             "platform": "5",
         }
         assert dep.get_rail_departure_station_info() == expected
 
     def test_full_departure_on_time(self):
         loc = {
-            "origin": [{"description": "Reading"}],
-            "destination": [{"description": "London Paddington"}],
+            "origin": [{"description": "Station Origin"}],
+            "destination": [{"description": "Station Destination"}],
             "gbttBookedDeparture": "0930",
             "platform": "5",
             "realtimeDeparture": "0930",
         }
         dep = RailDepartureStationInfo(loc)
         expected = {
-            "origin": "Reading",
-            "destination": "London Paddington",
+            "origin": "Station Origin",
+            "destination": "Station Destination",
             "platform": "5",
         }
         assert dep.get_rail_departure_station_info() == expected

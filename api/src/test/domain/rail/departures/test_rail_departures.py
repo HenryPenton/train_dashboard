@@ -9,8 +9,8 @@ class TestMultipleDepartures:
             "services": [
                 {
                     "locationDetail": {
-                        "origin": [{"description": "Reading"}],
-                        "destination": [{"description": "London Paddington"}],
+                        "origin": [{"description": "Edinburgh"}],
+                        "destination": [{"description": "Glasgow"}],
                         "gbttBookedDeparture": "0930",
                         "platform": "5",
                         "realtimeDeparture": "0935",
@@ -40,8 +40,8 @@ class TestMultipleDepartures:
             {
                 "actual": "0935",
                 "delay": 5,
-                "destination": "London Paddington",
-                "origin": "Reading",
+                "destination": "Glasgow",
+                "origin": "Edinburgh",
                 "platform": "5",
                 "status": "Late",
             },

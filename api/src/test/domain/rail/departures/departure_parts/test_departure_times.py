@@ -6,8 +6,6 @@ from src.domain.rail.departures.departure_parts.departure_times import (
 class TestRailDepartureTimes:
     def test_departure_delay_past_midnight(self):
         loc = {
-            "origin": [{"description": "Reading"}],
-            "destination": [{"description": "London Paddington"}],
             "gbttBookedDeparture": "2330",
             "platform": "5",
             "realtimeDeparture": "0005",
@@ -23,8 +21,6 @@ class TestRailDepartureTimes:
 
     def test_full_departure(self):
         loc = {
-            "origin": [{"description": "Reading"}],
-            "destination": [{"description": "London Paddington"}],
             "gbttBookedDeparture": "0930",
             "platform": "5",
             "realtimeDeparture": "0930",
@@ -40,8 +36,6 @@ class TestRailDepartureTimes:
 
     def test_full_departure_on_time_is_valid(self):
         loc = {
-            "origin": [{"description": "Reading"}],
-            "destination": [{"description": "London Paddington"}],
             "gbttBookedDeparture": "0930",
             "platform": "5",
         }
@@ -51,8 +45,6 @@ class TestRailDepartureTimes:
 
     def test_full_departure_multi_origin(self):
         loc = {
-            "origin": [{"description": "Reading"}, {"description": "Oxford"}],
-            "destination": [{"description": "London Paddington"}],
             "gbttBookedDeparture": "0930",
             "platform": "5",
             "realtimeDeparture": "0935",
@@ -68,11 +60,6 @@ class TestRailDepartureTimes:
 
     def test_full_departure_multi_destination(self):
         loc = {
-            "origin": [{"description": "Reading"}],
-            "destination": [
-                {"description": "London Paddington"},
-                {"description": "Birmingham"},
-            ],
             "gbttBookedDeparture": "0930",
             "platform": "5",
             "realtimeDeparture": "0935",
@@ -88,8 +75,6 @@ class TestRailDepartureTimes:
 
     def test_full_departure_early(self):
         loc = {
-            "origin": [{"description": "Reading"}],
-            "destination": [{"description": "London Paddington"}],
             "gbttBookedDeparture": "0930",
             "platform": "5",
             "realtimeDeparture": "0929",
@@ -105,8 +90,6 @@ class TestRailDepartureTimes:
 
     def test_full_departure_on_time(self):
         loc = {
-            "origin": [{"description": "Reading"}],
-            "destination": [{"description": "London Paddington"}],
             "gbttBookedDeparture": "0930",
             "platform": "5",
             "realtimeDeparture": "0930",
@@ -140,8 +123,6 @@ class TestRailDepartureTimes:
 
     def test_overnight_departure(self):
         loc = {
-            "origin": [{"description": "Reading"}],
-            "destination": [{"description": "London Paddington"}],
             "gbttBookedDeparture": "2330",
             "platform": "5",
         }
@@ -155,8 +136,6 @@ class TestRailDepartureTimes:
 
     def test_overnight_departure_with_delay(self):
         loc = {
-            "origin": [{"description": "Reading"}],
-            "destination": [{"description": "London Paddington"}],
             "gbttBookedDeparture": "2330",
             "platform": "5",
             "realtimeDeparture": "2340",
