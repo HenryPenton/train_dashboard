@@ -6,26 +6,73 @@ from src.shared.utils.check_group_of_properties_exist import (
 
 class RailDepartureTimes:
     def __init__(self, location_detail: dict):
-        self.scheduled = self._get_scheduled(location_detail)
-        self.real = self._get_real(location_detail)
-        self.delay = self._get_delay(self.scheduled, self.real)
+        self.scheduled_arrival = self._get_scheduled_arrival(location_detail)
+        self.real_arrival = self._get_real_arrival(location_detail)
+        self.scheduled_departure = self._get_scheduled_departure(location_detail)
+        self.real_departure = self._get_real_departure(location_detail)
+
+        self.actual = self._get_actual(self.real_departure, self.scheduled_departure)
+
+        self.duration = self._get_duration(
+            self.real_departure,
+            self.real_arrival,
+            self.scheduled_departure,
+            self.scheduled_arrival,
+        )
+
+        self.delay = self._get_delay(self.scheduled_departure, self.real_departure)
         self.status = self._get_status(self.delay)
-        self.actual = self._get_actual(self.scheduled, self.delay)
 
     @staticmethod
-    def _get_scheduled(loc):
+    def _get_actual(real_departure, scheduled_departure):
+        return real_departure or scheduled_departure
+
+    @staticmethod
+    def _get_duration(
+        real_departure, real_arrival, scheduled_departure, scheduled_arrival
+    ):
+        def minutes(t):
+            return twenty_four_hour_string_to_minutes(t)
+
+        # Prefer real times if both are present
+        if real_departure and real_arrival:
+            dep_min = minutes(real_departure)
+            arr_min = minutes(real_arrival)
+            if dep_min is not None and arr_min is not None:
+                return arr_min - dep_min
+            return None
+
+        # Otherwise fall back to scheduled times
+        dep_min = minutes(scheduled_departure)
+        arr_min = minutes(scheduled_arrival)
+        if dep_min is not None and arr_min is not None:
+            return arr_min - dep_min
+        return None
+
+    @staticmethod
+    def _get_scheduled_arrival(loc):
+        return loc.get("gbttBookedArrival")
+
+    @staticmethod
+    def _get_scheduled_departure(loc):
         return loc.get("gbttBookedDeparture")
 
     @staticmethod
-    def _get_real(loc):
+    def _get_real_arrival(loc):
+        return loc.get("realtimeArrival")
+
+    @staticmethod
+    def _get_real_departure(loc):
         return loc.get("realtimeDeparture")
 
     @classmethod
-    def _get_delay(cls, scheduled: str, real: str):
-        sched_min = twenty_four_hour_string_to_minutes(scheduled)
-        real_min = twenty_four_hour_string_to_minutes(real)
-        if sched_min is not None and real_min is not None:
-            return real_min - sched_min
+    def _get_delay(cls, scheduled_departure: str, real_departure: str):
+        sched_min = twenty_four_hour_string_to_minutes(scheduled_departure)
+        real_min = twenty_four_hour_string_to_minutes(real_departure)
+        if sched_min is not None:
+            if real_min is not None:
+                return real_min - sched_min
+            return 0
         return None
 
     @staticmethod
@@ -39,24 +86,13 @@ class RailDepartureTimes:
         if delay == 0:
             return "On time"
 
-    @classmethod
-    def _get_actual(cls, scheduled: int, delay: int):
-        sched_min = twenty_four_hour_string_to_minutes(scheduled)
-        if sched_min is not None:
-            delay_to_add = delay if delay is not None else 0
-            actual_min = sched_min + delay_to_add
-            actual_h = actual_min // 60
-            actual_m = actual_min % 60
-            return f"{actual_h:02d}{actual_m:02d}"
-        return None
-
     def is_valid(self):
         return check_group_of_properties_exist(
-            self.scheduled,
-            self.real,
+            self.scheduled_arrival,
+            self.scheduled_departure,
             self.delay,
             self.status,
-            self.actual,
+            self.duration,
         )
 
     def get_rail_departure_times(self):
@@ -64,4 +100,5 @@ class RailDepartureTimes:
             "delay": self.delay,
             "status": self.status,
             "actual": self.actual,
+            "duration": self.duration,
         }

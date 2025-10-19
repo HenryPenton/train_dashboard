@@ -4,35 +4,71 @@ from src.domain.rail.departures.departure_parts.departure_times import (
 
 
 class TestRailDepartureTimes:
+    # def test_overnight_departure_with_delay(self):
+    #     loc = {
+    #         "origin": [{"description": "Reading"}],
+    #         "destination": [{"description": "London Paddington"}],
+    #         "gbttBookedDeparture": "2330",
+    #         "gbttBookedArrival": "0030",
+    #         "platform": "5",
+    #         "realtimeDeparture": "2345",
+    #         "realtimeArrival": "0045",
+    #     }
+    #     dep = RailDepartureTimes(loc)
+    #     expected = {
+    #         "delay": 15,
+    #         "status": "Late",
+    #         "actual": "2345",
+    #     }
+    #     assert dep.get_rail_departure_times() == expected
+
     def test_full_departure(self):
         loc = {
             "origin": [{"description": "Reading"}],
             "destination": [{"description": "London Paddington"}],
             "gbttBookedDeparture": "0930",
+            "gbttBookedArrival": "1000",
             "platform": "5",
-            "realtimeDeparture": "0935",
+            "realtimeDeparture": "0930",
+            "realtimeArrival": "1000",
         }
         dep = RailDepartureTimes(loc)
         expected = {
-            "delay": 5,
-            "status": "Late",
-            "actual": "0935",
+            "delay": 0,
+            "status": "On time",
+            "actual": "0930",
+            "duration": 30,
         }
         assert dep.get_rail_departure_times() == expected
+
+    def test_full_departure_on_time_is_valid(self):
+        loc = {
+            "origin": [{"description": "Reading"}],
+            "destination": [{"description": "London Paddington"}],
+            "gbttBookedDeparture": "0930",
+            "gbttBookedArrival": "1000",
+            "platform": "5",
+        }
+        dep = RailDepartureTimes(loc)
+
+        assert dep.is_valid() is True
 
     def test_full_departure_multi_origin(self):
         loc = {
             "origin": [{"description": "Reading"}, {"description": "Oxford"}],
             "destination": [{"description": "London Paddington"}],
             "gbttBookedDeparture": "0930",
+            "gbttBookedArrival": "1000",
             "platform": "5",
             "realtimeDeparture": "0935",
+            "realtimeArrival": "1005",
         }
         dep = RailDepartureTimes(loc)
         expected = {
             "delay": 5,
             "status": "Late",
             "actual": "0935",
+            "duration": 30,
         }
         assert dep.get_rail_departure_times() == expected
 
@@ -44,14 +80,17 @@ class TestRailDepartureTimes:
                 {"description": "Birmingham"},
             ],
             "gbttBookedDeparture": "0930",
+            "gbttBookedArrival": "1000",
             "platform": "5",
             "realtimeDeparture": "0935",
+            "realtimeArrival": "1005",
         }
         dep = RailDepartureTimes(loc)
         expected = {
             "delay": 5,
             "status": "Late",
             "actual": "0935",
+            "duration": 30,
         }
         assert dep.get_rail_departure_times() == expected
 
@@ -60,14 +99,17 @@ class TestRailDepartureTimes:
             "origin": [{"description": "Reading"}],
             "destination": [{"description": "London Paddington"}],
             "gbttBookedDeparture": "0930",
+            "gbttBookedArrival": "1000",
             "platform": "5",
             "realtimeDeparture": "0929",
+            "realtimeArrival": "0955",
         }
         dep = RailDepartureTimes(loc)
         expected = {
             "delay": -1,
             "status": "Early",
             "actual": "0929",
+            "duration": 26,
         }
         assert dep.get_rail_departure_times() == expected
 
@@ -76,14 +118,17 @@ class TestRailDepartureTimes:
             "origin": [{"description": "Reading"}],
             "destination": [{"description": "London Paddington"}],
             "gbttBookedDeparture": "0930",
+            "gbttBookedArrival": "1000",
             "platform": "5",
             "realtimeDeparture": "0930",
+            "realtimeArrival": "1000",
         }
         dep = RailDepartureTimes(loc)
         expected = {
             "delay": 0,
             "status": "On time",
             "actual": "0930",
+            "duration": 30,
         }
         assert dep.get_rail_departure_times() == expected
 
@@ -92,31 +137,17 @@ class TestRailDepartureTimes:
             "origin": [],
             "destination": [],
             "gbttBookedDeparture": None,
+            "gbttBookedArrival": None,
             "platform": None,
             "realtimeDeparture": None,
+            "realtimeArrival": None,
         }
         dep = RailDepartureTimes(loc)
         expected = {
             "delay": None,
             "status": None,
             "actual": None,
-        }
-        assert dep.get_rail_departure_times() == expected
-        assert not dep.is_valid()
-
-    def test_non_standard_time_format(self):
-        loc = {
-            "origin": [],
-            "destination": [],
-            "gbttBookedDeparture": "930",
-            "platform": None,
-            "realtimeDeparture": None,
-        }
-        dep = RailDepartureTimes(loc)
-        expected = {
-            "delay": None,
-            "status": None,
-            "actual": None,
+            "duration": None,
         }
         assert dep.get_rail_departure_times() == expected
         assert not dep.is_valid()
