@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import * as z from "zod";
+import { Departures } from "@/app/validators/DepartureSchema";
 
 export async function GET(
   _request: Request,
@@ -23,18 +23,6 @@ export async function GET(
       );
     }
     const rawData = await res.json();
-    // Define a basic Zod schema for the expected departures response
-    const DepartureSchema = z.object({
-      delay: z.number(),
-      status: z.enum(["Early", "On time", "Late"]),
-      actual: z.string(),
-      platform: z.string(),
-      origin: z.string(),
-      destination: z.string(),
-    });
-
-    const Departures = z.array(DepartureSchema);
-
     const data = Departures.parse(rawData);
 
     return NextResponse.json(data);

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Departures } from "../validators/DepartureSchema";
 
 type Departure = {
   origin: string;
@@ -28,10 +29,11 @@ export default function TrainDepartures(props: TrainDepartureProps) {
         const result = await fetch(
           `/api/departures/${props.fromStation.stationCode}/to/${props.toStation.stationCode}`
         );
-
-        if (!result.ok) throw new Error(`API error: ${result.status}`);
         const data = await result.json();
-        const tenTrains = data.slice(0, 10);
+
+        const departures = Departures.parse(data);
+
+        const tenTrains = departures.slice(0, 10);
         setDepartures(tenTrains);
       } catch {
         setError(true);
