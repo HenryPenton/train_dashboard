@@ -1,33 +1,32 @@
+from src.adapters.clients.rttclient import DepartureRecord
 from src.shared.utils.check_group_of_properties_exist import (
     check_group_of_properties_exist,
 )
 
 
 class RailDepartureStationInfo:
-    def __init__(self, location_detail: dict):
-        self.origin = self._get_origin(location_detail)
-        self.destination = self._get_destination(location_detail)
-        self.platform = self._get_platform(location_detail)
+    def __init__(self, departure: DepartureRecord):
+        self.origin = self._get_origin(departure)
+        self.destination = self._get_destination(departure)
+        self.platform = self._get_platform(departure)
 
     @staticmethod
-    def _get_origin(loc):
-        origins = loc.get("origin", [])
+    def _get_origin(departure: DepartureRecord):
+        origins = departure.origins
         if len(origins) == 0:
             return None
-        return ", ".join([origin.get("description", "") for origin in origins])
+        return ", ".join([origin for origin in origins])
 
     @staticmethod
-    def _get_destination(loc):
-        destinations = loc.get("destination", [])
+    def _get_destination(departure: DepartureRecord):
+        destinations = departure.destinations
         if len(destinations) == 0:
             return None
-        return ", ".join(
-            [destination.get("description", "") for destination in destinations]
-        )
+        return ", ".join([destination for destination in destinations])
 
     @staticmethod
-    def _get_platform(loc):
-        return loc.get("platform")
+    def _get_platform(departure: DepartureRecord):
+        return departure.platform
 
     def is_valid(self):
         return check_group_of_properties_exist(

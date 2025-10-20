@@ -1,41 +1,40 @@
 from src.domain.rail.departures.rail_departures import (
     RailDepartures,
 )
+from src.adapters.clients.rttclient import DepartureRecord
 
 
 class TestMultipleDepartures:
     def test_multiple_departures(self):
-        data = {
-            "services": [
+        records = [
+            DepartureRecord(
                 {
-                    "locationDetail": {
-                        "origin": [{"description": "Edinburgh"}],
-                        "destination": [{"description": "Glasgow"}],
-                        "gbttBookedDeparture": "0930",
-                        "platform": "5",
-                        "realtimeDeparture": "0935",
-                    }
-                },
+                    "origin": [{"description": "Edinburgh"}],
+                    "destination": [{"description": "Glasgow"}],
+                    "gbttBookedDeparture": "0930",
+                    "platform": "5",
+                    "realtimeDeparture": "0935",
+                }
+            ),
+            DepartureRecord(
                 {
-                    "locationDetail": {
-                        "origin": [{"description": "Oxford"}],
-                        "destination": [{"description": "Manchester"}],
-                        "gbttBookedDeparture": "1015",
-                        "platform": "2",
-                        "realtimeDeparture": "1015",
-                    }
-                },
+                    "origin": [{"description": "Oxford"}],
+                    "destination": [{"description": "Manchester"}],
+                    "gbttBookedDeparture": "1015",
+                    "platform": "2",
+                    "realtimeDeparture": "1015",
+                }
+            ),
+            DepartureRecord(
                 {
-                    "locationDetail": {
-                        "origin": [{"description": "Bristol"}],
-                        "destination": [{"description": "Cardiff"}],
-                        "gbttBookedDeparture": "1100",
-                        "platform": "1",
-                        "realtimeDeparture": "1058",
-                    }
-                },
-            ]
-        }
+                    "origin": [{"description": "Bristol"}],
+                    "destination": [{"description": "Cardiff"}],
+                    "gbttBookedDeparture": "1100",
+                    "platform": "1",
+                    "realtimeDeparture": "1058",
+                }
+            ),
+        ]
         expected = [
             {
                 "actual": "0935",
@@ -63,6 +62,6 @@ class TestMultipleDepartures:
             },
         ]
 
-        results = RailDepartures(data).get_all_rail_departures()
+        results = RailDepartures(records).get_all_rail_departures()
 
         assert results == expected

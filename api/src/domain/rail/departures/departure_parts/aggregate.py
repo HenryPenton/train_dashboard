@@ -1,3 +1,4 @@
+from src.adapters.clients.rttclient import DepartureRecord
 from src.domain.rail.departures.departure_parts.departure_station_info import (
     RailDepartureStationInfo,
 )
@@ -7,9 +8,9 @@ from src.domain.rail.departures.departure_parts.departure_times import (
 
 
 class RailDepartureAggregate:
-    def __init__(self, location_detail: dict):
-        self.rail_departure_times = RailDepartureTimes(location_detail)
-        self.rail_departure_info = RailDepartureStationInfo(location_detail)
+    def __init__(self, departure: DepartureRecord):
+        self.rail_departure_times = RailDepartureTimes(departure)
+        self.rail_departure_info = RailDepartureStationInfo(departure)
 
     def get_rail_departure(self):
         departure_times = self.rail_departure_times.get_rail_departure_times()

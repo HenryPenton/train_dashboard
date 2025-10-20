@@ -1,17 +1,18 @@
+from src.adapters.clients.rttclient import DepartureRecord
 from src.domain.rail.departures.departure_parts.aggregate import RailDepartureAggregate
 
 
 class RailDepartures:
-    def __init__(self, all_services: dict):
+    def __init__(self, all_services: list[DepartureRecord]):
         self.departures = self._extract_departures(all_services)
 
     @staticmethod
-    def _extract_departures(all_services: dict) -> list[RailDepartureAggregate]:
-        services = all_services.get("services", [])
+    def _extract_departures(
+        all_services: list[DepartureRecord],
+    ) -> list[RailDepartureAggregate]:
         departures = []
-        for dep in services:
-            loc = dep.get("locationDetail", {})
-            departure_aggregate = RailDepartureAggregate(loc)
+        for dep in all_services:
+            departure_aggregate = RailDepartureAggregate(dep)
             if departure_aggregate.is_valid():
                 departures.append(departure_aggregate.get_rail_departure())
 

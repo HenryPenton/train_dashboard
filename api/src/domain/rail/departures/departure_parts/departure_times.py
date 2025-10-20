@@ -1,3 +1,4 @@
+from src.adapters.clients.rttclient import DepartureRecord
 from src.shared.utils.time import twenty_four_hour_string_to_minutes
 from src.shared.utils.check_group_of_properties_exist import (
     check_group_of_properties_exist,
@@ -5,9 +6,9 @@ from src.shared.utils.check_group_of_properties_exist import (
 
 
 class RailDepartureTimes:
-    def __init__(self, location_detail: dict):
-        self.scheduled_departure = self._get_scheduled_departure(location_detail)
-        self.real_departure = self._get_real_departure(location_detail)
+    def __init__(self, service: DepartureRecord):
+        self.scheduled_departure = self._get_scheduled_departure(service)
+        self.real_departure = self._get_real_departure(service)
 
         self.actual = self.real_departure or self.scheduled_departure
 
@@ -18,12 +19,12 @@ class RailDepartureTimes:
         self.status = self._get_status(self.delay)
 
     @staticmethod
-    def _get_scheduled_departure(loc):
-        return loc.get("gbttBookedDeparture")
+    def _get_scheduled_departure(service: DepartureRecord):
+        return service.scheduled_departure
 
     @staticmethod
-    def _get_real_departure(loc):
-        return loc.get("realtimeDeparture")
+    def _get_real_departure(service: DepartureRecord):
+        return service.real_departure
 
     @staticmethod
     def _adjust_delay_for_overnight(delay, booked_departure=None, real_departure=None):
