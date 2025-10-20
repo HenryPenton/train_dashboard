@@ -10,5 +10,5 @@ class AllRoutes:
         if not self.journeys or len(self.journeys) == 0:
             return {"error": "No journeys found"}
         best = self.journeys[0]
-        print(f"{best} best")
+
         return BestRoute(best).get_best_route_summary()

@@ -1,23 +1,24 @@
 from collections import Counter
 
+from src.adapters.clients.tflclient import LineRecord
 from src.shared.utils.check_group_of_properties_exist import (
     check_group_of_properties_exist,
 )
 
 
 class LineStatus:
-    def __init__(self, line: dict):
+    def __init__(self, line: LineRecord):
         self.status = self._get_status(line)
         self.name = self._get_name(line)
         self.statusSeverity = self._get_status_severity(line)
 
     @staticmethod
     def _get_name(line):
-        return line.get("name")
+        return line.name
 
     @staticmethod
     def _get_status_severity(line):
-        line_statuses = line.get("lineStatuses", [])
+        line_statuses = line.line_statuses
         if line_statuses:
             return min(
                 (
@@ -30,7 +31,7 @@ class LineStatus:
 
     @staticmethod
     def _get_status(line):
-        line_statuses = line.get("lineStatuses", [])
+        line_statuses = line.line_statuses
         if line_statuses:
             status_list = [
                 s.get("statusSeverityDescription")
@@ -51,6 +52,7 @@ class LineStatus:
         has_required_properties = check_group_of_properties_exist(
             self.name, self.status, self.statusSeverity
         )
+
         if has_required_properties:
             return {
                 "name": self.name,
@@ -60,14 +62,15 @@ class LineStatus:
 
 
 class LineStatuses:
-    def __init__(self, lines: list[dict]):
+    def __init__(self, lines: list[LineRecord]):
         self.line_statuses = self._extract_statuses(lines)
 
     @staticmethod
-    def _extract_statuses(lines: list[dict]) -> list[dict]:
+    def _extract_statuses(lines: list[LineRecord]) -> list[dict]:
         lines_statuses: list[dict] = []
         for line in lines:
             line_status_dict = LineStatus(line).get_status()
+
             if line_status_dict:
                 lines_statuses.append(line_status_dict)
 

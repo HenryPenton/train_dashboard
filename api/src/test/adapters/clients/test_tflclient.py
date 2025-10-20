@@ -1,5 +1,10 @@
 import pytest
-from src.adapters.clients.tflclient import TFLClient, TFLClientError, JourneyRecord
+from src.adapters.clients.tflclient import (
+    TFLClient,
+    TFLClientError,
+    JourneyRecord,
+    LineRecord,
+)
 
 
 class MockAsyncClient:
@@ -39,7 +44,7 @@ async def test_get_best_route_success():
     client = TFLClient(MockAsyncClient(mock_response))
     result = await client.get_possible_route_journeys("Paddington", "Liverpool Street")
     assert all(isinstance(r, JourneyRecord) for r in result)
-    print(result)
+
     assert result[0].legs == []
     assert result[0].duration == 25
     assert result[0].arrival == "2025-10-19T10:30:00Z"
@@ -60,11 +65,22 @@ async def test_get_best_route_error():
 
 @pytest.mark.asyncio
 async def test_get_all_lines_status_success():
-    mock_json = {"lines": [{"id": "central", "status": "Good Service"}]}
+    mock_json = [
+        {
+            "id": "central",
+            "name": "Central",
+            "lineStatuses": [
+                {"statusSeverityDescription": "Good Service", "statusSeverity": 10}
+            ],
+        }
+    ]
     mock_response = MockResponse(json_data=mock_json)
     client = TFLClient(MockAsyncClient(mock_response))
     result = await client.get_all_lines_status()
-    assert result == mock_json
+    assert isinstance(result, list)
+    assert all(isinstance(r, LineRecord) for r in result)
+    assert result[0].id == "central"
+    assert result[0].line_statuses[0]["statusSeverityDescription"] == "Good Service"
 
 
 @pytest.mark.asyncio

@@ -16,4 +16,5 @@ class TFLService:
 
     async def get_line_status(self):
         data = await self.client.get_all_lines_status()
+
         return LineStatuses(data).get_line_statuses()

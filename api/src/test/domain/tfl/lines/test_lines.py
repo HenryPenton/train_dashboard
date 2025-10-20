@@ -1,13 +1,13 @@
 from src.domain.tfl.lines.lines import LineStatus, LineStatuses
+from src.adapters.clients.tflclient import LineRecord
 
 
 class TestLineStatus:
     def test_one_status(self):
-        line = {
+        line = LineRecord({
             "name": "Victoria",
             "lineStatuses": [{"statusSeverityDescription": "Good Service", "statusSeverity": 10}],
-        }
-
+        })
         result = LineStatus(line).get_status()
         assert result == {
             "name": "Victoria",
@@ -16,16 +16,14 @@ class TestLineStatus:
         }
 
     def test_two_statuses(self):
-        line = {
+        line = LineRecord({
             "name": "Northern",
             "lineStatuses": [
                 {"statusSeverityDescription": "Minor Delays", "statusSeverity": 6},
                 {"statusSeverityDescription": "Part Suspended", "statusSeverity": 4},
             ],
-        }
-
+        })
         result = LineStatus(line).get_status()
-
         assert result == {
             "name": "Northern",
             "status": "Minor Delays, Part Suspended",
@@ -33,15 +31,14 @@ class TestLineStatus:
         }
 
     def test_two_same_statuses(self):
-        line = {
+        line = LineRecord({
             "name": "Mildmay",
             "lineStatuses": [
                 {"statusSeverityDescription": "Part Closure", "statusSeverity": 3},
                 {"statusSeverityDescription": "Part Closure", "statusSeverity": 3},
                 {"statusSeverityDescription": "Good Service", "statusSeverity": 10},
             ],
-        }
-
+        })
         result = LineStatus(line).get_status()
         assert result == {
             "name": "Mildmay",
@@ -50,7 +47,7 @@ class TestLineStatus:
         }
 
     def test_empty(self):
-        assert LineStatus({}).get_status() is None
+        assert LineStatus(LineRecord({})).get_status() is None
 
 
 class TestLineStatuses:
@@ -59,10 +56,10 @@ class TestLineStatuses:
 
     def test_one_line(self):
         lines = [
-            {
+            LineRecord({
                 "name": "Victoria",
                 "lineStatuses": [{"statusSeverityDescription": "Good Service", "statusSeverity": 10}],
-            },
+            })
         ]
         result = LineStatuses(lines).get_line_statuses()
         assert result == [
@@ -75,19 +72,19 @@ class TestLineStatuses:
 
     def test_two_lines(self):
         lines = [
-            {
+            LineRecord({
                 "name": "Northern",
                 "lineStatuses": [
                     {"statusSeverityDescription": "Minor Delays", "statusSeverity": 6},
                     {"statusSeverityDescription": "Part Suspended", "statusSeverity": 4},
                 ],
-            },
-            {
+            }),
+            LineRecord({
                 "name": "Piccadilly",
                 "lineStatuses": [
                     {"statusSeverityDescription": "Good Service", "statusSeverity": 10},
                 ],
-            },
+            }),
         ]
         result = LineStatuses(lines).get_line_statuses()
         assert result == [
@@ -105,16 +102,11 @@ class TestLineStatuses:
 
     def test_missing_fields_omitted(self):
         lines = [
-            {},
-            {"name": "Piccadilly"},
-            {"lineStatuses": []},
-            {
-                "lineStatuses": [{"statusSeverityDescription": "Good Service"}],
-            },
-            {
-                "name": "Piccadilly",
-                "lineStatuses": [{"statusSeverityDescription": "Good Service"}],
-            },
+            LineRecord({}),
+            LineRecord({"name": "Piccadilly"}),
+            LineRecord({"lineStatuses": []}),
+            LineRecord({"lineStatuses": [{"statusSeverityDescription": "Good Service"}]}),
+            LineRecord({"name": "Piccadilly", "lineStatuses": [{"statusSeverityDescription": "Good Service"}]}),
         ]
         result = LineStatuses(lines).get_line_statuses()
         assert result == []
