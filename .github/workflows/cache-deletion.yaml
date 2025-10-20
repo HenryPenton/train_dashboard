@@ -1,0 +1,25 @@
+name: Delete All Caches
+
+on:
+  workflow_dispatch:
+
+jobs:
+  delete-caches:
+    runs-on: ubuntu-latest
+    steps:
+      - name: List all caches
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const caches = await github.rest.actions.listCaches({
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            });
+            if (caches.data.actions_caches.length === 0) {
+              console.log("No caches found.");
+              return;
+            }
+            for (const cache of caches.data.actions_caches) {
+              
+              console.log(`Deleted cache: ${cache.key}`);
+            }
