@@ -7,17 +7,17 @@ from src.shared.utils.check_group_of_properties_exist import (
 
 
 class LineStatus:
-    def __init__(self, line: LineRecord):
+    def __init__(self, line: LineRecord) -> None:
         self.status = self._get_status(line)
         self.name = self._get_name(line)
         self.statusSeverity = self._get_status_severity(line)
 
     @staticmethod
-    def _get_name(line):
+    def _get_name(line) -> str | None:
         return line.name
 
     @staticmethod
-    def _get_status_severity(line):
+    def _get_status_severity(line) -> int | None:
         line_statuses = line.line_statuses
         if line_statuses:
             return min(
@@ -30,7 +30,7 @@ class LineStatus:
             )
 
     @staticmethod
-    def _get_status(line):
+    def _get_status(line) -> str | None:
         line_statuses = line.line_statuses
         if line_statuses:
             status_list = [
