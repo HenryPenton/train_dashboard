@@ -1,5 +1,12 @@
 import { NextResponse } from "next/server";
 
+// Type for TFL line status response
+export type TflLineStatusType = {
+  name: string;
+  status: string | null;
+  statusSeverity: number;
+};
+
 export async function GET() {
   try {
     const res = await fetch(`${process.env.SERVER_URL}/tfl/line-status`);
@@ -10,6 +17,7 @@ export async function GET() {
       );
     }
     const data = await res.json();
+
     return NextResponse.json(data);
   } catch (e: unknown) {
     const message = e instanceof Error ? e.message : "Unknown error";

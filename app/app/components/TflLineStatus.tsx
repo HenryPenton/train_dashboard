@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 type TflLineStatusType = {
   name: string;
   status: string | null;
+  statusSeverity: number;
 };
 
 export default function TflLineStatus() {
@@ -64,43 +65,47 @@ export default function TflLineStatus() {
   );
 }
 
+function getStatusClass(
+  _status: string | null,
+  statusSeverity: number
+): string {
+  // Severity: 1 (worst) to 10 (best)
+  // Example color map: 1-3 red, 4-5 orange, 6-7 yellow, 8-9 light green, 10 green
+  const severityColors: { [key: number]: string } = {
+    1: "text-[#b91c1c] font-semibold", // dark red
+    2: "text-[#b91c1c] font-semibold", // dark red
+    3: "text-[#ef4444] font-semibold", // red
+    4: "text-[#ef4444] font-semibold", // red
+    5: "text-[#f87171] font-semibold", // light red
+    6: "text-[#f59e42] font-semibold", // orange
+    7: "text-[#fbbf24] font-semibold", // yellow-orange
+    8: "text-[#bbf7d0] font-semibold", // light green
+    9: "text-[#4ade80] font-semibold", // green
+    10: "text-[#22c55e] font-semibold", // dark green
+  };
+  return severityColors[statusSeverity] || "text-[#f1f1f1]";
+}
+
 function renderTflLineStatusList(tflStatuses: TflLineStatusType[]) {
   return (
     <ul role="list">
-      {tflStatuses.map((line, i) => {
-        let statusClass = "";
-        const status = line.status ? line.status.toLowerCase() : "";
-        if (
-          status.includes("suspend") ||
-          status.includes("closure") ||
-          status.includes("closed")
-        ) {
-          statusClass = "text-[#f87171] font-semibold"; // red
-        } else if (status.includes("minor delay")) {
-          statusClass = "text-[#fbbf24] font-semibold"; // orange
-        } else if (line.status === "Good Service") {
-          statusClass = "text-[#4ade80] font-semibold"; // green
-        } else if (line.status && line.status !== "Good Service") {
-          statusClass = "text-[#f87171] font-semibold"; // red for other negatives
-        }
-        return (
-          <li
-            key={i}
-            className="mb-3 text-[1.08rem]"
-            style={{ letterSpacing: "0.01em" }}
-            role="listitem"
-            aria-label={`Line ${line.name}`}
+      {tflStatuses.map((line, i) => (
+        <li
+          key={i}
+          className="mb-3 text-[1.08rem]"
+          style={{ letterSpacing: "0.01em" }}
+          role="listitem"
+          aria-label={`Line ${line.name}`}
+        >
+          <strong aria-label={`Line name ${line.name}`}>{line.name}</strong>:{" "}
+          <span
+            className={getStatusClass(line.status, line.statusSeverity)}
+            aria-label={`Line status ${line.status || "Unknown"}`}
           >
-            <strong aria-label={`Line name ${line.name}`}>{line.name}</strong>:{" "}
-            <span
-              className={statusClass}
-              aria-label={`Line status ${line.status || "Unknown"}`}
-            >
-              {line.status || "Unknown"}
-            </span>
-          </li>
-        );
-      })}
+            {line.status || "Unknown"}
+          </span>
+        </li>
+      ))}
     </ul>
   );
 }
