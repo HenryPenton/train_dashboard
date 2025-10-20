@@ -9,9 +9,9 @@ afterEach(() => {
 describe("TflLineStatus", () => {
   it("renders with mocked API data", async () => {
     const dummyData = [
-      { name: "Victoria", status: "Good Service" },
-      { name: "Northern", status: "Minor Delays" },
-      { name: "Central", status: "Part Suspended" },
+      { name: "Victoria", status: "Good Service", statusSeverity: 10 },
+      { name: "Northern", status: "Minor Delays", statusSeverity: 5 },
+      { name: "Central", status: "Part Suspended", statusSeverity: 3 },
     ];
 
     jest.spyOn(global, "fetch").mockImplementation(async () => {

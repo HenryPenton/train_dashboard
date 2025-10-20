@@ -63,9 +63,6 @@ export default function TflBestRoute({ from, to }: TflRouteProps) {
       <div className="text-white mb-1" aria-label="Journey duration">
         <span className="font-bold">Duration:</span> {data.duration} min
       </div>
-      <div className="text-white mb-1" aria-label="Journey status">
-        <span className="font-bold">Status:</span> {data.status}
-      </div>
     </div>
   );
 }

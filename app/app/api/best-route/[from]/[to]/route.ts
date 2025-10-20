@@ -43,9 +43,8 @@ export async function GET(
 
     // Transform backend response to match frontend expectations
     return NextResponse.json({
-      route: data.legs.map((leg) => `${leg.mode}: ${leg.instruction}`) || [],
+      route: data.legs.map((leg) => `${leg.mode}: ${leg.instruction}`),
       duration: data.duration,
-      status: data.error ? data.error : "OK",
     });
   } catch (e: unknown) {
     const message = e instanceof Error ? e.message : "Unknown error";
