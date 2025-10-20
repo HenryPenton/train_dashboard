@@ -2,7 +2,7 @@ from src.adapters.clients.tflclient import JourneyRecord
 
 
 class BestRoute:
-    def __init__(self, best: JourneyRecord):
+    def __init__(self, best: JourneyRecord) -> None:
         self.duration = best.duration
         self.arrival = best.arrival
         self.legs = [

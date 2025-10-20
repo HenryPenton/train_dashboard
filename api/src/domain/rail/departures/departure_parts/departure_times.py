@@ -6,12 +6,10 @@ from src.shared.utils.check_group_of_properties_exist import (
 
 
 class RailDepartureTimes:
-    def __init__(self, service: DepartureRecord):
+    def __init__(self, service: DepartureRecord) -> None:
         self.scheduled_departure = self._get_scheduled_departure(service)
         self.real_departure = self._get_real_departure(service)
-
         self.actual = self.real_departure or self.scheduled_departure
-
         self.delay = self._get_delay(self.scheduled_departure, self.real_departure)
         self.delay = self._adjust_delay_for_overnight(
             self.delay, self.scheduled_departure, self.real_departure
@@ -19,15 +17,17 @@ class RailDepartureTimes:
         self.status = self._get_status(self.delay)
 
     @staticmethod
-    def _get_scheduled_departure(service: DepartureRecord):
+    def _get_scheduled_departure(service: DepartureRecord) -> str:
         return service.scheduled_departure
 
     @staticmethod
-    def _get_real_departure(service: DepartureRecord):
+    def _get_real_departure(service: DepartureRecord) -> str:
         return service.real_departure
 
     @staticmethod
-    def _adjust_delay_for_overnight(delay, booked_departure=None, real_departure=None):
+    def _adjust_delay_for_overnight(
+        delay, booked_departure=None, real_departure=None
+    ) -> int | None:
         # A negative delay can represent one of two things, the train is early, or the train was late
         # and its lateness took the departure time past midnight. Here we make the possibly naive assumption
         # that a train is never more than 12 hours late or early to deal with this situation (720 minutes).
@@ -40,7 +40,7 @@ class RailDepartureTimes:
         return delay
 
     @classmethod
-    def _get_delay(cls, scheduled_departure: str, real_departure: str):
+    def _get_delay(cls, scheduled_departure: str, real_departure: str) -> int | None:
         sched_min = twenty_four_hour_string_to_minutes(scheduled_departure)
         real_min = twenty_four_hour_string_to_minutes(real_departure)
         if sched_min is None:
@@ -50,7 +50,7 @@ class RailDepartureTimes:
         return 0
 
     @staticmethod
-    def _get_status(delay: int):
+    def _get_status(delay: int) -> str | None:
         if delay is None:
             return None
         if delay > 0:
@@ -60,14 +60,14 @@ class RailDepartureTimes:
         if delay == 0:
             return "On time"
 
-    def is_valid(self):
+    def is_valid(self) -> bool:
         return check_group_of_properties_exist(
             self.actual,
             self.delay,
             self.status,
         )
 
-    def get_rail_departure_times(self):
+    def get_rail_departure_times(self) -> dict:
         return {
             "delay": self.delay,
             "status": self.status,
