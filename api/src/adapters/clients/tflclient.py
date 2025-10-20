@@ -1,5 +1,10 @@
 import httpx
-from fastapi import HTTPException
+
+
+class TFLClientError(Exception):
+    """Custom exception for TFLClient errors."""
+
+    pass
 
 
 class TFLClient:
@@ -23,22 +28,20 @@ class TFLClient:
             response = await self.client.get(url)
             response.raise_for_status()
             return response.json()
-        except httpx.HTTPStatusError as e:
-            raise HTTPException(status_code=e.response.status_code, detail=str(e))
         except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+            raise TFLClientError(f"TFLClient failed: {str(e)}")
 
     async def get_all_lines_status(self):
         """
         Fetch the status of all major TFL lines (tube, overground, dlr, elizabeth-line, tram).
         :return: JSON response from TFL API
         """
-        url = f"{self.api_root}/Line/Mode/tube,overground,dlr,elizabeth-line,tram/status"
+        url = (
+            f"{self.api_root}/Line/Mode/tube,overground,dlr,elizabeth-line,tram/status"
+        )
         try:
             response = await self.client.get(url)
             response.raise_for_status()
             return response.json()
-        except httpx.HTTPStatusError as e:
-            raise HTTPException(status_code=e.response.status_code, detail=str(e))
         except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+            raise TFLClientError(f"TFLClient failed: {str(e)}")
