@@ -9,17 +9,19 @@ jobs:
     permissions:
       actions: write
     steps:
-      - name: Cleanup
+      - name: Cleanup all caches in batches
         run: |
-          echo "Fetching list of all cache keys"
-          cacheKeys=$(gh cache list --limit 100 --json id --jq '.[].id')
-
           set +e
-          echo "Deleting caches..."
-          for cacheKey in $cacheKeys
-          do
-              echo "Deleting cache with key: $cacheKey"
+          while true; do
+            cacheKeys=$(gh cache list --limit 100 --json id --jq '.[].id')
+            if [ -z "$cacheKeys" ]; then
+              echo "No more caches to delete."
+              break
+            fi
+            echo "Deleting caches..."
+            for cacheKey in $cacheKeys; do
               gh cache delete $cacheKey
+            done
           done
           echo "Done"
         env:
