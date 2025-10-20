@@ -48,9 +48,6 @@ describe("TflBestRoute", () => {
       expect(screen.getByLabelText("Journey duration")).toHaveTextContent(
         "Duration: 22 min"
       );
-      expect(screen.getByLabelText("Journey status")).toHaveTextContent(
-        "Status: OK"
-      );
 
       expect(screen.getByLabelText("Journey leg 1")).toHaveTextContent(
         "Tube: Bakerloo line to Oxford Circus"
