@@ -1,4 +1,4 @@
-from src.domain.tfl.lines import LineStatus, LineStatuses
+from src.domain.tfl.lines.lines import LineStatus, LineStatuses
 
 
 class TestLineStatus:

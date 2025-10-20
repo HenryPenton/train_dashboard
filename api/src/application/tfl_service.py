@@ -1,6 +1,6 @@
 from src.adapters.clients.tflclient import TFLClient
-from src.domain.tfl.routes import AllRoutes
-from src.domain.tfl.lines import LineStatuses
+from src.domain.tfl.routes.routes import AllRoutes
+from src.domain.tfl.lines.lines import LineStatuses
 
 
 class TFLService:

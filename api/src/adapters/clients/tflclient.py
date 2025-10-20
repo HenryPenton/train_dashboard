@@ -1,6 +1,26 @@
 import httpx
 
 
+class RouteRecord:
+    def __init__(self, journey: dict):
+        self.duration = journey.get("duration")
+        self.legs = journey.get("legs", [])
+
+    @staticmethod
+    def from_journey(journey: dict):
+        return RouteRecord(journey)
+
+
+class LineRecord:
+    def __init__(self, line: dict):
+        self.id = line.get("id")
+        self.status = line.get("status")
+
+    @staticmethod
+    def from_line(line: dict):
+        return LineRecord(line)
+
+
 class TFLClientError(Exception):
     """Custom exception for TFLClient errors."""
 
