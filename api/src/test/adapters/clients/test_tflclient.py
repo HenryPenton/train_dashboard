@@ -1,5 +1,5 @@
 import pytest
-from src.adapters.clients.tflclient import TFLClient, TFLClientError
+from src.adapters.clients.tflclient import TFLClient, TFLClientError, JourneyRecord
 
 
 class MockAsyncClient:
@@ -30,11 +30,19 @@ class MockResponse:
 
 @pytest.mark.asyncio
 async def test_get_best_route_success():
-    mock_json = {"journeys": [{"duration": 25, "legs": []}]}
+    mock_json = {
+        "journeys": [
+            {"duration": 25, "legs": [], "arrivalDateTime": "2025-10-19T10:30:00Z"}
+        ]
+    }
     mock_response = MockResponse(json_data=mock_json)
     client = TFLClient(MockAsyncClient(mock_response))
     result = await client.get_possible_route_journeys("Paddington", "Liverpool Street")
-    assert result == [{"duration": 25, "legs": []}]
+    assert all(isinstance(r, JourneyRecord) for r in result)
+    print(result)
+    assert result[0].legs == []
+    assert result[0].duration == 25
+    assert result[0].arrival == "2025-10-19T10:30:00Z"
 
 
 @pytest.mark.asyncio

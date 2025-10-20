@@ -65,8 +65,8 @@ class RTTClient:
             departures = []
             for service in data.get("services", []):
                 loc = service.get("locationDetail", {})
-                record = DepartureRecord(loc)
-                departures.append(record)
+                departure_record = DepartureRecord(loc)
+                departures.append(departure_record)
             return departures
         except Exception as e:
             raise RTTClientError(f"RTTClient failed: {str(e)}")

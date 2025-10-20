@@ -1,7 +1,10 @@
+from src.adapters.clients.tflclient import JourneyRecord
+
+
 class BestRoute:
-    def __init__(self, best: dict):
-        self.duration = best.get("duration")
-        self.arrival = best.get("arrivalDateTime")
+    def __init__(self, best: JourneyRecord):
+        self.duration = best.duration
+        self.arrival = best.arrival
         self.legs = [
             {
                 "mode": leg.get("mode", {}).get("name"),
@@ -10,7 +13,7 @@ class BestRoute:
                 "arrival": leg.get("arrivalPoint", {}).get("commonName"),
                 "line": leg.get("routeOptions", [{}])[0].get("name"),
             }
-            for leg in best.get("legs", [])
+            for leg in best.legs
         ]
 
     def get_best_route_summary(self) -> dict:

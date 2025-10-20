@@ -1,21 +1,24 @@
 from src.domain.tfl.routes.routes import BestRoute
+from src.adapters.clients.tflclient import JourneyRecord
 
 
 class TestBestRoute:
     def test_basic_journey(self):
-        best = {
-            "duration": 45,
-            "arrivalDateTime": "2025-10-17T09:45:00",
-            "legs": [
-                {
-                    "mode": {"name": "Tube"},
-                    "instruction": {"summary": "Take the Central line"},
-                    "departurePoint": {"commonName": "Oxford Circus"},
-                    "arrivalPoint": {"commonName": "Liverpool Street"},
-                    "routeOptions": [{"name": "Central"}],
-                }
-            ],
-        }
+        best = JourneyRecord(
+            {
+                "duration": 45,
+                "arrivalDateTime": "2025-10-17T09:45:00",
+                "legs": [
+                    {
+                        "mode": {"name": "Tube"},
+                        "instruction": {"summary": "Take the Central line"},
+                        "departurePoint": {"commonName": "Oxford Circus"},
+                        "arrivalPoint": {"commonName": "Liverpool Street"},
+                        "routeOptions": [{"name": "Central"}],
+                    }
+                ],
+            }
+        )
         result = BestRoute(best).get_best_route_summary()
         assert result == {
             "duration": 45,
@@ -32,26 +35,28 @@ class TestBestRoute:
         }
 
     def test_multiple_legs(self):
-        best = {
-            "duration": 60,
-            "arrivalDateTime": "2025-10-17T10:00:00",
-            "legs": [
-                {
-                    "mode": {"name": "Tube"},
-                    "instruction": {"summary": "Take the Victoria line"},
-                    "departurePoint": {"commonName": "Brixton"},
-                    "arrivalPoint": {"commonName": "Oxford Circus"},
-                    "routeOptions": [{"name": "Victoria"}],
-                },
-                {
-                    "mode": {"name": "Tube"},
-                    "instruction": {"summary": "Change to Central line"},
-                    "departurePoint": {"commonName": "Oxford Circus"},
-                    "arrivalPoint": {"commonName": "Liverpool Street"},
-                    "routeOptions": [{"name": "Central"}],
-                },
-            ],
-        }
+        best = JourneyRecord(
+            {
+                "duration": 60,
+                "arrivalDateTime": "2025-10-17T10:00:00",
+                "legs": [
+                    {
+                        "mode": {"name": "Tube"},
+                        "instruction": {"summary": "Take the Victoria line"},
+                        "departurePoint": {"commonName": "Brixton"},
+                        "arrivalPoint": {"commonName": "Oxford Circus"},
+                        "routeOptions": [{"name": "Victoria"}],
+                    },
+                    {
+                        "mode": {"name": "Tube"},
+                        "instruction": {"summary": "Change to Central line"},
+                        "departurePoint": {"commonName": "Oxford Circus"},
+                        "arrivalPoint": {"commonName": "Liverpool Street"},
+                        "routeOptions": [{"name": "Central"}],
+                    },
+                ],
+            }
+        )
         result = BestRoute(best).get_best_route_summary()
         assert result == {
             "duration": 60,
@@ -75,19 +80,21 @@ class TestBestRoute:
         }
 
     def test_missing_fields(self):
-        best = {
-            "duration": None,
-            "arrivalDateTime": None,
-            "legs": [
-                {
-                    "mode": {},
-                    "instruction": {},
-                    "departurePoint": {},
-                    "arrivalPoint": {},
-                    "routeOptions": [{}],
-                }
-            ],
-        }
+        best = JourneyRecord(
+            {
+                "duration": None,
+                "arrivalDateTime": None,
+                "legs": [
+                    {
+                        "mode": {},
+                        "instruction": {},
+                        "departurePoint": {},
+                        "arrivalPoint": {},
+                        "routeOptions": [{}],
+                    }
+                ],
+            }
+        )
         result = BestRoute(best).get_best_route_summary()
         assert result == {
             "duration": None,
@@ -104,26 +111,28 @@ class TestBestRoute:
         }
 
     def test_multiple_modes(self):
-        best = {
-            "duration": 30,
-            "arrivalDateTime": "2025-10-17T08:30:00",
-            "legs": [
-                {
-                    "mode": {"name": "Bus"},
-                    "instruction": {"summary": "Take the 25 bus"},
-                    "departurePoint": {"commonName": "Stratford"},
-                    "arrivalPoint": {"commonName": "Aldgate"},
-                    "routeOptions": [{"name": "25"}],
-                },
-                {
-                    "mode": {"name": "Tram"},
-                    "instruction": {"summary": "Take the Croydon Tramlink"},
-                    "departurePoint": {"commonName": "East Croydon"},
-                    "arrivalPoint": {"commonName": "Wimbledon"},
-                    "routeOptions": [{"name": "Tramlink"}],
-                },
-            ],
-        }
+        best = JourneyRecord(
+            {
+                "duration": 30,
+                "arrivalDateTime": "2025-10-17T08:30:00",
+                "legs": [
+                    {
+                        "mode": {"name": "Bus"},
+                        "instruction": {"summary": "Take the 25 bus"},
+                        "departurePoint": {"commonName": "Stratford"},
+                        "arrivalPoint": {"commonName": "Aldgate"},
+                        "routeOptions": [{"name": "25"}],
+                    },
+                    {
+                        "mode": {"name": "Tram"},
+                        "instruction": {"summary": "Take the Croydon Tramlink"},
+                        "departurePoint": {"commonName": "East Croydon"},
+                        "arrivalPoint": {"commonName": "Wimbledon"},
+                        "routeOptions": [{"name": "Tramlink"}],
+                    },
+                ],
+            }
+        )
         result = BestRoute(best).get_best_route_summary()
         assert result == {
             "duration": 30,
