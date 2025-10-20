@@ -116,6 +116,7 @@ fastapi dev src/main.py
 ```
 
 3. **Usage:**
+
 - Frontend: http://localhost:3000
 - Backend: http://localhost:8000
 
@@ -135,6 +136,44 @@ fastapi dev src/main.py
 
 - Multi-arch Docker builds for both frontend and backend
 - Automated builds and pushes via GitHub Actions
+
+## Running Unit Tests
+
+### Backend (FastAPI/Python)
+
+Unit tests for the backend are written using `pytest`.
+
+To run all backend tests:
+
+```sh
+cd api
+pytest
+```
+
+You can run a specific test file:
+
+```sh
+pytest src/test/domain/rail/departures/departure_parts/test_departure_times.py
+```
+
+### Frontend (Next.js/React)
+
+Unit tests for the frontend are written using Jest and React Testing Library.
+
+To run all frontend tests:
+
+```sh
+cd app
+pnpm test
+```
+
+You can run a specific test file:
+
+```sh
+pnpm test app/components/__tests__/TflBestRoute.test.tsx
+```
+
+Test coverage reports and watch mode are also available via Jest CLI options.
 
 ## License
 
