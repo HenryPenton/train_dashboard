@@ -43,40 +43,59 @@ export default function TrainDepartures(props: TrainDepartureProps) {
   }, [props.fromStation.stationCode, props.toStation.stationCode]);
 
   return (
-    <section className="flex-1 bg-[#23262f] rounded-[12px] p-6 text-[#f1f1f1] shadow-[0_2px_12px_0_rgba(0,0,0,0.25)]">
-      <h2 className="text-xl font-semibold text-white mb-2">
+    <section
+      className="flex-1 bg-[#23262f] rounded-[12px] p-6 text-[#f1f1f1] shadow-[0_2px_12px_0_rgba(0,0,0,0.25)]"
+      aria-label="Train Departures Section"
+    >
+      <h2
+        className="text-xl font-semibold text-white mb-2"
+        role="heading"
+        aria-level={2}
+      >
         Train Departures
       </h2>
       <div style={{ marginBottom: 16 }}>
-        <span>
+        <span aria-label="Departure route">
           Departures from{" "}
           <strong>
             {props.fromStation.stationName} to{" "}
             {`${props.toStation.stationName}`}
           </strong>
         </span>
-        {loading && <span style={{ marginLeft: 8 }}>Loading...</span>}
+        {loading && (
+          <span style={{ marginLeft: 8 }} aria-live="polite">
+            Loading...
+          </span>
+        )}
       </div>
       {error && (
-        <div className="text-[#ff4d4f] bg-[#2a1a1a] p-2 rounded mb-2">
+        <div
+          className="text-[#ff4d4f] bg-[#2a1a1a] p-2 rounded mb-2"
+          role="alert"
+          aria-label="Departure error"
+        >
           Could not find any services for the configured route.
         </div>
       )}
       {departures && (
         <div>
           {departures.length === 0 ? (
-            <div>No departures found for this destination.</div>
+            <div role="status" aria-label="No departures found">
+              No departures found for this destination.
+            </div>
           ) : (
-            <ul>
+            <ul role="list" aria-label="Departure list">
               {departures.map((dep, i) => (
                 <li
                   key={i}
                   className="mb-4 text-[1.08rem] bg-[#23262f] rounded-[8px] p-[12px_0] shadow-[0_1px_4px_0_rgba(0,0,0,0.13)]"
+                  role="listitem"
+                  aria-label={`Departure from ${dep.origin} to ${dep.destination}`}
                 >
                   <strong>{dep.origin}</strong> →{" "}
                   <strong>{dep.destination}</strong>
                   <br />
-                  <span>
+                  <span aria-label="Departure details">
                     Departs: {renderDepartureStatus(dep)} {" | Platform: "}
                     {dep.platform || "-"}
                     {typeof dep.delay === "number" && (
@@ -88,6 +107,9 @@ export default function TrainDepartures(props: TrainDepartureProps) {
                               ? "text-[#ff4d4f] font-semibold"
                               : "text-[#4ade80] font-semibold"
                           }
+                          aria-label={`Delay: ${
+                            dep.delay === 0 ? "On time" : `${dep.delay} min`
+                          }`}
                         >
                           {dep.delay === 0 ? "On time" : `${dep.delay} min`}
                         </span>
@@ -106,11 +128,32 @@ export default function TrainDepartures(props: TrainDepartureProps) {
 function renderDepartureStatus(dep: Departure) {
   switch (dep.status) {
     case "Early":
-      return <span className="text-[#4ade80] font-semibold">{dep.actual}</span>;
+      return (
+        <span
+          className="text-[#4ade80] font-semibold"
+          aria-label="Early departure"
+        >
+          {dep.actual}
+        </span>
+      );
     case "On time":
-      return <span className="text-[#4ade80] font-semibold">{dep.actual}</span>;
+      return (
+        <span
+          className="text-[#4ade80] font-semibold"
+          aria-label="On time departure"
+        >
+          {dep.actual}
+        </span>
+      );
     case "Late":
-      return <span className="text-[#ff4d4f] font-semibold">{dep.actual}</span>;
+      return (
+        <span
+          className="text-[#ff4d4f] font-semibold"
+          aria-label="Late departure"
+        >
+          {dep.actual}
+        </span>
+      );
     default:
       return null;
   }
