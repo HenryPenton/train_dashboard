@@ -1,5 +1,5 @@
+import { ApiRailDeparturesSchema } from "@/app/validators/api-validators/RailDepartureSchema";
 import { NextResponse } from "next/server";
-import { Departures } from "@/app/validators/DepartureSchema";
 
 export async function GET(
   _request: Request,
@@ -23,7 +23,7 @@ export async function GET(
       );
     }
     const rawData = await res.json();
-    const data = Departures.parse(rawData);
+    const data = ApiRailDeparturesSchema.parse(rawData);
 
     return NextResponse.json(data);
   } catch (e: unknown) {

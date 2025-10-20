@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import * as z from "zod";
+import { ApiLineStatusesSchema } from "@/app/validators/api-validators/LineStatusSchema";
 
 // Type for TFL line status response
 export type TflLineStatusType = {
@@ -18,14 +18,7 @@ export async function GET() {
       );
     }
     const data = await res.json();
-    const LineStatuses = z.array(
-      z.object({
-        name: z.string(),
-        status: z.string(),
-        statusSeverity: z.number(),
-      })
-    );
-    const lineStatusData = LineStatuses.parse(data);
+    const lineStatusData = ApiLineStatusesSchema.parse(data);
 
     return NextResponse.json(lineStatusData);
   } catch (e: unknown) {

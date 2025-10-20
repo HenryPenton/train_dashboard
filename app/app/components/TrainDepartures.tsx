@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Departures } from "../validators/DepartureSchema";
+import { FrontEndRailDeparturesSchema } from "../validators/frontend-validators/RailDepartureSchema";
 
 type Departure = {
   origin: string;
@@ -31,7 +31,7 @@ export default function TrainDepartures(props: TrainDepartureProps) {
         );
         const data = await result.json();
 
-        const departures = Departures.parse(data);
+        const departures = FrontEndRailDeparturesSchema.parse(data);
 
         const tenTrains = departures.slice(0, 10);
         setDepartures(tenTrains);

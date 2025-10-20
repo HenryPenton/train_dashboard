@@ -2,8 +2,6 @@
 import { useEffect, useState } from "react";
 
 interface BestRouteData {
-  origin: string;
-  destination: string;
   route: string[];
   duration: number;
   status: string;
@@ -27,6 +25,7 @@ export default function TflBestRoute({ from, to }: TflRouteProps) {
         const res = await fetch(`/api/best-route/${from.naptan}/${to.naptan}`);
         if (!res.ok) throw new Error("Failed to fetch best route");
         const json = await res.json();
+
         setData(json);
       } catch (e: unknown) {
         const message = e instanceof Error ? e.message : "Unknown error";

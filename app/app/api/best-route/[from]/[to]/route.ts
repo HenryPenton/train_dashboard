@@ -14,7 +14,6 @@ const BackendResponseSchema = z.object({
   duration: z.number(),
   arrival: z.string(),
   legs: z.array(BackendLegSchema),
-  error: z.string().optional(),
 });
 
 export async function GET(
@@ -44,8 +43,6 @@ export async function GET(
 
     // Transform backend response to match frontend expectations
     return NextResponse.json({
-      origin: from,
-      destination: to,
       route: data.legs.map((leg) => `${leg.mode}: ${leg.instruction}`) || [],
       duration: data.duration,
       status: data.error ? data.error : "OK",
