@@ -1,14 +1,21 @@
-# ---- Build Stage ----
-FROM node:24-alpine AS builder
+
+# ---- Dependencies Stage ----
+FROM node:24-alpine AS deps
 WORKDIR /app
 
-# Install dependencies
 COPY package.json pnpm-lock.yaml ./
 RUN npm install -g pnpm \
     && pnpm install --frozen-lockfile
 
-# Copy source and build
+# ---- Build Environment ----
+FROM node:24-alpine AS builder
+WORKDIR /app
+RUN npm install -g pnpm 
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/package.json ./
+COPY --from=deps /app/pnpm-lock.yaml ./
 COPY . .
+
 RUN pnpm build
 
 # ---- Production Stage ----
