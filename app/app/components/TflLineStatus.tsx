@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 type TflLineStatusType = {
   name: string;
-  status: string | null;
+  status: string;
   statusSeverity: number;
 };
 
@@ -65,10 +65,7 @@ export default function TflLineStatus() {
   );
 }
 
-function getStatusClass(
-  _status: string | null,
-  statusSeverity: number
-): string {
+function getStatusClass(statusSeverity: number): string {
   // Severity: 1 (worst) to 10 (best)
   // Example color map: 1-3 red, 4-5 orange, 6-7 yellow, 8-9 light green, 10 green
   const severityColors: { [key: number]: string } = {
@@ -99,7 +96,7 @@ function renderTflLineStatusList(tflStatuses: TflLineStatusType[]) {
         >
           <strong aria-label={`Line name ${line.name}`}>{line.name}</strong>:{" "}
           <span
-            className={getStatusClass(line.status, line.statusSeverity)}
+            className={getStatusClass(line.statusSeverity)}
             aria-label={`Line status ${line.status || "Unknown"}`}
           >
             {line.status || "Unknown"}
