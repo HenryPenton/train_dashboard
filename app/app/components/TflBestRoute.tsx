@@ -14,7 +14,7 @@ type TflRouteProps = {
   to: { placeName: string; naptan: string };
 };
 
-export default function TflBestRoute(props: TflRouteProps) {
+export default function TflBestRoute({ from, to }: TflRouteProps) {
   const [data, setData] = useState<BestRouteData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -24,22 +24,19 @@ export default function TflBestRoute(props: TflRouteProps) {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(
-          `/api/best-route/${props.from.naptan}/${props.to.naptan}`
-        );
+        const res = await fetch(`/api/best-route/${from.naptan}/${to.naptan}`);
         if (!res.ok) throw new Error("Failed to fetch best route");
         const json = await res.json();
         setData(json);
       } catch (e: unknown) {
         const message = e instanceof Error ? e.message : "Unknown error";
-
         setError(message);
       } finally {
         setLoading(false);
       }
     }
     fetchBestRoute();
-  }, [props.from.naptan, props.to.naptan]);
+  }, [from.naptan, to.naptan]);
 
   if (loading) return <div className="text-white">Loading best route...</div>;
   if (error) return <div className="text-red-400">Error: {error}</div>;
@@ -55,10 +52,10 @@ export default function TflBestRoute(props: TflRouteProps) {
         Best Route
       </h2>
       <div className="text-white mb-1" aria-label="Origin">
-        <span className="font-bold">From:</span> {props.from.placeName}
+        <span className="font-bold">From:</span> {from.placeName}
       </div>
       <div className="text-white mb-1" aria-label="Destination">
-        <span className="font-bold">To:</span> {props.to.placeName}
+        <span className="font-bold">To:</span> {to.placeName}
       </div>
       <div className="text-white mb-1">
         <span className="font-bold">Route:</span>
@@ -75,36 +72,19 @@ export default function TflBestRoute(props: TflRouteProps) {
 }
 
 function routeLegs(data: BestRouteData) {
+  const colorMap: Record<string, string> = {
+    tube: "text-yellow-300",
+    elizabeth: "text-purple-400",
+    bus: "text-red-400",
+    walk: "text-green-400",
+    overground: "text-orange-400",
+    train: "text-blue-400",
+  };
   return data.route.map((stage, idx) => {
     const match = stage.match(/^([\w\s-]+):\s*(.*)$/i);
     const method = match ? match[1] : null;
     const rest = match ? match[2] : stage;
-    let color = "text-cyan-300";
-    if (method) {
-      const lowercaseMethod = method.toLowerCase();
-      switch (lowercaseMethod) {
-        case "tube":
-          color = "text-yellow-300";
-          break;
-        case "elizabeth":
-          color = "text-purple-400";
-          break;
-        case "bus":
-          color = "text-red-400";
-          break;
-        case "walk":
-          color = "text-green-400";
-          break;
-        case "overground":
-          color = "text-orange-400";
-          break;
-        case "train":
-          color = "text-blue-400";
-          break;
-        default:
-          color = "text-cyan-300";
-      }
-    }
+    const color = method ? colorMap[method.toLowerCase()] : "text-cyan-300";
     return (
       <div
         key={idx}
