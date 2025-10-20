@@ -19,6 +19,7 @@ jobs:
           for cacheKey in $cacheKeys
           do
               echo "Deleting cache with key: $cacheKey"
+              gh cache delete $cacheKey
           done
           echo "Done"
         env:
