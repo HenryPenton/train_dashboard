@@ -84,7 +84,7 @@ function routeLegs(data: BestRouteData) {
     const match = stage.match(/^([\w\s-]+):\s*(.*)$/i);
     const method = match ? match[1] : null;
     const rest = match ? match[2] : stage;
-    const color = method ? colorMap[method.toLowerCase()] : "text-cyan-300";
+    const color = method ? colorMap[method.toLowerCase()] : "text-purple-300";
     return (
       <div
         key={idx}
