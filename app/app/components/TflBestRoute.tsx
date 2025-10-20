@@ -74,7 +74,7 @@ export default function TflBestRoute({ from, to }: TflRouteProps) {
 function routeLegs(data: BestRouteData) {
   const colorMap: Record<string, string> = {
     tube: "text-yellow-300",
-    elizabeth: "text-purple-400",
+    "elizabeth-line": "text-purple-400",
     bus: "text-red-400",
     walk: "text-green-400",
     overground: "text-orange-400",
