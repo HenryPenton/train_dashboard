@@ -58,13 +58,13 @@ class TestLineStatuses:
         assert LineStatuses([]).get_line_statuses() == []
 
     def test_one_line(self):
-        response_json = [
+        lines = [
             {
                 "name": "Victoria",
                 "lineStatuses": [{"statusSeverityDescription": "Good Service", "statusSeverity": 10}],
             },
         ]
-        result = LineStatuses(response_json).get_line_statuses()
+        result = LineStatuses(lines).get_line_statuses()
         assert result == [
             {
                 "name": "Victoria",
@@ -74,7 +74,7 @@ class TestLineStatuses:
         ]
 
     def test_two_lines(self):
-        response_json = [
+        lines = [
             {
                 "name": "Northern",
                 "lineStatuses": [
@@ -89,7 +89,7 @@ class TestLineStatuses:
                 ],
             },
         ]
-        result = LineStatuses(response_json).get_line_statuses()
+        result = LineStatuses(lines).get_line_statuses()
         assert result == [
             {
                 "name": "Northern",
@@ -104,7 +104,7 @@ class TestLineStatuses:
         ]
 
     def test_missing_fields_omitted(self):
-        response_json = [
+        lines = [
             {},
             {"name": "Piccadilly"},
             {"lineStatuses": []},
@@ -116,5 +116,5 @@ class TestLineStatuses:
                 "lineStatuses": [{"statusSeverityDescription": "Good Service"}],
             },
         ]
-        result = LineStatuses(response_json).get_line_statuses()
+        result = LineStatuses(lines).get_line_statuses()
         assert result == []

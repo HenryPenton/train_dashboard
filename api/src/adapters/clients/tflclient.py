@@ -1,26 +1,6 @@
 import httpx
 
 
-class RouteRecord:
-    def __init__(self, journey: dict):
-        self.duration = journey.get("duration")
-        self.legs = journey.get("legs", [])
-
-    @staticmethod
-    def from_journey(journey: dict):
-        return RouteRecord(journey)
-
-
-class LineRecord:
-    def __init__(self, line: dict):
-        self.id = line.get("id")
-        self.status = line.get("status")
-
-    @staticmethod
-    def from_line(line: dict):
-        return LineRecord(line)
-
-
 class TFLClientError(Exception):
     """Custom exception for TFLClient errors."""
 
@@ -36,7 +16,7 @@ class TFLClient:
         self.client = client
         self.api_root = "https://api.tfl.gov.uk"
 
-    async def get_best_route(self, from_station: str, to_station: str):
+    async def get_possible_route_journeys(self, from_station: str, to_station: str):
         """
         Fetch the best route from TFL Journey Planner API between two stations.
         :param from_station: Origin station name or code
@@ -47,7 +27,7 @@ class TFLClient:
         try:
             response = await self.client.get(url)
             response.raise_for_status()
-            return response.json()
+            return response.json().get("journeys", [])
         except Exception as e:
             raise TFLClientError(f"TFLClient failed: {str(e)}")
 

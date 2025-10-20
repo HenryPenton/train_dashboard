@@ -60,13 +60,13 @@ class LineStatus:
 
 
 class LineStatuses:
-    def __init__(self, response_json: list[dict]):
-        self.line_statuses = self._extract_statuses(response_json)
+    def __init__(self, lines: list[dict]):
+        self.line_statuses = self._extract_statuses(lines)
 
     @staticmethod
-    def _extract_statuses(response_json: list[dict]) -> list[dict]:
+    def _extract_statuses(lines: list[dict]) -> list[dict]:
         lines_statuses: list[dict] = []
-        for line in response_json:
+        for line in lines:
             line_status_dict = LineStatus(line).get_status()
             if line_status_dict:
                 lines_statuses.append(line_status_dict)

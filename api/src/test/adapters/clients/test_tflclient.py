@@ -33,8 +33,8 @@ async def test_get_best_route_success():
     mock_json = {"journeys": [{"duration": 25, "legs": []}]}
     mock_response = MockResponse(json_data=mock_json)
     client = TFLClient(MockAsyncClient(mock_response))
-    result = await client.get_best_route("Paddington", "Liverpool Street")
-    assert result == mock_json
+    result = await client.get_possible_route_journeys("Paddington", "Liverpool Street")
+    assert result == [{"duration": 25, "legs": []}]
 
 
 @pytest.mark.asyncio
@@ -46,7 +46,7 @@ async def test_get_best_route_error():
     mock_response = ErrorResponse()
     client = TFLClient(MockAsyncClient(mock_response))
     with pytest.raises(TFLClientError) as e:
-        await client.get_best_route("Paddington", "Liverpool Street")
+        await client.get_possible_route_journeys("Paddington", "Liverpool Street")
     assert "TFLClient failed" in str(e.value)
 
 

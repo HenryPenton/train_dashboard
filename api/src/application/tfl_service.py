@@ -8,8 +8,9 @@ class TFLService:
         self.client = client
 
     async def get_best_route(self, from_station: str, to_station: str):
-        data = await self.client.get_best_route(from_station, to_station)
-        journeys = data.get("journeys", [])
+        journeys = await self.client.get_possible_route_journeys(
+            from_station, to_station
+        )
 
         return AllRoutes(journeys).get_best()
 
