@@ -26,6 +26,9 @@ importers:
       tailwindcss:
         specifier: ^4.1.15
         version: 4.1.15
+      zod:
+        specifier: ^4.1.12
+        version: 4.1.12
     devDependencies:
       '@eslint/eslintrc':
         specifier: ^3.3.1

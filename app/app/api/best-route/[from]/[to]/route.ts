@@ -1,20 +1,21 @@
 // Next.js API route proxy for /api/best_route
 import { NextResponse } from "next/server";
+import * as z from "zod";
 
-type BackendLeg = {
-  mode: string;
-  instruction: string;
-  departure: string;
-  arrival: string;
-  line: string;
-};
+const BackendLegSchema = z.object({
+  mode: z.string(),
+  instruction: z.string(),
+  departure: z.string(),
+  arrival: z.string(),
+  line: z.string(),
+});
 
-type BackendResponse = {
-  duration: number;
-  arrival: string;
-  legs: BackendLeg[];
-  error?: string;
-};
+const BackendResponseSchema = z.object({
+  duration: z.number(),
+  arrival: z.string(),
+  legs: z.array(BackendLegSchema),
+  error: z.string().optional(),
+});
 
 export async function GET(
   _request: Request,
@@ -37,13 +38,15 @@ export async function GET(
         { status: 500 }
       );
     }
-    const data: BackendResponse = await res.json();
+    const rawData = await res.json();
+    // Validate backend response with Zod
+    const data = BackendResponseSchema.parse(rawData);
+
     // Transform backend response to match frontend expectations
     return NextResponse.json({
       origin: from,
       destination: to,
-      route:
-        data.legs?.map((leg: BackendLeg) => `${leg.mode}: ${leg.instruction}`) || [],
+      route: data.legs.map((leg) => `${leg.mode}: ${leg.instruction}`) || [],
       duration: data.duration,
       status: data.error ? data.error : "OK",
     });
