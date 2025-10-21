@@ -1,9 +1,7 @@
 services:
   app:
     container_name: train_dashboard_app
-    build:
-      context: ./app
-      dockerfile: Dockerfile
+    image: henrypenton/train-dashboard-app:latest
     depends_on:
       - api
     env_file:
@@ -13,9 +11,7 @@ services:
 
   api:
     container_name: train_dashboard_api
-    build:
-      context: ./api
-      dockerfile: Dockerfile
+    image: henrypenton/train-dashboard-api:latest
     volumes:
       - ./config.json:/app/config.json
     env_file:

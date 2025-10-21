@@ -1,0 +1,25 @@
+{
+  "tfl_best_routes": [
+    {
+      "origin": "London Paddington",
+      "originNaptan": "940GZZLUPAC",
+      "destination": "Mornington Crescent",
+      "destinationNaptan": "940GZZLUMTC"
+    }
+  ],
+  "rail_departures": [
+    {
+      "origin": "Edinburgh Waverley",
+      "originCode": "EDB",
+      "destination": "Kings Cross",
+      "destinationCode": "KGX"
+    },
+    {
+      "origin": "Kings Cross",
+      "originCode": "KGX",
+      "destination": "Edinburgh Waverley",
+      "destinationCode": "EDB"
+    }
+  ],
+  "show_tube_lines": true
+}
