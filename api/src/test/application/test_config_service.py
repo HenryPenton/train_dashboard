@@ -23,7 +23,11 @@ def test_get_config(monkeypatch):
         "src.application.config_service.JSONFileReader", DummyJSONFileReader
     )
     config = ConfigService.get_config()
-    assert config == {"foo": "bar"}
+    assert config == {
+        "rail_departures": [],
+        "tfl_best_routes": [],
+        "show_tfl_lines": False,
+    }
 
 
 def test_get_config_file_not_found(monkeypatch):
