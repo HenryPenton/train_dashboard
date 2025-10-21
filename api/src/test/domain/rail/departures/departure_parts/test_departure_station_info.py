@@ -8,8 +8,8 @@ class TestDepartureStationInfo:
     def test_full_departure(self):
         record = DepartureRecord(
             {
-                "origin": [{"description": "Station Origin"}],
-                "destination": [{"description": "Station Destination"}],
+                "origin": [{"description": "Aberdeen"}],
+                "destination": [{"description": "Pitlochry"}],
                 "gbttBookedDeparture": "0930",
                 "platform": "5",
                 "realtimeDeparture": "0935",
@@ -17,8 +17,8 @@ class TestDepartureStationInfo:
         )
         dep = RailDepartureStationInfo(record)
         expected = {
-            "origin": "Station Origin",
-            "destination": "Station Destination",
+            "origin": "Aberdeen",
+            "destination": "Pitlochry",
             "platform": "5",
         }
         assert dep.get_rail_departure_station_info() == expected
@@ -27,10 +27,10 @@ class TestDepartureStationInfo:
         record = DepartureRecord(
             {
                 "origin": [
-                    {"description": "Station Origin"},
+                    {"description": "Aberdeen"},
                     {"description": "Oxford"},
                 ],
-                "destination": [{"description": "Station Destination"}],
+                "destination": [{"description": "Pitlochry"}],
                 "gbttBookedDeparture": "0930",
                 "platform": "5",
                 "realtimeDeparture": "0935",
@@ -38,8 +38,8 @@ class TestDepartureStationInfo:
         )
         dep = RailDepartureStationInfo(record)
         expected = {
-            "origin": "Station Origin, Oxford",
-            "destination": "Station Destination",
+            "origin": "Aberdeen, Oxford",
+            "destination": "Pitlochry",
             "platform": "5",
         }
         assert dep.get_rail_departure_station_info() == expected
@@ -47,9 +47,9 @@ class TestDepartureStationInfo:
     def test_full_departure_multi_destination(self):
         record = DepartureRecord(
             {
-                "origin": [{"description": "Station Origin"}],
+                "origin": [{"description": "Aberdeen"}],
                 "destination": [
-                    {"description": "Station Destination"},
+                    {"description": "Pitlochry"},
                     {"description": "Birmingham"},
                 ],
                 "gbttBookedDeparture": "0930",
@@ -59,8 +59,8 @@ class TestDepartureStationInfo:
         )
         dep = RailDepartureStationInfo(record)
         expected = {
-            "origin": "Station Origin",
-            "destination": "Station Destination, Birmingham",
+            "origin": "Aberdeen",
+            "destination": "Pitlochry, Birmingham",
             "platform": "5",
         }
         assert dep.get_rail_departure_station_info() == expected
@@ -68,8 +68,8 @@ class TestDepartureStationInfo:
     def test_full_departure_early(self):
         record = DepartureRecord(
             {
-                "origin": [{"description": "Station Origin"}],
-                "destination": [{"description": "Station Destination"}],
+                "origin": [{"description": "Aberdeen"}],
+                "destination": [{"description": "Pitlochry"}],
                 "gbttBookedDeparture": "0930",
                 "platform": "5",
                 "realtimeDeparture": "0929",
@@ -77,8 +77,8 @@ class TestDepartureStationInfo:
         )
         dep = RailDepartureStationInfo(record)
         expected = {
-            "origin": "Station Origin",
-            "destination": "Station Destination",
+            "origin": "Aberdeen",
+            "destination": "Pitlochry",
             "platform": "5",
         }
         assert dep.get_rail_departure_station_info() == expected
@@ -86,8 +86,8 @@ class TestDepartureStationInfo:
     def test_full_departure_on_time(self):
         record = DepartureRecord(
             {
-                "origin": [{"description": "Station Origin"}],
-                "destination": [{"description": "Station Destination"}],
+                "origin": [{"description": "Aberdeen"}],
+                "destination": [{"description": "Pitlochry"}],
                 "gbttBookedDeparture": "0930",
                 "platform": "5",
                 "realtimeDeparture": "0930",
@@ -95,8 +95,8 @@ class TestDepartureStationInfo:
         )
         dep = RailDepartureStationInfo(record)
         expected = {
-            "origin": "Station Origin",
-            "destination": "Station Destination",
+            "origin": "Aberdeen",
+            "destination": "Pitlochry",
             "platform": "5",
         }
         assert dep.get_rail_departure_station_info() == expected
