@@ -1,5 +1,5 @@
-import json
 from pathlib import Path
+from src.adapters.file_handlers.file_read import JSONFileReader
 
 CONFIG_PATH = Path(__file__).parent.parent.parent / "config.json"
 
@@ -7,7 +7,5 @@ CONFIG_PATH = Path(__file__).parent.parent.parent / "config.json"
 class ConfigService:
     @staticmethod
     def get_config():
-        if not CONFIG_PATH.exists():
-            raise FileNotFoundError("Config file not found")
-        with open(CONFIG_PATH, "r") as f:
-            return json.load(f)
+        adapter = JSONFileReader(CONFIG_PATH)
+        return adapter.read_json()
