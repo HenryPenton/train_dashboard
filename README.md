@@ -1,6 +1,11 @@
-# Travel Dashboard
 
-A full-stack web application for live train and tube status, route planning, and departures, built with Next.js (frontend) and FastAPI (backend).
+# Travel Dashboard
+![Dashboard Screenshot](Dashboard.png)
+![Tube lines Screenshot](TubeLines.png)
+
+A full-stack application for live train and tube status, route planning, and departures, built with Next.js (frontend) and FastAPI (backend).
+
+
 
 ## Overview
 
