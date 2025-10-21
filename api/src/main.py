@@ -22,9 +22,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-REALTIME_TRAINS_API_BASE = "https://api.rtt.io/api/v1/json"
-REALTIME_TRAINS_API_USER = os.getenv("RTT_API_USER", "your_username")
-REALTIME_TRAINS_API_PASS = os.getenv("RTT_API_PASS", "your_password")
 
 app.include_router(config_router)
 
