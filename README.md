@@ -62,7 +62,8 @@ This file contains route and departure configuration for the train dashboard.
       "destinationCode": "<Destination Station Code>"
     }
     // ... more departures
-  ]
+  ],
+  "show_tfl_lines": true
 }
 ```
 

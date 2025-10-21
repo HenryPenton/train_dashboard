@@ -23,6 +23,7 @@ type DepartureConfig = {
 type ConfigType = {
   tfl_best_routes: BestRoute[];
   rail_departures: DepartureConfig[];
+  show_tfl_lines: boolean;
 };
 export default function Home() {
   const [config, setConfig] = useState<ConfigType | null>(null);
@@ -91,9 +92,11 @@ export default function Home() {
               );
             })}
         </div>
-        <div className="flex flex-col min-w-[320px] max-w-[600px]">
-          <TflLineStatus />
-        </div>
+        {config?.show_tfl_lines && (
+          <div className="flex flex-col min-w-[320px] max-w-[600px]">
+            <TflLineStatus />
+          </div>
+        )}
       </div>
 
       <LastRefreshed />
