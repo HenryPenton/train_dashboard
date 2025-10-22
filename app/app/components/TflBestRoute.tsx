@@ -8,8 +8,8 @@ interface BestRouteData {
 }
 
 type TflRouteProps = {
-  from: { placeName: string; naptan: string };
-  to: { placeName: string; naptan: string };
+  from: { placeName: string; naptanOrAtco: string };
+  to: { placeName: string; naptanOrAtco: string };
 };
 
 export default function TflBestRoute({ from, to }: TflRouteProps) {
@@ -22,7 +22,9 @@ export default function TflBestRoute({ from, to }: TflRouteProps) {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(`/api/best-route/${from.naptan}/${to.naptan}`);
+        const res = await fetch(
+          `/api/best-route/${from.naptanOrAtco}/${to.naptanOrAtco}`
+        );
         if (!res.ok) throw new Error("Failed to fetch best route");
         const json = await res.json();
 
@@ -35,7 +37,7 @@ export default function TflBestRoute({ from, to }: TflRouteProps) {
       }
     }
     fetchBestRoute();
-  }, [from.naptan, to.naptan]);
+  }, [from.naptanOrAtco, to.naptanOrAtco]);
 
   if (loading) return <div className="text-white">Loading best route...</div>;
   if (error) return <div className="text-red-400">Error: {error}</div>;

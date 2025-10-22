@@ -2,9 +2,9 @@
   "tfl_best_routes": [
     {
       "origin": "London Paddington",
-      "originNaptan": "940GZZLUPAC",
+      "originNaPTANOrATCO": "940GZZLUPAC",
       "destination": "Mornington Crescent",
-      "destinationNaptan": "940GZZLUMTC"
+      "destinationNaPTANOrATCO": "940GZZLUMTC"
     }
   ],
   "rail_departures": [

@@ -28,8 +28,8 @@ describe("TflBestRoute", () => {
 
     render(
       <TflBestRoute
-        from={{ placeName: "Edgeware Road", naptan: "PAD" }}
-        to={{ placeName: "Liverpool Street", naptan: "LST" }}
+        from={{ placeName: "Edgeware Road", naptanOrAtco: "PAD" }}
+        to={{ placeName: "Liverpool Street", naptanOrAtco: "LST" }}
       />
     );
 

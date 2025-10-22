@@ -15,9 +15,9 @@ export default function Settings() {
   const [showTflLine, setShowTflLine] = useState(false);
   const [route, setRoute] = useState({
     origin: "",
-    originNaptan: "",
+    originNaPTANOrATCO: "",
     destination: "",
-    destinationNaptan: "",
+    destinationNaPTANOrATCO: "",
   });
   const [routes, setRoutes] = useState<Array<typeof route>>([]);
   const [departure, setDeparture] = useState({
@@ -74,16 +74,16 @@ export default function Settings() {
     e.preventDefault();
     if (
       route.origin &&
-      route.originNaptan &&
+      route.originNaPTANOrATCO &&
       route.destination &&
-      route.destinationNaptan
+      route.destinationNaPTANOrATCO
     ) {
       setRoutes([...routes, route]);
       setRoute({
         origin: "",
-        originNaptan: "",
+        originNaPTANOrATCO: "",
         destination: "",
-        destinationNaptan: "",
+        destinationNaPTANOrATCO: "",
       });
       // Here you would send the new route to your backend API
     }
@@ -205,10 +205,10 @@ export default function Settings() {
             />
             <input
               type="text"
-              name="originNaptan"
-              value={route.originNaptan}
+              name="originNaPTANOrATCO"
+              value={route.originNaPTANOrATCO}
               onChange={handleRouteChange}
-              placeholder="Origin Naptan Code"
+              placeholder="Origin NaPTAN or ATCO Code"
               className="border px-2 py-1 w-full mb-2"
               required
             />
@@ -223,10 +223,10 @@ export default function Settings() {
             />
             <input
               type="text"
-              name="destinationNaptan"
-              value={route.destinationNaptan}
+              name="destinationNaPTANOrATCO"
+              value={route.destinationNaPTANOrATCO}
               onChange={handleRouteChange}
-              placeholder="Destination Naptan Code"
+              placeholder="Destination NaPTAN or ATCO Code"
               className="border px-2 py-1 w-full mb-2"
               required
             />
@@ -245,8 +245,8 @@ export default function Settings() {
             {routes.map((r, i) => (
               <li key={i} className="mb-1 flex items-center justify-between">
                 <span>
-                  {r.origin} ({r.originNaptan}) → {r.destination} (
-                  {r.destinationNaptan})
+                  {r.origin} ({r.originNaPTANOrATCO}) → {r.destination} (
+                  {r.destinationNaPTANOrATCO})
                 </span>
                 <button
                   type="button"

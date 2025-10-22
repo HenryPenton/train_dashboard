@@ -58,15 +58,15 @@ def test_process_config_with_valid_tfl_best_routes():
         "tfl_best_routes": [
             {
                 "origin": "A",
-                "originNaptan": "B",
+                "originNaPTANOrATCO": "B",
                 "destination": "C",
-                "destinationNaptan": "D",
+                "destinationNaPTANOrATCO": "D",
             },
             {
                 "origin": "E",
-                "originNaptan": "F",
+                "originNaPTANOrATCO": "F",
                 "destination": "G",
-                "destinationNaptan": "H",
+                "destinationNaPTANOrATCO": "H",
                 "extra": "I",
             },
         ]
@@ -75,15 +75,15 @@ def test_process_config_with_valid_tfl_best_routes():
     assert processed["tfl_best_routes"] == [
         {
             "origin": "A",
-            "originNaptan": "B",
+            "originNaPTANOrATCO": "B",
             "destination": "C",
-            "destinationNaptan": "D",
+            "destinationNaPTANOrATCO": "D",
         },
         {
             "origin": "E",
-            "originNaptan": "F",
+            "originNaPTANOrATCO": "F",
             "destination": "G",
-            "destinationNaptan": "H",
+            "destinationNaPTANOrATCO": "H",
         },
     ]
 
@@ -93,15 +93,15 @@ def test_process_config_with_invalid_tfl_best_routes():
         "tfl_best_routes": [
             {
                 "origin": "A",
-                "originNaptan": "B",
+                "originNaPTANOrATCO": "B",
                 "destination": "C",
-            },  # missing destinationNaptan
+            },  # missing destinationNaPTANOrATCO
             {
                 "origin": "A",
-                "originNaptan": "B",
+                "originNaPTANOrATCO": "B",
                 "destination": "C",
-                "destinationNaptan": 123,
-            },  # destinationNaptan not str
+                "destinationNaPTANOrATCO": 123,
+            },  # destinationNaPTANOrATCO not str
             "notadict",  # not a dict
         ]
     }

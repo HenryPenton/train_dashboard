@@ -72,9 +72,9 @@ This file contains route and departure configuration for the train dashboard.
   "tfl_best_routes": [
     {
       "origin": "<Origin Station Name>",
-      "originNaptan": "<Origin Naptan Code>",
+      "originNaPTANOrATCO": "<Origin NaPTAN or ATCO Code>",
       "destination": "<Destination Station Name>",
-      "destinationNaptan": "<Destination Naptan Code>"
+      "destinationNaPTANOrATCO": "<Destination NaPTAN or ATCO Code>"
     }
     // ... more routes
   ],
@@ -96,9 +96,9 @@ This file contains route and departure configuration for the train dashboard.
 _tfl_best_routes_
 
 - `origin`: Name of the origin station
-- `originNaptan`: Naptan code for the origin station
+- `originNaPTANOrATCO`: NaPTAN or ATCO code for the origin station
 - `destination`: Name of the destination station
-- `destinationNaptan`: Naptan code for the destination station
+- `destinationNaPTANOrATCO`: NaPTAN or ATCO code for the destination station
 
 _rail_departures_
 

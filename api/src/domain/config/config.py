@@ -21,7 +21,7 @@ class Config:
     @staticmethod
     def _get_tfl_best_routes(config):
         value = config.get("tfl_best_routes")
-        allowed_keys = {"origin", "originNaptan", "destination", "destinationNaptan"}
+        allowed_keys = {"origin", "originNaPTANOrATCO", "destination", "destinationNaPTANOrATCO"}
         return check_only_allowed_keys(value, allowed_keys)
 
     @staticmethod

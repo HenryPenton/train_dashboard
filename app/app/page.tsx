@@ -8,9 +8,9 @@ import { useEffect, useState } from "react";
 
 type BestRoute = {
   origin: string;
-  originNaptan: string;
+  originNaPTANOrATCO: string;
   destination: string;
-  destinationNaptan: string;
+  destinationNaPTANOrATCO: string;
 };
 
 type DepartureConfig = {
@@ -82,11 +82,11 @@ export default function Home() {
                   key={i}
                   to={{
                     placeName: route.destination,
-                    naptan: route.destinationNaptan,
+                    naptanOrAtco: route.destinationNaPTANOrATCO,
                   }}
                   from={{
                     placeName: route.origin,
-                    naptan: route.originNaptan,
+                    naptanOrAtco: route.originNaPTANOrATCO,
                   }}
                 />
               );
