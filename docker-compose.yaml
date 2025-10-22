@@ -1,7 +1,7 @@
 services:
   app:
     container_name: train_dashboard_app
-    image: henrypenton/train-dashboard-app:latest
+    image: henrypenton/train-dashboard-app:stable
     depends_on:
       - api
     env_file:
@@ -11,7 +11,7 @@ services:
 
   api:
     container_name: train_dashboard_api
-    image: henrypenton/train-dashboard-api:latest
+    image: henrypenton/train-dashboard-api:stable
     volumes:
       - ./config.json:/app/config.json
     env_file:
