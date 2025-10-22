@@ -8,5 +8,5 @@ Dockerfile
 readme.md
 **/*/test_*.py
 venv
-test
+**/test
 conftest.py
