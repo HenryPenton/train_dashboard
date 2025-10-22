@@ -1,4 +1,3 @@
-from datetime import datetime
 from src.adapters.clients.tflclient import JourneyRecord
 from src.domain.tfl.routes.best_route.best_route import BestRoute
 
@@ -10,16 +9,7 @@ class AllRoutes:
     def get_best(self) -> dict:
         if not self.journeys or len(self.journeys) == 0:
             return {"error": "No journeys found"}
-        # Sort journeys by soonest arrival time
-        sorted_journeys = sorted(
-            self.journeys,
-            key=lambda j: (
-                datetime.fromisoformat(getattr(j, "arrival", ""))
-                if getattr(j, "arrival", None)
-                else datetime.max
-            ),
-        )
 
-        best = sorted_journeys[0]
+        best = self.journeys[0]
 
         return BestRoute(best).get_best_route_summary()
