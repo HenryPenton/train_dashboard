@@ -176,9 +176,21 @@ export default function Settings() {
         <h4 className="font-semibold mb-2">Tube Routes</h4>
         <ul>
           {routes.map((r, i) => (
-            <li key={i} className="mb-1">
-              {r.origin} ({r.originNaptan}) → {r.destination} (
-              {r.destinationNaptan})
+            <li key={i} className="mb-1 flex items-center justify-between">
+              <span>
+                {r.origin} ({r.originNaptan}) → {r.destination} (
+                {r.destinationNaptan})
+              </span>
+              <button
+                type="button"
+                aria-label="Remove route"
+                className="ml-2 text-red-500 hover:text-red-700 font-bold"
+                onClick={() => {
+                  setRoutes(routes.filter((_, idx) => idx !== i));
+                }}
+              >
+                ×
+              </button>
             </li>
           ))}
         </ul>
@@ -239,9 +251,21 @@ export default function Settings() {
         <h4 className="font-semibold mb-2">Train Departures</h4>
         <ul>
           {departures.map((d, i) => (
-            <li key={i} className="mb-1">
-              {d.origin} ({d.originCode}) → {d.destination} ({d.destinationCode}
-              )
+            <li key={i} className="mb-1 flex items-center justify-between">
+              <span>
+                {d.origin} ({d.originCode}) → {d.destination} (
+                {d.destinationCode})
+              </span>
+              <button
+                type="button"
+                aria-label="Remove departure"
+                className="ml-2 text-red-500 hover:text-red-700 font-bold"
+                onClick={() => {
+                  setDepartures(departures.filter((_, idx) => idx !== i));
+                }}
+              >
+                ×
+              </button>
             </li>
           ))}
         </ul>
