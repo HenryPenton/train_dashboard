@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Settings() {
+  const router = useRouter();
   const [showTflLine, setShowTflLine] = useState(false);
   const [route, setRoute] = useState({
     origin: "",
@@ -104,7 +106,7 @@ export default function Settings() {
         body: JSON.stringify(payload),
       });
       if (res.ok) {
-        alert("Settings saved!");
+        router.push("/");
       } else {
         alert("Failed to save settings.");
       }
