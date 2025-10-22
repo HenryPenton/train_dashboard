@@ -16,7 +16,7 @@ describe("TflBestRoute", () => {
         "Bus: 176 to Liverpool Street",
       ],
       duration: 22,
-      status: "OK",
+      arrival: "2022-02-01T12:00:00.000Z",
     };
 
     jest.spyOn(global, "fetch").mockImplementation(async () => {
@@ -45,9 +45,9 @@ describe("TflBestRoute", () => {
         "To: Liverpool Street"
       );
 
-      expect(screen.getByLabelText("Journey duration")).toHaveTextContent(
-        "Duration: 22 min"
-      );
+      expect(
+        screen.getByLabelText("Journey duration and arrival")
+      ).toHaveTextContent("Duration: 22 min|Arrival: 12:00:00 PM");
 
       expect(screen.getByLabelText("Journey leg 1")).toHaveTextContent(
         "Tube: Bakerloo line to Oxford Circus"
