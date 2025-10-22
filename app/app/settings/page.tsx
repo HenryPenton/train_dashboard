@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 export default function Settings() {
   // Example data for sidebar
   const [sidebarItems, setSidebarItems] = useState<Array<{ CommonName: string; ATCOCode: string }>>([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [selectedSidebarIndex, setSelectedSidebarIndex] = useState<
     number | null
   >(null);
@@ -138,20 +139,31 @@ export default function Settings() {
       {/* Sidebar */}
       <aside className="w-64 h-[500px] overflow-y-auto border-r pr-4 mr-8">
         <h3 className="font-semibold mb-4">Stations</h3>
+        <input
+          type="text"
+          placeholder="Search stations..."
+          value={searchTerm}
+          onChange={e => setSearchTerm(e.target.value)}
+          className="mb-4 px-2 py-1 border w-full rounded"
+        />
         <ul>
-          {sidebarItems.map((item, idx) => (
-            <li
-              key={idx}
-              className={`mb-2 cursor-pointer px-2 py-1 rounded ${
-                selectedSidebarIndex === idx
-                  ? "bg-purple-100 font-bold"
-                  : "hover:bg-gray-100"
-              }`}
-              onClick={() => setSelectedSidebarIndex(idx)}
-            >
-              {item.CommonName}
-            </li>
-          ))}
+          {sidebarItems
+            .filter(item =>
+              item.CommonName.toLowerCase().includes(searchTerm.toLowerCase())
+            )
+            .map((item, idx) => (
+              <li
+                key={idx}
+                className={`mb-2 cursor-pointer px-2 py-1 rounded ${
+                  selectedSidebarIndex === idx
+                    ? "bg-purple-100 font-bold"
+                    : "hover:bg-gray-100"
+                }`}
+                onClick={() => setSelectedSidebarIndex(idx)}
+              >
+                {item.CommonName}
+              </li>
+            ))}
         </ul>
       </aside>
       {/* Main content */}
