@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from src.adapters.handlers.atco_code import router as atco_code_router
 from src.adapters.handlers.config import router as config_router
 from src.adapters.handlers.rail_handlers import get_departures_handler
 from src.adapters.handlers.tfl_handlers import (
@@ -24,6 +25,7 @@ app.add_middleware(
 )
 
 app.include_router(config_router)
+app.include_router(atco_code_router)
 
 
 # Departures new handler
