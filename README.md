@@ -33,7 +33,26 @@ train_dashboard/
 ├── README.md    # Project documentation
 ```
 
-## Setup & Configuration
+
+## Configuration: Mounting config.json
+
+The backend API stores its settings in a config file (`config.json`). When running with Docker Compose, you can mount a host directory to persist and edit this file outside the container. This is configured in `docker-compose.yaml`:
+
+```yaml
+  api:
+    volumes:
+      - ./config:/app/config:rw
+```
+
+**How it works:**
+- The local `./config` directory is mounted to `/app/config` inside the container.
+- Any changes made by the backend to `/app/config/config.json` will be reflected in your local `./config/config.json` file.
+- You can edit or back up `config.json` directly on your host machine.
+
+**Usage notes:**
+- If `config.json` does not exist in `./config`, the backend will create it when needed.
+- Ensure your local directory and file have write permissions for the container user.
+- If you switch back to a named volume (e.g., `config_data:/app/config`), Docker will use its own internal storage and changes will not be reflected on the host.
 
 ### Docker Images
 
