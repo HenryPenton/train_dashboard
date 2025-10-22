@@ -13,11 +13,18 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Pull latest app image
-        run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/train-dashboard-app:latest
 
-      - name: Pull latest api image
-        run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/train-dashboard-api:latest
+      - name: Pull latest app image (amd64)
+        run: docker pull --platform linux/amd64 ${{ secrets.DOCKERHUB_USERNAME }}/train-dashboard-app:latest
+
+      - name: Pull latest app image (arm64)
+        run: docker pull --platform linux/arm64 ${{ secrets.DOCKERHUB_USERNAME }}/train-dashboard-app:latest
+
+      - name: Pull latest api image (amd64)
+        run: docker pull --platform linux/amd64 ${{ secrets.DOCKERHUB_USERNAME }}/train-dashboard-api:latest
+
+      - name: Pull latest api image (arm64)
+        run: docker pull --platform linux/arm64 ${{ secrets.DOCKERHUB_USERNAME }}/train-dashboard-api:latest
 
       - name: Tag app image as stable
         run: docker tag ${{ secrets.DOCKERHUB_USERNAME }}/train-dashboard-app:latest ${{ secrets.DOCKERHUB_USERNAME }}/train-dashboard-app:stable
