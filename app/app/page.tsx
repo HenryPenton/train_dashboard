@@ -49,7 +49,7 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="w-full min-h-screen p-8 bg-[#181818] font-mono text-[#f8f8f2]">
+    <main className="w-full min-h-screen p-8 bg-[#181818] font-mono text-[#f8f8f2] relative">
       <h1
         className="text-center text-cyan-300 text-4xl font-bold tracking-widest mb-10 drop-shadow-[0_0_2px_white,0_0_8px_#00ffe7] font-mono border-b-4 border-yellow-200 pb-4"
         style={{ letterSpacing: "0.15em" }}
@@ -100,6 +100,9 @@ export default function Home() {
       </div>
 
       <LastRefreshed />
+      <div className="w-full text-center mt-10">
+        <a href="/settings" className="text-cyan-300 hover:underline text-lg font-bold">Settings</a>
+      </div>
     </main>
   );
 }
