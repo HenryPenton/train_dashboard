@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 interface BestRouteData {
   route: string[];
   duration: number;
-  status: string;
+  arrival: string;
 }
 
 type TflRouteProps = {
@@ -62,8 +62,14 @@ export default function TflBestRoute({ from, to }: TflRouteProps) {
         <span className="font-bold">Route:</span>
         <div className="ml-2 mt-1 flex flex-col gap-1">{routeLegs(data)}</div>
       </div>
-      <div className="text-white mb-1" aria-label="Journey duration">
+      <div
+        className="text-white mb-1"
+        aria-label="Journey duration and arrival"
+      >
         <span className="font-bold">Duration:</span> {data.duration} min
+        <span className="mx-2">|</span>
+        <span className="font-bold">Arrival:</span>{" "}
+        {new Date(data.arrival).toLocaleTimeString()}
       </div>
     </div>
   );

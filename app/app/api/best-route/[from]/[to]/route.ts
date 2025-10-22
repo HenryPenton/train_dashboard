@@ -45,6 +45,7 @@ export async function GET(
     return NextResponse.json({
       route: data.legs.map((leg) => `${leg.mode}: ${leg.instruction}`),
       duration: data.duration,
+      arrival: data.arrival,
     });
   } catch (e: unknown) {
     const message = e instanceof Error ? e.message : "Unknown error";
