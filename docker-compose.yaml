@@ -13,7 +13,7 @@ services:
     container_name: train_dashboard_api
     image: henrypenton/train-dashboard-api:stable
     volumes:
-      - ./config.json:/app/config.json
+      - ./config:/app/config:rw
     env_file:
       - .env
     ports:

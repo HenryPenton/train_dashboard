@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   const data = await req.json();
+
   // Forward the settings to the FastAPI backend
-  const apiRes = await fetch("http://localhost:8000/config", {
+  const apiRes = await fetch(`${process.env.SERVER_URL}/config`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
