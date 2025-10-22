@@ -11,9 +11,9 @@ class StationService:
     def get_stations(self) -> List[Station]:
         data = self.reader.read_json()
         stations = [
-            Station(ATCOCode=s["ATCOCode"], CommonName=s["CommonName"])
+            Station(naptanID=s["naptanID"], CommonName=s["commonName"])
             for s in data
-            if "ATCOCode" in s and "CommonName" in s
+            if "naptanID" in s and "commonName" in s
         ]
         stations.sort(key=lambda x: x.CommonName.lower())
         return stations

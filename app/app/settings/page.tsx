@@ -1,15 +1,17 @@
 "use client";
 
-import { useState } from "react";
-import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-
+import { useEffect, useState } from "react";
+type SidebarItem = {
+  CommonName: string;
+  naptanID: string;
+};
 export default function Settings() {
   // Example data for sidebar
-  const [sidebarItems, setSidebarItems] = useState<Array<{ CommonName: string; ATCOCode: string }>>([]);
+  const [sidebarItems, setSidebarItems] = useState<Array<SidebarItem>>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedSidebarIndex, setSelectedSidebarIndex] = useState<
-    number | null
+  const [selectedSidebarItem, setSelectedSidebarItem] = useState<
+    SidebarItem["naptanID"] | null
   >(null);
   const router = useRouter();
   const [showTflLine, setShowTflLine] = useState(false);
@@ -50,7 +52,7 @@ export default function Settings() {
 
     async function fetchSidebarItems() {
       try {
-        const res = await fetch("/api/atco-code");
+        const res = await fetch("/api/naptan");
         if (res.ok) {
           const data = await res.json();
           setSidebarItems(data);
@@ -61,6 +63,10 @@ export default function Settings() {
     }
     fetchSidebarItems();
   }, []);
+
+  const filtered = sidebarItems.filter((item) =>
+    item.CommonName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setShowTflLine(e.target.checked);
@@ -85,7 +91,6 @@ export default function Settings() {
         destination: "",
         destinationNaPTANOrATCO: "",
       });
-      // Here you would send the new route to your backend API
     }
   };
 
@@ -143,23 +148,21 @@ export default function Settings() {
           type="text"
           placeholder="Search stations..."
           value={searchTerm}
-          onChange={e => setSearchTerm(e.target.value)}
+          onChange={(e) => setSearchTerm(e.target.value)}
           className="mb-4 px-2 py-1 border w-full rounded"
         />
         <ul>
-          {sidebarItems
-            .filter(item =>
+          {filtered
+            .filter((item) =>
               item.CommonName.toLowerCase().includes(searchTerm.toLowerCase())
             )
             .map((item, idx) => (
               <li
                 key={idx}
                 className={`mb-2 cursor-pointer px-2 py-1 rounded ${
-                  selectedSidebarIndex === idx
-                    ? "bg-purple-100 font-bold"
-                    : "hover:bg-gray-100"
+                  selectedSidebarItem === item.naptanID ? "bg-blue-100" : ""
                 }`}
-                onClick={() => setSelectedSidebarIndex(idx)}
+                onClick={() => setSelectedSidebarItem(item.naptanID)}
               >
                 {item.CommonName}
               </li>
@@ -170,12 +173,10 @@ export default function Settings() {
       <section className="flex-1">
         <h2 className="text-2xl font-bold mb-6">Settings</h2>
         {/* ATCO code detail panel */}
-        {selectedSidebarIndex !== null && (
+        {selectedSidebarItem !== null && (
           <div className="mb-8 p-4 border rounded bg-gray-50">
-            <h4 className="font-semibold mb-2">ATCO Code</h4>
-            <div className="text-lg">
-              {sidebarItems[selectedSidebarIndex].ATCOCode}
-            </div>
+            <h4 className="font-semibold mb-2">NaPTAN ID</h4>
+            <div className="text-lg">{selectedSidebarItem}</div>
           </div>
         )}
 

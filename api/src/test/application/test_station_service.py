@@ -8,8 +8,8 @@ class DummyJSONFileReader:
 
     def read_json(self):
         return [
-            {"ATCOCode": "123", "CommonName": "Alpha"},
-            {"ATCOCode": "456", "CommonName": "Beta"},
+            {"naptanID": "123", "commonName": "Alpha"},
+            {"naptanID": "456", "commonName": "Beta"},
         ]
 
 
@@ -30,8 +30,8 @@ def test_get_stations(monkeypatch):
     from src.domain.station.station import Station
 
     assert stations == [
-        Station(ATCOCode="123", CommonName="Alpha"),
-        Station(ATCOCode="456", CommonName="Beta"),
+        Station(naptanID="123", CommonName="Alpha"),
+        Station(naptanID="456", CommonName="Beta"),
     ]
 
 

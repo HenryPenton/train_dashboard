@@ -3,5 +3,5 @@ from dataclasses import dataclass
 
 @dataclass
 class Station:
-    ATCOCode: str
+    naptanID: str
     CommonName: str
