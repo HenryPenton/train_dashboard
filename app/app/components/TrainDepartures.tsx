@@ -58,10 +58,8 @@ export default function TrainDepartures(props: TrainDepartureProps) {
       </h2>
       <div style={{ marginBottom: 16 }}>
         <span aria-label="Departure route">
-          Departures from{" "}
           <strong>
-            {props.fromStation.stationName} to{" "}
-            {`${props.toStation.stationName}`}
+            {`Departures from ${props.fromStation.stationName} to ${props.toStation.stationName}`}
           </strong>
         </span>
         {loading && (
@@ -88,37 +86,7 @@ export default function TrainDepartures(props: TrainDepartureProps) {
           ) : (
             <ul role="list" aria-label="Departure list">
               {departures.map((dep, i) => (
-                <li
-                  key={i}
-                  className="mb-4 text-[1.08rem] bg-[#23262f] rounded-[8px] p-[12px_0] shadow-[0_1px_4px_0_rgba(0,0,0,0.13)]"
-                  role="listitem"
-                  aria-label={`Departure from ${dep.origin} to ${dep.destination}`}
-                >
-                  <strong>{dep.origin}</strong> →{" "}
-                  <strong>{dep.destination}</strong>
-                  <br />
-                  <span aria-label="Departure details">
-                    Departs: {renderDepartureStatus(dep)} {" | Platform: "}
-                    {dep.platform || "-"}
-                    {typeof dep.delay === "number" && (
-                      <>
-                        {" | Delay: "}
-                        <span
-                          className={
-                            dep.delay > 0
-                              ? "text-[#ff4d4f] font-semibold"
-                              : "text-[#4ade80] font-semibold"
-                          }
-                          aria-label={`Delay: ${
-                            dep.delay === 0 ? "On time" : `${dep.delay} min`
-                          }`}
-                        >
-                          {dep.delay === 0 ? "On time" : `${dep.delay} min`}
-                        </span>
-                      </>
-                    )}
-                  </span>
-                </li>
+                <DepartureListItem key={i} dep={dep} />
               ))}
             </ul>
           )}
@@ -127,6 +95,7 @@ export default function TrainDepartures(props: TrainDepartureProps) {
     </section>
   );
 }
+
 function renderDepartureStatus(dep: Departure) {
   return (
     <span
@@ -137,5 +106,39 @@ function renderDepartureStatus(dep: Departure) {
     >
       {dep.actual}
     </span>
+  );
+}
+
+function DepartureListItem({ dep }: { dep: Departure }) {
+  return (
+    <li
+      className="mb-4 text-[1.08rem] bg-[#23262f] rounded-[8px] p-[12px_0] shadow-[0_1px_4px_0_rgba(0,0,0,0.13)]"
+      role="listitem"
+      aria-label={`Departure from ${dep.origin} to ${dep.destination}`}
+    >
+      <strong>{dep.origin}</strong> → <strong>{dep.destination}</strong>
+      <br />
+      <span aria-label="Departure details">
+        Departs: {renderDepartureStatus(dep)} {" | Platform: "}
+        {dep.platform || "-"}
+        {typeof dep.delay === "number" && (
+          <>
+            {" | Delay: "}
+            <span
+              className={
+                dep.delay > 0
+                  ? "text-[#ff4d4f] font-semibold"
+                  : "text-[#4ade80] font-semibold"
+              }
+              aria-label={`Delay: ${
+                dep.delay === 0 ? "On time" : `${dep.delay} min`
+              }`}
+            >
+              {dep.delay === 0 ? "On time" : `${dep.delay} min`}
+            </span>
+          </>
+        )}
+      </span>
+    </li>
   );
 }
