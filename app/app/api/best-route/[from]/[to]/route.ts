@@ -14,6 +14,7 @@ const BackendResponseSchema = z.object({
   duration: z.number(),
   arrival: z.string(),
   legs: z.array(BackendLegSchema),
+  fare: z.number().nullable(),
 });
 
 export async function GET(
@@ -46,6 +47,7 @@ export async function GET(
       route: data.legs.map((leg) => `${leg.mode}: ${leg.instruction}`),
       duration: data.duration,
       arrival: data.arrival,
+      fare: data.fare,
     });
   } catch (e: unknown) {
     const message = e instanceof Error ? e.message : "Unknown error";
