@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { FrontEndLineStatuses } from "../../../validators/frontend-validators/LineStatusSchema";
 import TflLineStatusList from "./TflLineStatusList";
+import SectionHeading from "../../SectionHeading";
 
 type TflLineStatusType = {
   name: string;
@@ -41,14 +42,7 @@ export default function TflLineStatus() {
       aria-label="TFL Line Status Section"
       role="region"
     >
-      <h2
-        className="text-xl font-semibold text-white mb-2"
-        role="heading"
-        aria-level={2}
-        aria-label="TFL Line Status Heading"
-      >
-        TFL Line Status
-      </h2>
+  <SectionHeading className="text-white" ariaLabel="TFL Line Status Heading">TFL Line Status</SectionHeading>
       {tflLoading && (
         <div role="status" aria-label="Loading TFL line statuses">
           Loading TFL line statuses...

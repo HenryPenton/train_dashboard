@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import Sidebar from "../components/settings/Sidebar";
+import SectionHeading from "../components/SectionHeading";
 import AddTubeRouteForm from "../components/settings/AddTubeRouteForm";
 import AddTrainDepartureForm from "../components/settings/AddTrainDepartureForm";
 import TubeRoutesList from "../components/settings/TubeRoutesList";
@@ -162,7 +163,7 @@ export default function Settings() {
       />
       {/* Main content */}
       <section className="flex-1">
-        <h2 className="text-2xl font-bold mb-6">Settings</h2>
+  <SectionHeading className="text-2xl font-bold mb-6 text-gray-900">Settings</SectionHeading>
 
         {selectedSidebarItem !== null && (
           <div className="mb-8 p-4 border rounded bg-gray-50">

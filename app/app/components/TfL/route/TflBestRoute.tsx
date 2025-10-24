@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import SectionHeading from "../../SectionHeading";
 import RouteLegs from "./RouteLegs";
 
 interface BestRouteData {
@@ -47,13 +48,7 @@ export default function TflBestRoute({ from, to }: TflRouteProps) {
 
   return (
     <div className="bg-[#23272f] rounded-lg p-6 shadow-lg">
-      <h2
-        className="text-xl font-semibold text-white mb-2"
-        role="heading"
-        aria-level={2}
-      >
-        Best Route
-      </h2>
+  <SectionHeading className="text-white">Best Route</SectionHeading>
       <div className="text-white mb-1" aria-label="Origin">
         <span className="font-bold">From:</span> {from.placeName}
       </div>

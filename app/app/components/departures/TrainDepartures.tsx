@@ -3,6 +3,7 @@ import { FrontEndRailDeparturesSchema } from "../../validators/frontend-validato
 import DepartureError from "./DepartureError";
 import DepartureList from "./DepartureList";
 import Loading from "../Loading";
+import SectionHeading from "../SectionHeading";
 
 type Departure = {
   origin: string;
@@ -52,13 +53,7 @@ export default function TrainDepartures(props: TrainDepartureProps) {
       className="flex-1 bg-[#23262f] rounded-[12px] p-6 text-[#f1f1f1] shadow-[0_2px_12px_0_rgba(0,0,0,0.25)]"
       aria-label="Train Departures Section"
     >
-      <h2
-        className="text-xl font-semibold text-white mb-2"
-        role="heading"
-        aria-level={2}
-      >
-        Train Departures
-      </h2>
+  <SectionHeading className="text-white">Train Departures</SectionHeading>
       <div style={{ marginBottom: 16 }}>
         <span aria-label="Departure route">
           <strong>
