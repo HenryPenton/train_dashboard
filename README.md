@@ -1,4 +1,3 @@
-
 # Travel Dashboard
 
 THIS PROJECT IS UNDER VERY HEAVY DEVELOPMENT!
@@ -8,13 +7,15 @@ THIS PROJECT IS UNDER VERY HEAVY DEVELOPMENT!
 
 A full-stack application for live train and tube status, route planning, and departures, built with Next.js (frontend) and FastAPI (backend).
 
-
-
 ## Overview
 
 **Frontend (app/):** Next.js, React, Tailwind CSS. Responsive dashboard UI for train departures, tube line status, and best route suggestions. Fetches live data from the FastAPI backend.
 
 **Backend (api/):** FastAPI (Python). Modular endpoints for train departures, tube line status, best route. Integrates with Real Time Trains and TFL APIs. Returns simplified, frontend-friendly JSON responses.
+
+## Setup
+
+See [SETUP.md](./SETUP.md) for detailed installation and configuration instructions.
 
 ## Features
 
@@ -35,27 +36,6 @@ train_dashboard/
 ├── docker-compose.yaml
 ├── README.md    # Project documentation
 ```
-
-
-## Configuration: Mounting config.json
-
-The backend API stores its settings in a config file (`config.json`). When running with Docker Compose, you can mount a host directory to persist and edit this file outside the container. This is configured in `docker-compose.yaml`:
-
-```yaml
-  api:
-    volumes:
-      - ./config:/app/config:rw
-```
-
-**How it works:**
-- The local `./config` directory is mounted to `/app/config` inside the container.
-- Any changes made by the backend to `/app/config/config.json` will be reflected in your local `./config/config.json` file.
-- You can edit or back up `config.json` directly on your host machine.
-
-**Usage notes:**
-- If `config.json` does not exist in `./config`, the backend will create it when needed.
-- Ensure your local directory and file have write permissions for the container user.
-- If you switch back to a named volume (e.g., `config_data:/app/config`), Docker will use its own internal storage and changes will not be reflected on the host.
 
 ### Docker Images
 
@@ -116,10 +96,6 @@ Codes for stations can be either **CRS** codes (e.g. PAD for London Paddington) 
 
 To use live train departures, obtain an API username and password from Real Time Trains (RTT): https://www.realtimetrains.co.uk/about/developer
 Add your credentials to `.env` as `RTT_API_USER` and `RTT_API_PASS`. See `.env.template` for an example.
-
-### Config File Use
-
-Mount the config file as a volume, as shown in the example `docker-compose.yaml`.
 
 ## Development - Getting Started
 
