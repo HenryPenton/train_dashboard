@@ -53,3 +53,16 @@ describe("TrainDepartures accessibility happy path", () => {
     expect(screen.getByLabelText("Late departure")).toBeInTheDocument();
   });
 });
+
+describe("TrainDepartures error state", () => {
+  beforeEach(() => {
+    global.fetch = jest.fn().mockRejectedValue(new Error("API error"));
+  });
+
+  it("shows an error message when fetch fails", async () => {
+    render(<TrainDepartures {...mockProps} />);
+    const error = await screen.findByRole("alert", { name: /Departure error/i });
+    expect(error).toBeInTheDocument();
+    expect(error).toHaveTextContent("Could not find any services for the configured route.");
+  });
+});
