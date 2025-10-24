@@ -71,13 +71,14 @@ export default function TflBestRoute({ from, to }: TflRouteProps) {
         <span className="mx-2">|</span>
         <span className="font-bold">Arrival:</span>{" "}
         {new Date(data.arrival).toLocaleTimeString()}
+        {typeof data.fare === "number" && (
+          <span>
+            <span className="mx-2">|</span>
+            <span className="font-bold">Fare:</span> £
+            {(data.fare / 100).toFixed(2)}
+          </span>
+        )}
       </div>
-      {typeof data.fare === "number" && (
-        <div className="text-white mt-2 p-3 rounded bg-[#1a1d23]">
-          <span className="font-bold">Fare:</span> £
-          {(data.fare / 100).toFixed(2)}
-        </div>
-      )}
     </div>
   );
 }
