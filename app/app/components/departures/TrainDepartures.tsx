@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { FrontEndRailDeparturesSchema } from "../../validators/frontend-validators/RailDepartureSchema";
-import DepartureListItem from "./DepartureListItem";
+import DepartureError from "./DepartureError";
+import DepartureList from "./DepartureList";
+import Loading from "../Loading";
 
 type Departure = {
   origin: string;
@@ -63,37 +65,12 @@ export default function TrainDepartures(props: TrainDepartureProps) {
             {`Departures from ${props.fromStation.stationName} to ${props.toStation.stationName}`}
           </strong>
         </span>
-        {loading && (
-          <span style={{ marginLeft: 8 }} aria-live="polite">
-            Loading...
-          </span>
-        )}
+        {loading && <Loading />}
       </div>
       {error && (
-        <div
-          className="text-[#ff4d4f] bg-[#2a1a1a] p-2 rounded mb-2"
-          role="alert"
-          aria-label="Departure error"
-        >
-          Could not find any services for the configured route.
-        </div>
+        <DepartureError message="Could not find any services for the configured route." />
       )}
-      {departures && (
-        <div>
-          {departures.length === 0 ? (
-            <div role="status" aria-label="No departures found">
-              No departures found for this destination.
-            </div>
-          ) : (
-            <ul role="list" aria-label="Departure list">
-              {departures.map((dep, i) => (
-                <DepartureListItem key={i} dep={dep} />
-              ))}
-            </ul>
-          )}
-        </div>
-      )}
+      {departures && <DepartureList departures={departures} />}
     </section>
   );
 }
-
