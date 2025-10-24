@@ -128,35 +128,14 @@ export default function TrainDepartures(props: TrainDepartureProps) {
   );
 }
 function renderDepartureStatus(dep: Departure) {
-  switch (dep.status) {
-    case "Early":
-      return (
-        <span
-          className="text-[#4ade80] font-semibold"
-          aria-label="Early departure"
-        >
-          {dep.actual}
-        </span>
-      );
-    case "On time":
-      return (
-        <span
-          className="text-[#4ade80] font-semibold"
-          aria-label="On time departure"
-        >
-          {dep.actual}
-        </span>
-      );
-    case "Late":
-      return (
-        <span
-          className="text-[#ff4d4f] font-semibold"
-          aria-label="Late departure"
-        >
-          {dep.actual}
-        </span>
-      );
-    default:
-      return null;
-  }
+  return (
+    <span
+      aria-label={`${dep.status} departure`}
+      className={`font-semibold ${
+        dep.status === "Late" ? "text-[#ff4d4f]" : "text-[#4ade80]"
+      }`}
+    >
+      {dep.actual}
+    </span>
+  );
 }
