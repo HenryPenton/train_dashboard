@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 type SidebarItem = {
   CommonName: string;
   naptanID: string;
@@ -64,8 +64,12 @@ export default function Settings() {
     fetchSidebarItems();
   }, []);
 
-  const filtered = sidebarItems.filter((item) =>
-    item.CommonName.toLowerCase().includes(searchTerm.toLowerCase())
+  const filtered = useMemo(
+    () =>
+      sidebarItems.filter((item) =>
+        item.CommonName.toLowerCase().includes(searchTerm.toLowerCase())
+      ),
+    [sidebarItems, searchTerm]
   );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -152,21 +156,17 @@ export default function Settings() {
           className="mb-4 px-2 py-1 border w-full rounded"
         />
         <ul>
-          {filtered
-            .filter((item) =>
-              item.CommonName.toLowerCase().includes(searchTerm.toLowerCase())
-            )
-            .map((item, idx) => (
-              <li
-                key={idx}
-                className={`mb-2 cursor-pointer px-2 py-1 rounded ${
-                  selectedSidebarItem === item.naptanID ? "bg-blue-100" : ""
-                }`}
-                onClick={() => setSelectedSidebarItem(item.naptanID)}
-              >
-                {item.CommonName}
-              </li>
-            ))}
+          {filtered.map((item, idx) => (
+            <li
+              key={idx}
+              className={`mb-2 cursor-pointer px-2 py-1 rounded ${
+                selectedSidebarItem === item.naptanID ? "bg-blue-100" : ""
+              }`}
+              onClick={() => setSelectedSidebarItem(item.naptanID)}
+            >
+              {item.CommonName}
+            </li>
+          ))}
         </ul>
       </aside>
       {/* Main content */}
