@@ -3,23 +3,23 @@ import { NextResponse } from "next/server";
 
 export async function GET(
   _request: Request,
-  { params }: { params: Promise<{ from: string; to: string }> }
+  { params }: { params: Promise<{ from: string; to: string }> },
 ) {
   const { from, to } = await params;
   if (!from || !to) {
     return NextResponse.json(
       { error: "Missing required path parameters: from, to" },
-      { status: 400 }
+      { status: 400 },
     );
   }
   try {
     const res = await fetch(
-      `${process.env.SERVER_URL}/rail/departures/${from}/to/${to}`
+      `${process.env.SERVER_URL}/rail/departures/${from}/to/${to}`,
     );
     if (!res.ok) {
       return NextResponse.json(
         { error: "Failed to fetch departures" },
-        { status: 500 }
+        { status: 500 },
       );
     }
     const rawData = await res.json();

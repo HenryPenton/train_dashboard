@@ -11,12 +11,13 @@ interface AddTubeRouteFormProps {
   onAdd: (e: React.FormEvent) => void;
 }
 
-export default function AddTubeRouteForm({ route, onChange, onAdd }: AddTubeRouteFormProps) {
+export default function AddTubeRouteForm({
+  route,
+  onChange,
+  onAdd,
+}: AddTubeRouteFormProps) {
   return (
-    <form
-      onSubmit={onAdd}
-      className="mb-8 p-4 border rounded bg-gray-50"
-    >
+    <form onSubmit={onAdd} className="mb-8 p-4 border rounded bg-gray-50">
       <h3 className="font-semibold mb-4">Add Tube Route</h3>
       <div className="mb-2">
         <input

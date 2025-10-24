@@ -10,7 +10,10 @@ interface TubeRoutesListProps {
   onRemove: (idx: number) => void;
 }
 
-export default function TubeRoutesList({ routes, onRemove }: TubeRoutesListProps) {
+export default function TubeRoutesList({
+  routes,
+  onRemove,
+}: TubeRoutesListProps) {
   return (
     <div className="mb-10">
       <h4 className="font-semibold mb-2">Tube Routes</h4>
@@ -18,7 +21,8 @@ export default function TubeRoutesList({ routes, onRemove }: TubeRoutesListProps
         {routes.map((r, i) => (
           <li key={i} className="mb-1 flex items-center justify-between">
             <span>
-              {r.origin} ({r.originNaPTANOrATCO}) → {r.destination} ({r.destinationNaPTANOrATCO})
+              {r.origin} ({r.originNaPTANOrATCO}) → {r.destination} (
+              {r.destinationNaPTANOrATCO})
             </span>
             <button
               type="button"

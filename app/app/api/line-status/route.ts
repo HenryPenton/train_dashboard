@@ -14,7 +14,7 @@ export async function GET() {
     if (!res.ok) {
       return NextResponse.json(
         { error: "Failed to fetch TFL line status" },
-        { status: 500 }
+        { status: 500 },
       );
     }
     const data = await res.json();

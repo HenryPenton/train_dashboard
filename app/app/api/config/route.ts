@@ -8,7 +8,7 @@ export async function GET() {
     if (!res.ok) {
       return NextResponse.json(
         { error: "Failed to fetch config from backend." },
-        { status: res.status }
+        { status: res.status },
       );
     }
     const data = await res.json();
@@ -17,7 +17,7 @@ export async function GET() {
   } catch {
     return NextResponse.json(
       { error: "Config fetch failed." },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

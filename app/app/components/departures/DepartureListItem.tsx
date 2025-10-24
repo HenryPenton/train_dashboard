@@ -13,9 +13,7 @@ function renderDepartureStatus(dep: Departure) {
   return (
     <span
       aria-label={`${dep.status} departure`}
-      className={`font-semibold ${
-        dep.status === "Late" ? "text-[#ff4d4f]" : "text-[#4ade80]"
-      }`}
+      className={`font-semibold ${dep.status === "Late" ? "text-[#ff4d4f]" : "text-[#4ade80]"}`}
     >
       {dep.actual}
     </span>
@@ -43,9 +41,7 @@ export default function DepartureListItem({ dep }: { dep: Departure }) {
                   ? "text-[#ff4d4f] font-semibold"
                   : "text-[#4ade80] font-semibold"
               }
-              aria-label={`Delay: ${
-                dep.delay === 0 ? "On time" : `${dep.delay} min`
-              }`}
+              aria-label={`Delay: ${dep.delay === 0 ? "On time" : `${dep.delay} min`}`}
             >
               {dep.delay === 0 ? "On time" : `${dep.delay} min`}
             </span>

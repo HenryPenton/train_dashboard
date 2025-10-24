@@ -25,30 +25,30 @@ describe("TflLineStatus", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByRole("heading", { name: /TFL Line Status/ })
+        screen.getByRole("heading", { name: /TFL Line Status/ }),
       ).toBeInTheDocument();
 
       expect(screen.getByRole("list")).toBeInTheDocument();
 
       expect(screen.getByLabelText("Line name Victoria")).toHaveTextContent(
-        "Victoria"
+        "Victoria",
       );
       expect(
-        screen.getByLabelText("Line status Good Service")
+        screen.getByLabelText("Line status Good Service"),
       ).toHaveTextContent("Good Service");
 
       expect(screen.getByLabelText("Line name Northern")).toHaveTextContent(
-        "Northern"
+        "Northern",
       );
       expect(
-        screen.getByLabelText("Line status Minor Delays")
+        screen.getByLabelText("Line status Minor Delays"),
       ).toHaveTextContent("Minor Delays");
 
       expect(screen.getByLabelText("Line name Central")).toHaveTextContent(
-        "Central"
+        "Central",
       );
       expect(
-        screen.getByLabelText("Line status Part Suspended")
+        screen.getByLabelText("Line status Part Suspended"),
       ).toHaveTextContent("Part Suspended");
     });
   });

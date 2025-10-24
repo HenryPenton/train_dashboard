@@ -46,10 +46,10 @@ export default function Settings() {
           const data = await res.json();
           setShowTflLine(!!data.show_tfl_lines);
           setRoutes(
-            Array.isArray(data.tfl_best_routes) ? data.tfl_best_routes : []
+            Array.isArray(data.tfl_best_routes) ? data.tfl_best_routes : [],
           );
           setDepartures(
-            Array.isArray(data.rail_departures) ? data.rail_departures : []
+            Array.isArray(data.rail_departures) ? data.rail_departures : [],
           );
         }
       } catch {
@@ -75,9 +75,9 @@ export default function Settings() {
   const filtered = useMemo(
     () =>
       sidebarItems.filter((item) =>
-        item.CommonName.toLowerCase().includes(searchTerm.toLowerCase())
+        item.CommonName.toLowerCase().includes(searchTerm.toLowerCase()),
       ),
-    [sidebarItems, searchTerm]
+    [sidebarItems, searchTerm],
   );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -163,7 +163,9 @@ export default function Settings() {
       />
       {/* Main content */}
       <section className="flex-1">
-  <SectionHeading className="text-2xl font-bold mb-6 text-gray-900">Settings</SectionHeading>
+        <SectionHeading className="text-2xl font-bold mb-6 text-gray-900">
+          Settings
+        </SectionHeading>
 
         {selectedSidebarItem !== null && (
           <div className="mb-8 p-4 border rounded bg-gray-50">

@@ -1,4 +1,3 @@
-
 import * as z from "zod";
 
 export const RailDepartureSchema = z.object({

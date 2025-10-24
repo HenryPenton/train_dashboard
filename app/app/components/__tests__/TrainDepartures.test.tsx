@@ -41,7 +41,9 @@ describe("TrainDepartures accessibility happy path", () => {
     expect(list).toBeInTheDocument();
 
     // Find list items by aria-label
-    const depItems = await screen.findAllByLabelText(/Departure from Paddington to Liverpool Street/);
+    const depItems = await screen.findAllByLabelText(
+      /Departure from Paddington to Liverpool Street/,
+    );
     expect(depItems.length).toBe(2);
 
     // Find delay elements by aria-label
@@ -61,8 +63,12 @@ describe("TrainDepartures error state", () => {
 
   it("shows an error message when fetch fails", async () => {
     render(<TrainDepartures {...mockProps} />);
-    const error = await screen.findByRole("alert", { name: /Departure error/i });
+    const error = await screen.findByRole("alert", {
+      name: /Departure error/i,
+    });
     expect(error).toBeInTheDocument();
-    expect(error).toHaveTextContent("Could not find any services for the configured route.");
+    expect(error).toHaveTextContent(
+      "Could not find any services for the configured route.",
+    );
   });
 });

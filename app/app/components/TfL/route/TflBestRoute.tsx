@@ -26,7 +26,7 @@ export default function TflBestRoute({ from, to }: TflRouteProps) {
       setError(null);
       try {
         const res = await fetch(
-          `/api/best-route/${from.naptanOrAtco}/${to.naptanOrAtco}`
+          `/api/best-route/${from.naptanOrAtco}/${to.naptanOrAtco}`,
         );
         if (!res.ok) throw new Error("Failed to fetch best route");
         const json = await res.json();
@@ -48,7 +48,7 @@ export default function TflBestRoute({ from, to }: TflRouteProps) {
 
   return (
     <div className="bg-[#23272f] rounded-lg p-6 shadow-lg">
-  <SectionHeading className="text-white">Best Route</SectionHeading>
+      <SectionHeading className="text-white">Best Route</SectionHeading>
       <div className="text-white mb-1" aria-label="Origin">
         <span className="font-bold">From:</span> {from.placeName}
       </div>
@@ -80,4 +80,3 @@ export default function TflBestRoute({ from, to }: TflRouteProps) {
     </div>
   );
 }
-

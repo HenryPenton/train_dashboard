@@ -30,9 +30,12 @@ export default function Home() {
 
   // Auto-refresh the page every 5 minutes
   useEffect(() => {
-    const interval = setInterval(() => {
-      window.location.reload();
-    }, 5 * 60 * 1000);
+    const interval = setInterval(
+      () => {
+        window.location.reload();
+      },
+      5 * 60 * 1000,
+    );
     return () => clearInterval(interval);
   }, []);
 
@@ -101,7 +104,12 @@ export default function Home() {
 
       <LastRefreshed />
       <div className="w-full text-center mt-10">
-        <a href="/settings" className="text-cyan-300 hover:underline text-lg font-bold">Settings</a>
+        <a
+          href="/settings"
+          className="text-cyan-300 hover:underline text-lg font-bold"
+        >
+          Settings
+        </a>
       </div>
     </main>
   );

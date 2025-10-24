@@ -6,7 +6,11 @@ interface SectionHeadingProps {
   ariaLabel?: string;
 }
 
-export default function SectionHeading({ children, className = "", ariaLabel }: SectionHeadingProps) {
+export default function SectionHeading({
+  children,
+  className = "",
+  ariaLabel,
+}: SectionHeadingProps) {
   return (
     <h2
       className={`text-xl font-semibold mb-2 ${className}`}

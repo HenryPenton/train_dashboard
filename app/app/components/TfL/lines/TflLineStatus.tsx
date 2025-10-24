@@ -11,7 +11,7 @@ type TflLineStatusType = {
 
 export default function TflLineStatus() {
   const [tflStatuses, setTflStatuses] = useState<TflLineStatusType[] | null>(
-    null
+    null,
   );
   const [tflLoading, setTflLoading] = useState(false);
   const [tflError, setTflError] = useState("");
@@ -42,7 +42,12 @@ export default function TflLineStatus() {
       aria-label="TFL Line Status Section"
       role="region"
     >
-  <SectionHeading className="text-white" ariaLabel="TFL Line Status Heading">TFL Line Status</SectionHeading>
+      <SectionHeading
+        className="text-white"
+        ariaLabel="TFL Line Status Heading"
+      >
+        TFL Line Status
+      </SectionHeading>
       {tflLoading && (
         <div role="status" aria-label="Loading TFL line statuses">
           Loading TFL line statuses...
@@ -57,8 +62,7 @@ export default function TflLineStatus() {
           {tflError}
         </div>
       )}
-  {tflStatuses && <TflLineStatusList tflStatuses={tflStatuses} />}
+      {tflStatuses && <TflLineStatusList tflStatuses={tflStatuses} />}
     </section>
   );
 }
-

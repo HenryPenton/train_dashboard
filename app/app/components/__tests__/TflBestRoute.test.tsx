@@ -30,30 +30,30 @@ describe("TflBestRoute", () => {
       <TflBestRoute
         from={{ placeName: "Edgeware Road", naptanOrAtco: "PAD" }}
         to={{ placeName: "Liverpool Street", naptanOrAtco: "LST" }}
-      />
+      />,
     );
 
     await waitFor(() => {
       expect(
-        screen.getByRole("heading", { name: /Best Route/ })
+        screen.getByRole("heading", { name: /Best Route/ }),
       ).toBeInTheDocument();
 
       expect(screen.getByLabelText("Origin")).toHaveTextContent(
-        "From: Edgeware Road"
+        "From: Edgeware Road",
       );
       expect(screen.getByLabelText("Destination")).toHaveTextContent(
-        "To: Liverpool Street"
+        "To: Liverpool Street",
       );
 
       expect(
-        screen.getByLabelText("Journey duration and arrival")
+        screen.getByLabelText("Journey duration and arrival"),
       ).toHaveTextContent("Duration: 22 min|Arrival: 12:00:00 PM");
 
       expect(screen.getByLabelText("Journey leg 1")).toHaveTextContent(
-        "Tube: Bakerloo line to Oxford Circus"
+        "Tube: Bakerloo line to Oxford Circus",
       );
       expect(screen.getByLabelText("Journey leg 2")).toHaveTextContent(
-        "Bus: 176 to Liverpool Street"
+        "Bus: 176 to Liverpool Street",
       );
     });
   });

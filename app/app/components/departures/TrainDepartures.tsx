@@ -31,7 +31,7 @@ export default function TrainDepartures(props: TrainDepartureProps) {
       setDepartures(null);
       try {
         const result = await fetch(
-          `/api/departures/${props.fromStation.stationCode}/to/${props.toStation.stationCode}`
+          `/api/departures/${props.fromStation.stationCode}/to/${props.toStation.stationCode}`,
         );
         const data = await result.json();
 
@@ -53,7 +53,7 @@ export default function TrainDepartures(props: TrainDepartureProps) {
       className="flex-1 bg-[#23262f] rounded-[12px] p-6 text-[#f1f1f1] shadow-[0_2px_12px_0_rgba(0,0,0,0.25)]"
       aria-label="Train Departures Section"
     >
-  <SectionHeading className="text-white">Train Departures</SectionHeading>
+      <SectionHeading className="text-white">Train Departures</SectionHeading>
       <div style={{ marginBottom: 16 }}>
         <span aria-label="Departure route">
           <strong>

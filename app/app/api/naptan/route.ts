@@ -5,7 +5,7 @@ export async function GET() {
   if (!res.ok) {
     return NextResponse.json(
       { error: "Failed to fetch NAPTAN IDs" },
-      { status: 500 }
+      { status: 500 },
     );
   }
   const data = await res.json();

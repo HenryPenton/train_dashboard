@@ -10,7 +10,11 @@ type Departure = {
   status: "Early" | "On time" | "Late";
 };
 
-export default function DepartureList({ departures }: { departures: Departure[] }) {
+export default function DepartureList({
+  departures,
+}: {
+  departures: Departure[];
+}) {
   if (departures.length === 0) {
     return (
       <div role="status" aria-label="No departures found">

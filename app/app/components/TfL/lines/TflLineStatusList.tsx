@@ -24,7 +24,11 @@ function getStatusClass(statusSeverity: number): string {
   return severityColors[statusSeverity] || "text-[#f1f1f1]";
 }
 
-export default function TflLineStatusList({ tflStatuses }: { tflStatuses: TflLineStatusType[] }) {
+export default function TflLineStatusList({
+  tflStatuses,
+}: {
+  tflStatuses: TflLineStatusType[];
+}) {
   return (
     <ul role="list">
       {tflStatuses.map((line, i) => (
@@ -35,7 +39,7 @@ export default function TflLineStatusList({ tflStatuses }: { tflStatuses: TflLin
           role="listitem"
           aria-label={`Line ${line.name}`}
         >
-          <strong aria-label={`Line name ${line.name}`}>{line.name}</strong>: {" "}
+          <strong aria-label={`Line name ${line.name}`}>{line.name}</strong>:{" "}
           <span
             className={getStatusClass(line.statusSeverity)}
             aria-label={`Line status ${line.status || "Unknown"}`}

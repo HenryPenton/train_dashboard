@@ -11,12 +11,13 @@ interface AddTrainDepartureFormProps {
   onAdd: (e: React.FormEvent) => void;
 }
 
-export default function AddTrainDepartureForm({ departure, onChange, onAdd }: AddTrainDepartureFormProps) {
+export default function AddTrainDepartureForm({
+  departure,
+  onChange,
+  onAdd,
+}: AddTrainDepartureFormProps) {
   return (
-    <form
-      onSubmit={onAdd}
-      className="mb-8 p-4 border rounded bg-gray-50"
-    >
+    <form onSubmit={onAdd} className="mb-8 p-4 border rounded bg-gray-50">
       <h3 className="font-semibold mb-4">Add Train Departure</h3>
       <div className="mb-2">
         <input
