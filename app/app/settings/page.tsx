@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import { set } from "zod";
 type SidebarItem = {
   CommonName: string;
   naptanID: string;
@@ -143,6 +144,25 @@ export default function Settings() {
     }
   };
 
+  function SidebarListItem({
+    item,
+    selected,
+  }: {
+    item: SidebarItem;
+    selected: boolean;
+  }) {
+    return (
+      <li
+        className={`mb-2 cursor-pointer px-2 py-1 rounded ${
+          selected ? "bg-blue-100" : ""
+        }`}
+        onClick={() => setSelectedSidebarItem(item.naptanID)}
+      >
+        {item.CommonName}
+      </li>
+    );
+  }
+
   return (
     <main className="p-8 max-w-4xl mx-auto flex">
       {/* Sidebar */}
@@ -157,15 +177,11 @@ export default function Settings() {
         />
         <ul>
           {filtered.map((item, idx) => (
-            <li
+            <SidebarListItem
               key={idx}
-              className={`mb-2 cursor-pointer px-2 py-1 rounded ${
-                selectedSidebarItem === item.naptanID ? "bg-blue-100" : ""
-              }`}
-              onClick={() => setSelectedSidebarItem(item.naptanID)}
-            >
-              {item.CommonName}
-            </li>
+              item={item}
+              selected={selectedSidebarItem === item.naptanID}
+            />
           ))}
         </ul>
       </aside>
