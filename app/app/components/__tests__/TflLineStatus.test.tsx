@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
-import TflLineStatus from "../TflLineStatus";
+import TflLineStatus from "../TfL/lines/TflLineStatus";
 
 afterEach(() => {
   jest.restoreAllMocks();

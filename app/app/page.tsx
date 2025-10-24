@@ -1,8 +1,8 @@
 "use client";
 
-import TflLineStatus from "./components/TflLineStatus";
-import TrainDepartures from "./components/TrainDepartures";
-import TflBestRoute from "./components/TflBestRoute";
+import TflLineStatus from "./components/TfL/lines/TflLineStatus";
+import TrainDepartures from "./components/departures/TrainDepartures";
+import TflBestRoute from "./components/TfL/route/TflBestRoute";
 import LastRefreshed from "./components/LastRefreshed";
 import { useEffect, useState } from "react";
 

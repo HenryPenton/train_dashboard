@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import RouteLegs from "./RouteLegs";
 
 interface BestRouteData {
   route: string[];
@@ -61,7 +62,9 @@ export default function TflBestRoute({ from, to }: TflRouteProps) {
       </div>
       <div className="text-white mb-1">
         <span className="font-bold">Route:</span>
-        <div className="ml-2 mt-1 flex flex-col gap-1">{routeLegs(data)}</div>
+        <div className="ml-2 mt-1 flex flex-col gap-1">
+          <RouteLegs route={data.route} />
+        </div>
       </div>
       <div
         className="text-white mb-1"
@@ -83,31 +86,3 @@ export default function TflBestRoute({ from, to }: TflRouteProps) {
   );
 }
 
-function routeLegs(data: BestRouteData) {
-  const colorMap: Record<string, string> = {
-    tube: "text-yellow-300",
-    "elizabeth-line": "text-purple-400",
-    bus: "text-red-400",
-    walk: "text-green-400",
-    overground: "text-orange-400",
-    train: "text-blue-400",
-  };
-  return data.route.map((stage, idx) => {
-    const match = stage.match(/^([\w\s-]+):\s*(.*)$/i);
-    const method = match ? match[1] : null;
-    const rest = match ? match[2] : stage;
-    const color = method ? colorMap[method.toLowerCase()] : "text-cyan-300";
-    return (
-      <div
-        key={idx}
-        className="pl-2 border-l-2 border-cyan-300 flex items-baseline gap-2"
-        aria-label={`Journey leg ${idx + 1}`}
-      >
-        {method && (
-          <span className={`text-lg font-bold ${color}`}>{method}: </span>
-        )}
-        <span className="text-base">{rest}</span>
-      </div>
-    );
-  });
-}
