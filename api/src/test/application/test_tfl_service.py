@@ -24,6 +24,7 @@ class DummyTflClient:
                         }
                     ],
                     "duration": 15,
+                    "fare": {"totalCost": 300},
                     "arrivalDateTime": "2025-10-22T10:00:00Z",
                 }
             )
@@ -82,6 +83,7 @@ def test_get_best_route():
     assert result == {
         "duration": 15,
         "arrival": "2025-10-22T10:00:00Z",
+        "fare": 300,
         "legs": [
             {
                 "mode": "tube",

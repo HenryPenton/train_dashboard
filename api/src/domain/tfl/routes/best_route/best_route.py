@@ -15,10 +15,12 @@ class BestRoute:
             }
             for leg in best.legs
         ]
+        self.fare = best.fare
 
     def get_best_route_summary(self) -> dict:
         return {
             "duration": self.duration,
             "arrival": self.arrival,
             "legs": self.legs,
+            "fare": self.fare,
         }

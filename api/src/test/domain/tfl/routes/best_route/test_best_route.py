@@ -17,12 +17,14 @@ class TestBestRoute:
                         "routeOptions": [{"name": "Central"}],
                     }
                 ],
+                "fare": {"totalCost": 250},
             }
         )
         result = BestRoute(best).get_best_route_summary()
         assert result == {
             "duration": 45,
             "arrival": "2025-10-17T09:45:00",
+            "fare": 250,
             "legs": [
                 {
                     "mode": "Tube",
@@ -39,6 +41,7 @@ class TestBestRoute:
             {
                 "duration": 60,
                 "arrivalDateTime": "2025-10-17T10:00:00",
+                "fare": {"totalCost": 300},
                 "legs": [
                     {
                         "mode": {"name": "Tube"},
@@ -61,6 +64,7 @@ class TestBestRoute:
         assert result == {
             "duration": 60,
             "arrival": "2025-10-17T10:00:00",
+            "fare": 300,
             "legs": [
                 {
                     "mode": "Tube",
@@ -84,6 +88,7 @@ class TestBestRoute:
             {
                 "duration": None,
                 "arrivalDateTime": None,
+                "fare": {},
                 "legs": [
                     {
                         "mode": {},
@@ -99,6 +104,7 @@ class TestBestRoute:
         assert result == {
             "duration": None,
             "arrival": None,
+            "fare": None,
             "legs": [
                 {
                     "mode": None,
@@ -115,6 +121,7 @@ class TestBestRoute:
             {
                 "duration": 30,
                 "arrivalDateTime": "2025-10-17T08:30:00",
+                "fare": {"totalCost": 150},
                 "legs": [
                     {
                         "mode": {"name": "Bus"},
@@ -137,6 +144,7 @@ class TestBestRoute:
         assert result == {
             "duration": 30,
             "arrival": "2025-10-17T08:30:00",
+            "fare": 150,
             "legs": [
                 {
                     "mode": "Bus",
