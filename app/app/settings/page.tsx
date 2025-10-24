@@ -2,11 +2,17 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { set } from "zod";
+import Sidebar from "../components/settings/Sidebar";
+import AddTubeRouteForm from "../components/settings/AddTubeRouteForm";
+import AddTrainDepartureForm from "../components/settings/AddTrainDepartureForm";
+import TubeRoutesList from "../components/settings/TubeRoutesList";
+import TrainDeparturesList from "../components/settings/TrainDeparturesList";
+
 type SidebarItem = {
   CommonName: string;
   naptanID: string;
 };
+
 export default function Settings() {
   // Example data for sidebar
   const [sidebarItems, setSidebarItems] = useState<Array<SidebarItem>>([]);
@@ -144,51 +150,20 @@ export default function Settings() {
     }
   };
 
-  function SidebarListItem({
-    item,
-    selected,
-  }: {
-    item: SidebarItem;
-    selected: boolean;
-  }) {
-    return (
-      <li
-        className={`mb-2 cursor-pointer px-2 py-1 rounded ${
-          selected ? "bg-blue-100" : ""
-        }`}
-        onClick={() => setSelectedSidebarItem(item.naptanID)}
-      >
-        {item.CommonName}
-      </li>
-    );
-  }
-
   return (
     <main className="p-8 max-w-4xl mx-auto flex">
       {/* Sidebar */}
-      <aside className="w-64 h-[500px] overflow-y-auto border-r pr-4 mr-8">
-        <h3 className="font-semibold mb-4">Stations</h3>
-        <input
-          type="text"
-          placeholder="Search stations..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="mb-4 px-2 py-1 border w-full rounded"
-        />
-        <ul>
-          {filtered.map((item, idx) => (
-            <SidebarListItem
-              key={idx}
-              item={item}
-              selected={selectedSidebarItem === item.naptanID}
-            />
-          ))}
-        </ul>
-      </aside>
+      <Sidebar
+        items={filtered}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        selectedId={selectedSidebarItem}
+        setSelectedId={setSelectedSidebarItem}
+      />
       {/* Main content */}
       <section className="flex-1">
         <h2 className="text-2xl font-bold mb-6">Settings</h2>
-        {/* ATCO code detail panel */}
+
         {selectedSidebarItem !== null && (
           <div className="mb-8 p-4 border rounded bg-gray-50">
             <h4 className="font-semibold mb-2">NaPTAN ID</h4>
@@ -205,155 +180,29 @@ export default function Settings() {
           Show Tube Line Status
         </label>
 
-        <form
-          onSubmit={handleAddRoute}
-          className="mb-8 p-4 border rounded bg-gray-50"
-        >
-          <h3 className="font-semibold mb-4">Add Tube Route</h3>
-          <div className="mb-2">
-            <input
-              type="text"
-              name="origin"
-              value={route.origin}
-              onChange={handleRouteChange}
-              placeholder="Origin Station"
-              className="border px-2 py-1 w-full mb-2"
-              required
-            />
-            <input
-              type="text"
-              name="originNaPTANOrATCO"
-              value={route.originNaPTANOrATCO}
-              onChange={handleRouteChange}
-              placeholder="Origin NaPTAN or ATCO Code"
-              className="border px-2 py-1 w-full mb-2"
-              required
-            />
-            <input
-              type="text"
-              name="destination"
-              value={route.destination}
-              onChange={handleRouteChange}
-              placeholder="Destination Station"
-              className="border px-2 py-1 w-full mb-2"
-              required
-            />
-            <input
-              type="text"
-              name="destinationNaPTANOrATCO"
-              value={route.destinationNaPTANOrATCO}
-              onChange={handleRouteChange}
-              placeholder="Destination NaPTAN or ATCO Code"
-              className="border px-2 py-1 w-full mb-2"
-              required
-            />
-          </div>
-          <button
-            type="submit"
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-          >
-            Add Route
-          </button>
-        </form>
+        <AddTubeRouteForm
+          route={route}
+          onChange={handleRouteChange}
+          onAdd={handleAddRoute}
+        />
 
-        <div className="mb-10">
-          <h4 className="font-semibold mb-2">Tube Routes</h4>
-          <ul>
-            {routes.map((r, i) => (
-              <li key={i} className="mb-1 flex items-center justify-between">
-                <span>
-                  {r.origin} ({r.originNaPTANOrATCO}) → {r.destination} (
-                  {r.destinationNaPTANOrATCO})
-                </span>
-                <button
-                  type="button"
-                  aria-label="Remove route"
-                  className="ml-2 text-red-500 hover:text-red-700 font-bold"
-                  onClick={() => {
-                    setRoutes(routes.filter((_, idx) => idx !== i));
-                  }}
-                >
-                  ×
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <TubeRoutesList
+          routes={routes}
+          onRemove={(idx) => setRoutes(routes.filter((_, i) => i !== idx))}
+        />
 
-        <form
-          onSubmit={handleAddDeparture}
-          className="mb-8 p-4 border rounded bg-gray-50"
-        >
-          <h3 className="font-semibold mb-4">Add Train Departure</h3>
-          <div className="mb-2">
-            <input
-              type="text"
-              name="origin"
-              value={departure.origin}
-              onChange={handleDepartureChange}
-              placeholder="Origin Station"
-              className="border px-2 py-1 w-full mb-2"
-              required
-            />
-            <input
-              type="text"
-              name="originCode"
-              value={departure.originCode}
-              onChange={handleDepartureChange}
-              placeholder="Origin Code"
-              className="border px-2 py-1 w-full mb-2"
-              required
-            />
-            <input
-              type="text"
-              name="destination"
-              value={departure.destination}
-              onChange={handleDepartureChange}
-              placeholder="Destination Station"
-              className="border px-2 py-1 w-full mb-2"
-              required
-            />
-            <input
-              type="text"
-              name="destinationCode"
-              value={departure.destinationCode}
-              onChange={handleDepartureChange}
-              placeholder="Destination Code"
-              className="border px-2 py-1 w-full mb-2"
-              required
-            />
-          </div>
-          <button
-            type="submit"
-            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-          >
-            Add Departure
-          </button>
-        </form>
+        <AddTrainDepartureForm
+          departure={departure}
+          onChange={handleDepartureChange}
+          onAdd={handleAddDeparture}
+        />
 
-        <div>
-          <h4 className="font-semibold mb-2">Train Departures</h4>
-          <ul>
-            {departures.map((d, i) => (
-              <li key={i} className="mb-1 flex items-center justify-between">
-                <span>
-                  {d.origin} ({d.originCode}) → {d.destination} (
-                  {d.destinationCode})
-                </span>
-                <button
-                  type="button"
-                  aria-label="Remove departure"
-                  className="ml-2 text-red-500 hover:text-red-700 font-bold"
-                  onClick={() => {
-                    setDepartures(departures.filter((_, idx) => idx !== i));
-                  }}
-                >
-                  ×
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <TrainDeparturesList
+          departures={departures}
+          onRemove={(idx) =>
+            setDepartures(departures.filter((_, i) => i !== idx))
+          }
+        />
 
         <button
           onClick={handleSave}
