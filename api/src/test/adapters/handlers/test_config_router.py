@@ -34,3 +34,31 @@ def test_set_config_success(test_app):
     assert response.status_code == 200
     assert response.json() == {"status": "ok"}
     assert DummyConfigService.last_set == payload
+
+
+def test_get_config_not_found(monkeypatch, test_app):
+    class FailingConfigService:
+        def get_config(self):
+            raise FileNotFoundError()
+
+        def set_config(self, new_config):
+            pass
+
+    monkeypatch.setattr(config_handler, "config_service", FailingConfigService())
+    response = test_app.get("/config")
+    assert response.status_code == 404
+    assert response.json()["detail"] == "Config file not found"
+
+
+def test_set_config_error(monkeypatch, test_app):
+    class FailingConfigService:
+        def set_config(self, new_config):
+            raise Exception("fail")
+
+        def get_config(self):
+            return {"foo": "bar"}
+
+    monkeypatch.setattr(config_handler, "config_service", FailingConfigService())
+    response = test_app.post("/config", json={"bad": "data"})
+    assert response.status_code == 500
+    assert "fail" in response.json()["detail"]

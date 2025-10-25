@@ -9,8 +9,8 @@ class DummyRailService:
             {
                 "scheduled": "10:00",
                 "actual": "10:05",
-                "origin": 'AAA',
-                "destination": 'BBB',
+                "origin": "AAA",
+                "destination": "BBB",
             }
         ]
 
@@ -26,3 +26,17 @@ def test_get_departures(monkeypatch):
     assert response.json() == [
         {"scheduled": "10:00", "actual": "10:05", "origin": "AAA", "destination": "BBB"}
     ]
+
+
+def test_get_departures_error(monkeypatch):
+    class FailingRailService:
+        async def get_departures(self, origin, destination):
+            raise Exception("fail")
+
+    monkeypatch.setattr(rail_handler, "rail_service", FailingRailService())
+    app = FastAPI()
+    app.include_router(rail_handler.router)
+    client = TestClient(app)
+    response = client.get("/rail/departures/AAA/to/BBB")
+    assert response.status_code == 500
+    assert "fail" in response.json()["detail"]

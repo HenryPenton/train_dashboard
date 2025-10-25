@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from pathlib import Path
 from src.application.station_service import StationService
 
@@ -14,4 +14,4 @@ def get_naptan_ids():
         stations = station_service.get_stations()
         return [station.__dict__ for station in stations]
     except Exception as e:
-        return {"error": str(e)}
+        raise HTTPException(status_code=500, detail=str(e))

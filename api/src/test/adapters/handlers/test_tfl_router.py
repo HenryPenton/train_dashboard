@@ -31,3 +31,37 @@ def test_get_line_status(monkeypatch):
     response = client.get("/tfl/line-status")
     assert response.status_code == 200
     assert response.json() == [{"line": "Central", "status": "Good Service"}]
+
+
+def test_get_best_route_error(monkeypatch):
+    class FailingTFLService:
+        async def get_best_route(self, from_station, to_station):
+            raise Exception("fail")
+
+        async def get_line_status(self):
+            return []
+
+    monkeypatch.setattr(tfl_handler, "tfl_service", FailingTFLService())
+    app = FastAPI()
+    app.include_router(tfl_handler.router)
+    client = TestClient(app)
+    response = client.get("/tfl/best-route/A/B")
+    assert response.status_code == 500
+    assert "fail" in response.json()["detail"]
+
+
+def test_get_line_status_error(monkeypatch):
+    class FailingTFLService:
+        async def get_best_route(self, from_station, to_station):
+            return {}
+
+        async def get_line_status(self):
+            raise Exception("fail")
+
+    monkeypatch.setattr(tfl_handler, "tfl_service", FailingTFLService())
+    app = FastAPI()
+    app.include_router(tfl_handler.router)
+    client = TestClient(app)
+    response = client.get("/tfl/line-status")
+    assert response.status_code == 500
+    assert "fail" in response.json()["detail"]

@@ -30,3 +30,18 @@ def test_get_naptan_ids(monkeypatch):
         {"naptanID": "id1", "CommonName": "Alpha"},
         {"naptanID": "id2", "CommonName": "Beta"},
     ]
+
+
+def test_get_naptan_ids_error(monkeypatch):
+    class FailingStationService:
+        def get_stations(self):
+            raise Exception("fail")
+
+    monkeypatch.setattr(naptan_id_handler, "station_service", FailingStationService())
+    app = FastAPI()
+    app.include_router(naptan_id_handler.router)
+    client = TestClient(app)
+    response = client.get("/naptan-id")
+    assert response.status_code == 500
+    assert "detail" in response.json()
+    assert "fail" in response.json()["detail"]
