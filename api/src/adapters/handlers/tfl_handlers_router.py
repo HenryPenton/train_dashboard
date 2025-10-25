@@ -16,8 +16,6 @@ async def get_best_route(from_station: str, to_station: str):
     """
     try:
         return await tfl_service.get_best_route(from_station, to_station)
-    except httpx.HTTPStatusError as e:
-        raise HTTPException(status_code=e.response.status_code, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -29,7 +27,5 @@ async def get_tfl_line_status():
     """
     try:
         return await tfl_service.get_line_status()
-    except httpx.HTTPStatusError as e:
-        raise HTTPException(status_code=e.response.status_code, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
