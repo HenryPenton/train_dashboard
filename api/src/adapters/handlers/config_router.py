@@ -5,13 +5,14 @@ from src.application.config_service import ConfigService
 
 
 router = APIRouter()
+config_service = ConfigService()
 
 
 @router.post("/config")
 async def set_config(request: Request):
     try:
         new_config = await request.json()
-        ConfigService.set_config(new_config)
+        config_service.set_config(new_config)
         return JSONResponse(content={"status": "ok"})
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -20,7 +21,7 @@ async def set_config(request: Request):
 @router.get("/config")
 def get_config():
     try:
-        config_data = ConfigService.get_config()
+        config_data = config_service.get_config()
         return JSONResponse(content=config_data)
     except FileNotFoundError:
         raise HTTPException(status_code=404, detail="Config file not found")
