@@ -4,7 +4,7 @@ from pathlib import Path
 from src.adapters.file_handlers.json_file_write import JSONFileWriter
 
 
-def test_write_json_writes_file_correctly():
+def test_write_json_writes_file():
     # Create a temporary file
     with tempfile.TemporaryDirectory() as tmpdir:
         path = Path(tmpdir) / "test.json"
