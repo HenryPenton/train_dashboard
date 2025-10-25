@@ -1,14 +1,16 @@
 import httpx
-from fastapi import HTTPException
-
+from fastapi import HTTPException, APIRouter
 from src.adapters.clients.tflclient import TFLClient
 from src.application.tfl_service import TFLService
 
 tfl_client: TFLClient = TFLClient(httpx.AsyncClient())
 tfl_service = TFLService(tfl_client)
 
+router = APIRouter()
 
-async def get_best_route_handler(from_station: str, to_station: str):
+
+@router.get("/tfl/best-route/{from_station}/{to_station}")
+async def get_best_route(from_station: str, to_station: str):
     """
     Suggest the best current route from one station to another using the TFL Journey Planner API via TFLClient.
     """
@@ -20,7 +22,8 @@ async def get_best_route_handler(from_station: str, to_station: str):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-async def get_tfl_line_status_handler():
+@router.get("/tfl/line-status")
+async def get_tfl_line_status():
     """
     Get the status of all TFL lines from the TFL API, simplified.
     """

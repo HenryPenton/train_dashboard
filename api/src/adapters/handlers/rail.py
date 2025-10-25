@@ -1,20 +1,19 @@
 import httpx
-from fastapi import HTTPException
-
+from fastapi import HTTPException, APIRouter
 from src.adapters.clients.rttclient import RTTClient
 from src.application.rail_service import RailService
 
 rtt_client: RTTClient = RTTClient(httpx.AsyncClient())
 rail_service = RailService(rtt_client)
 
+router = APIRouter()
 
-async def get_departures_handler(
-    origin_station_code: str, destination_station_code: str
-):
+
+@router.get("/rail/departures/{origin_station_code}/to/{destination_station_code}")
+async def get_departures(origin_station_code: str, destination_station_code: str):
     """
     Get departures from a station using the Real Time Trains API, filtered by destination station code.
     """
-
     try:
         return await rail_service.get_departures(
             origin_station_code, destination_station_code
