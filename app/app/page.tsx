@@ -51,6 +51,24 @@ export default function Home() {
       });
   }, []);
 
+  const hasTrainDepartures = !!(
+    config &&
+    Array.isArray(config.rail_departures) &&
+    config.rail_departures.length > 0
+  );
+  const hasTflRoutes = !!(
+    config &&
+    Array.isArray(config.tfl_best_routes) &&
+    config.tfl_best_routes.length > 0
+  );
+  const hasTflLines = !!(config && config.show_tfl_lines);
+
+  // Counter for how many are true
+  let columnCount = 0;
+  if (hasTrainDepartures) columnCount++;
+  if (hasTflRoutes) columnCount++;
+  if (hasTflLines) columnCount++;
+
   return (
     <main className="w-full min-h-screen p-8 bg-[#181818] font-mono text-[#f8f8f2] relative">
       <h1
@@ -63,9 +81,10 @@ export default function Home() {
       <div
         className={`grid w-full gap-10 box-border
           grid-cols-1
-          lg:grid-cols-2
-          ${config?.show_tfl_lines ? "2xl:grid-cols-3" : ""}
-          justify-items-center`}
+          ${columnCount >= 3 ? "2xl:grid-cols-3" : ""}
+          ${columnCount >= 2 ? "lg:grid-cols-2" : ""}
+          justify-items-center
+          `}
       >
         {config && config.rail_departures.length > 0 && (
           <div>
@@ -106,7 +125,7 @@ export default function Home() {
         )}
 
         {config?.show_tfl_lines ? (
-          <div className="lg:col-span-2 2xl:col-span-1">
+          <div className="">
             <TflLineStatus />
           </div>
         ) : null}
