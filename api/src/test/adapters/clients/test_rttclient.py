@@ -88,3 +88,39 @@ async def test_get_departures_error():
     with pytest.raises(RTTClientError) as e:
         await client.get_departures("ABC", "XYZ")
     assert "RTTClient failed" in str(e.value)
+
+
+@pytest.mark.asyncio
+async def test_get_departures_invalid_record():
+    # One valid, one invalid (missing required field 'origin')
+    mock_json = {
+        "services": [
+            {
+                "locationDetail": {
+                    "origin": [{"description": "Edinburgh"}],
+                    "destination": [{"description": "Glasgow"}],
+                    "gbttBookedDeparture": "0930",
+                    "platform": "5",
+                    "realtimeDeparture": "0935",
+                }
+            },
+            {
+                "locationDetail": {
+                    # Invalid: missing 'origin', 'destination', and 'gbttBookedDeparture'
+                    "platform": "?",
+                }
+            },
+        ]
+    }
+    mock_response = MockResponse(json_data=mock_json)
+    client = RTTClient(MockAsyncClient(mock_response))
+    result = await client.get_departures("ABC", "XYZ")
+
+    # Only the valid record should be returned
+    assert isinstance(result, list)
+    assert len(result) == 1
+    assert result[0].origins == ["Edinburgh"]
+    assert result[0].destinations == ["Glasgow"]
+    assert result[0].scheduled_departure == "0930"
+    assert result[0].real_departure == "0935"
+    assert result[0].platform == "5"

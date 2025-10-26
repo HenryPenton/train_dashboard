@@ -1,8 +1,8 @@
-from src.adapters.schemas.tfl.line.line_schema import LineRecordSchema
-from src.domain.models.tfl.line_record import LineRecord
+from src.domain.tfl.lines.line_record import LineRecord
+from src.domain.tfl.routes.journey_record import JourneyRecord
 import httpx
+from src.adapters.schemas.tfl.line.line_schema import LineRecordSchema
 from src.adapters.schemas.tfl.route.route_schema import JourneyRecordSchema
-from src.domain.models.tfl.journey_record import JourneyRecord
 
 
 class TFLClientError(Exception):

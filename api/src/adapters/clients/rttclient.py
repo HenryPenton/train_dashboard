@@ -2,34 +2,8 @@ import os
 from typing import List
 
 import httpx
-
-
-class DepartureRecord:
-    def __init__(
-        self,
-        loc: List[dict],
-    ):
-        self.origins = DepartureRecord.process_origins(loc.get("origin", []))
-        self.destinations = DepartureRecord.process_destinations(
-            loc.get("destination", [])
-        )
-        self.scheduled_departure = loc.get("gbttBookedDeparture")
-        self.real_departure = loc.get("realtimeDeparture")
-        self.platform = loc.get("platform")
-
-    @staticmethod
-    def process_origins(origins: List[dict]) -> List[str]:
-        """
-        Returns a list of station names from the origins list.
-        """
-        return [o.get("description", "") for o in origins if isinstance(o, dict)]
-
-    @staticmethod
-    def process_destinations(destinations: List[dict]) -> List[str]:
-        """
-        Returns a list of station names from the destinations list.
-        """
-        return [d.get("description", "") for d in destinations if isinstance(d, dict)]
+from src.adapters.schemas.rail.departure.departure_schema import DepartureRecordSchema
+from src.domain.rail.departures.departure_record import DepartureRecord
 
 
 class RTTClientError(Exception):
@@ -65,8 +39,14 @@ class RTTClient:
             departures = []
             for service in data.get("services", []):
                 loc = service.get("locationDetail", {})
-                departure_record = DepartureRecord(loc)
-                departures.append(departure_record)
+                schema = DepartureRecordSchema()
+                try:
+                    departure_data = schema.load(loc)
+                    departure_record = DepartureRecord(departure_data)
+                    departures.append(departure_record)
+                except Exception as e:
+                    print(e)
+                    continue
             return departures
         except Exception as e:
             raise RTTClientError(f"RTTClient failed: {str(e)}")
