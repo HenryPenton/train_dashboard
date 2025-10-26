@@ -151,19 +151,20 @@ export default function Settings() {
   };
 
   return (
-    <main className="p-8 max-w-4xl mx-auto flex">
-      {/* Sidebar */}
-      <Sidebar
-        items={filtered}
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        selectedId={selectedSidebarItem?.naptanID ?? null}
-        setSelectedId={(id) => {
-          const found =
-            sidebarItems.find((item) => item.naptanID === id) || null;
-          setSelectedSidebarItem(found);
-        }}
-      />
+    <main className="p-8 max-w-4xl mx-auto flex flex-col md:flex-row">
+      <div className="w-full md:w-64 md:mr-8 md:mb-0 mb-8 p-0 border-0 md:border-r md:pr-4">
+        <Sidebar
+          items={filtered}
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          selectedId={selectedSidebarItem?.naptanID ?? null}
+          setSelectedId={(id) => {
+            const found =
+              sidebarItems.find((item) => item.naptanID === id) || null;
+            setSelectedSidebarItem(found);
+          }}
+        />
+      </div>
       {/* Main content */}
       <section className="flex-1">
         <SectionHeading className="text-2xl font-bold mb-6 text-gray-900">
