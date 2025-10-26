@@ -16,9 +16,14 @@ class DepartureRecordSchema(Schema):
     destination = fields.List(fields.Nested(LocationSchema), required=True)
     gbttBookedDeparture = fields.Str(required=True)
     realtimeDeparture = fields.Str(
-        allow_none=True, required=False, load_default=missing, dump_default=missing
+        allow_none=True,
+        required=False,
+        load_default=missing,
     )
-    platform = fields.Str(allow_none=True, load_default=None, dump_default=None)
+    platform = fields.Str(
+        allow_none=True,
+        load_default=None,
+    )
 
     @post_load
     def set_platform_questionmark(self, data, **kwargs):

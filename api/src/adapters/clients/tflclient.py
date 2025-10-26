@@ -37,7 +37,7 @@ class TFLClient:
             journeys = []
             for journey in data:
                 schema = JourneyRecordSchema()
-                journey_record = JourneyRecord(schema.dump(journey))
+                journey_record = JourneyRecord(schema.load(journey))
                 journeys.append(journey_record)
             return journeys
         except Exception as e:
@@ -56,6 +56,6 @@ class TFLClient:
             response.raise_for_status()
             data = response.json()
             schema = LineRecordSchema()
-            return [LineRecord(schema.dump(line)) for line in data]
+            return [LineRecord(schema.load(line)) for line in data]
         except Exception as e:
             raise TFLClientError(f"TFLClient failed: {str(e)}")
