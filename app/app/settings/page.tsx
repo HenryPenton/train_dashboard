@@ -18,7 +18,8 @@ export default function Settings() {
   // Example data for sidebar
   const [sidebarItems, setSidebarItems] = useState<Array<SidebarItem>>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedSidebarItem, setSelectedSidebarItem] = useState<SidebarItem | null>(null);
+  const [selectedSidebarItem, setSelectedSidebarItem] =
+    useState<SidebarItem | null>(null);
   const router = useRouter();
   const [showTflLine, setShowTflLine] = useState(false);
   const [route, setRoute] = useState({
@@ -158,7 +159,8 @@ export default function Settings() {
         setSearchTerm={setSearchTerm}
         selectedId={selectedSidebarItem?.naptanID ?? null}
         setSelectedId={(id) => {
-          const found = sidebarItems.find((item) => item.naptanID === id) || null;
+          const found =
+            sidebarItems.find((item) => item.naptanID === id) || null;
           setSelectedSidebarItem(found);
         }}
       />
@@ -172,29 +174,35 @@ export default function Settings() {
           <div className="mb-8 p-4 border rounded bg-gray-50">
             <h4 className="font-semibold mb-2">Place Details</h4>
             <div className="text-lg">
-              <span className="font-medium">Name:</span> {selectedSidebarItem.CommonName}
+              <span className="font-medium">Name:</span>{" "}
+              {selectedSidebarItem.CommonName}
             </div>
             <div className="text-lg">
-              <span className="font-medium">NaPTAN ID:</span> {selectedSidebarItem.naptanID}
+              <span className="font-medium">NaPTAN ID:</span>{" "}
+              {selectedSidebarItem.naptanID}
             </div>
             <div className="flex gap-4 mt-4">
               <button
                 className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                onClick={() => setRoute(r => ({
-                  ...r,
-                  origin: selectedSidebarItem.CommonName,
-                  originNaPTANOrATCO: selectedSidebarItem.naptanID
-                }))}
+                onClick={() =>
+                  setRoute((r) => ({
+                    ...r,
+                    origin: selectedSidebarItem.CommonName,
+                    originNaPTANOrATCO: selectedSidebarItem.naptanID,
+                  }))
+                }
               >
                 Set as Origin
               </button>
               <button
                 className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-                onClick={() => setRoute(r => ({
-                  ...r,
-                  destination: selectedSidebarItem.CommonName,
-                  destinationNaPTANOrATCO: selectedSidebarItem.naptanID
-                }))}
+                onClick={() =>
+                  setRoute((r) => ({
+                    ...r,
+                    destination: selectedSidebarItem.CommonName,
+                    destinationNaPTANOrATCO: selectedSidebarItem.naptanID,
+                  }))
+                }
               >
                 Set as Destination
               </button>
