@@ -60,29 +60,37 @@ export default function Home() {
         LIVE TRAIN &amp; TUBE STATUS
       </h1>
 
-      <div className="flex w-full flex-row gap-10 flex-wrap justify-around box-border">
-        <div className="flex flex-col gap-6 min-w-[320px] max-w-[600px]">
-          {config &&
-            config.rail_departures.map((route, i) => (
-              <TrainDepartures
-                key={i}
-                toStation={{
-                  stationCode: route.destinationCode,
-                  stationName: route.destination,
-                }}
-                fromStation={{
-                  stationCode: route.originCode,
-                  stationName: route.origin,
-                }}
-              />
+      <div
+        className={`grid w-full gap-10 box-border
+          grid-cols-1
+          lg:grid-cols-2
+          ${config?.show_tfl_lines ? "2xl:grid-cols-3" : ""}
+          justify-items-center`}
+      >
+        {config && config.rail_departures.length > 0 && (
+          <div>
+            {config.rail_departures.map((route, i) => (
+              <div key={i} className="mb-8 last:mb-0">
+                <TrainDepartures
+                  toStation={{
+                    stationCode: route.destinationCode,
+                    stationName: route.destination,
+                  }}
+                  fromStation={{
+                    stationCode: route.originCode,
+                    stationName: route.origin,
+                  }}
+                />
+              </div>
             ))}
-        </div>
-        <div className="flex flex-col gap-6 min-w-[320px] max-w-[600px]">
-          {config &&
-            config.tfl_best_routes.map((route, i) => {
-              return (
+          </div>
+        )}
+
+        {config && config.tfl_best_routes.length > 0 && (
+          <div>
+            {config.tfl_best_routes.map((route, i) => (
+              <div key={i} className="mb-8 last:mb-0">
                 <TflBestRoute
-                  key={i}
                   to={{
                     placeName: route.destination,
                     naptanOrAtco: route.destinationNaPTANOrATCO,
@@ -92,14 +100,16 @@ export default function Home() {
                     naptanOrAtco: route.originNaPTANOrATCO,
                   }}
                 />
-              );
-            })}
-        </div>
-        {config?.show_tfl_lines && (
-          <div className="flex flex-col min-w-[320px] max-w-[600px]">
-            <TflLineStatus />
+              </div>
+            ))}
           </div>
         )}
+
+        {config?.show_tfl_lines ? (
+          <div className="lg:col-span-2 2xl:col-span-1">
+            <TflLineStatus />
+          </div>
+        ) : null}
       </div>
 
       <LastRefreshed />
