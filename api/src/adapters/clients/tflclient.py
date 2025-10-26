@@ -1,13 +1,8 @@
+from src.adapters.schemas.tfl.line.line_schema import LineRecordSchema
+from src.domain.models.tfl.line_record import LineRecord
 import httpx
 from src.adapters.schemas.tfl.route.route_schema import JourneyRecordSchema
 from src.domain.models.tfl.journey_record import JourneyRecord
-
-
-class LineRecord:
-    def __init__(self, line: dict):
-        self.id = line.get("id")
-        self.name = line.get("name")
-        self.line_statuses = line.get("lineStatuses", [])
 
 
 class TFLClientError(Exception):
@@ -60,6 +55,7 @@ class TFLClient:
             response = await self.client.get(url)
             response.raise_for_status()
             data = response.json()
-            return [LineRecord(line) for line in data]
+            schema = LineRecordSchema()
+            return [LineRecord(schema.dump(line)) for line in data]
         except Exception as e:
             raise TFLClientError(f"TFLClient failed: {str(e)}")
