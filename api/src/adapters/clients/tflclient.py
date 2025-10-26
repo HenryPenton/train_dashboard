@@ -1,4 +1,6 @@
 import httpx
+from src.adapters.schemas.tfl.route.route_schema import JourneyRecordSchema
+from src.domain.models.tfl.journey_record import JourneyRecord
 
 
 class LineRecord:
@@ -6,19 +8,6 @@ class LineRecord:
         self.id = line.get("id")
         self.name = line.get("name")
         self.line_statuses = line.get("lineStatuses", [])
-
-
-class JourneyRecord:
-    def __init__(self, journey: dict):
-        self.legs = journey.get("legs", [])
-        self.duration = journey.get("duration")
-        self.arrival = journey.get("arrivalDateTime")
-        self.fare = self._get_fare_total_cost(journey)
-
-    @staticmethod
-    def _get_fare_total_cost(journey: dict) -> int | None:
-        fare = journey.get("fare", {})
-        return fare.get("totalCost")
 
 
 class TFLClientError(Exception):
@@ -52,7 +41,8 @@ class TFLClient:
             data = response.json().get("journeys", [])
             journeys = []
             for journey in data:
-                journey_record = JourneyRecord(journey)
+                schema = JourneyRecordSchema()
+                journey_record = JourneyRecord(schema.dump(journey))
                 journeys.append(journey_record)
             return journeys
         except Exception as e:
