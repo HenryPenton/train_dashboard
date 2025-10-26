@@ -39,7 +39,6 @@ export default function Home() {
     return () => clearInterval(interval);
   }, []);
 
-  // Fetch config from /api/config on mount
   useEffect(() => {
     fetch("/api/config")
       .then((res) => {
@@ -63,7 +62,6 @@ export default function Home() {
 
   const hasTflLines = config && config.show_tfl_lines;
 
-  // Counter for how many are true
   let columnCount = 0;
   if (hasTrainDepartures) columnCount++;
   if (hasTflRoutes) columnCount++;
