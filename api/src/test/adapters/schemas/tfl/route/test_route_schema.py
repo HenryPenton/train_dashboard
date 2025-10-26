@@ -1,12 +1,9 @@
 import pytest
 from src.adapters.schemas.tfl.route.route_schema import (
     FareSchema,
-    InstructionSchema,
     JourneyRecordSchema,
     LegSchema,
     ModeSchema,
-    PointSchema,
-    RouteOptionSchema,
 )
 
 
