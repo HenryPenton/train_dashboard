@@ -51,17 +51,17 @@ export default function Home() {
       });
   }, []);
 
-  const hasTrainDepartures = !!(
+  const hasTrainDepartures =
     config &&
     Array.isArray(config.rail_departures) &&
-    config.rail_departures.length > 0
-  );
-  const hasTflRoutes = !!(
+    config.rail_departures.length > 0;
+
+  const hasTflRoutes =
     config &&
     Array.isArray(config.tfl_best_routes) &&
-    config.tfl_best_routes.length > 0
-  );
-  const hasTflLines = !!(config && config.show_tfl_lines);
+    config.tfl_best_routes.length > 0;
+
+  const hasTflLines = config && config.show_tfl_lines;
 
   // Counter for how many are true
   let columnCount = 0;
