@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import SectionHeading from "../../SectionHeading";
 import RouteLegs from "./RouteLegs";
 import JourneyInfo from "./JourneyInfo";
+import { BestRouteSchema } from "@/app/validators/frontend-validators/BestRouteSchema";
 
 interface BestRouteData {
   route: string[];
@@ -32,7 +33,8 @@ export default function TflBestRoute({ from, to }: TflRouteProps) {
         if (!res.ok) throw new Error("Failed to fetch best route");
         const json = await res.json();
 
-        setData(json);
+        const parsedData = BestRouteSchema.parse(json);
+        setData(parsedData);
       } catch (e: unknown) {
         const message = e instanceof Error ? e.message : "Unknown error";
         setError(message);
