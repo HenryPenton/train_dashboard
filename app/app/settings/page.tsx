@@ -2,12 +2,13 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import Sidebar from "../components/settings/Sidebar";
 import SectionHeading from "../components/SectionHeading";
-import AddTubeRouteForm from "../components/settings/AddTubeRouteForm";
 import AddTrainDepartureForm from "../components/settings/AddTrainDepartureForm";
-import TubeRoutesList from "../components/settings/TubeRoutesList";
+import AddTubeRouteForm from "../components/settings/AddTubeRouteForm";
+import Sidebar from "../components/settings/Sidebar";
 import TrainDeparturesList from "../components/settings/TrainDeparturesList";
+import TubeRoutesList from "../components/settings/TubeRoutesList";
+import { ConfigSchema } from "../validators/frontend-validators/ConfigSchema";
 
 type SidebarItem = {
   CommonName: string;
@@ -45,16 +46,11 @@ export default function Settings() {
         const res = await fetch("/api/config");
         if (res.ok) {
           const data = await res.json();
-          setShowTflLine(!!data.show_tfl_lines);
-          setRoutes(
-            Array.isArray(data.tfl_best_routes) ? data.tfl_best_routes : [],
-          );
-          setDepartures(
-            Array.isArray(data.rail_departures) ? data.rail_departures : [],
-          );
-          if (typeof data.refresh_timer === "number") {
-            setRefreshTimer(data.refresh_timer);
-          }
+          const config = ConfigSchema.parse(data);
+          setShowTflLine(config.show_tfl_lines);
+          setRoutes(config.tfl_best_routes);
+          setDepartures(config.rail_departures);
+          setRefreshTimer(config.refresh_timer);
         }
       } catch {
         // ignore errors for now

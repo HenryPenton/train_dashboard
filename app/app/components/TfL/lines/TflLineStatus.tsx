@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FrontEndLineStatuses } from "../../../validators/frontend-validators/LineStatusSchema";
+import { FrontEndLineStatusesSchema } from "../../../validators/frontend-validators/LineStatusSchema";
 import TflLineStatusList from "./TflLineStatusList";
 import SectionHeading from "../../SectionHeading";
 
@@ -24,7 +24,7 @@ export default function TflLineStatus() {
         const res = await fetch("/api/line-status");
 
         const data = await res.json();
-        const validated = FrontEndLineStatuses.parse(data);
+        const validated = FrontEndLineStatusesSchema.parse(data);
         setTflStatuses(validated);
       } catch (e: unknown) {
         const message = e instanceof Error ? e.message : "Unknown error";
