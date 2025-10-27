@@ -27,7 +27,7 @@ def test_get_config(monkeypatch):
         "rail_departures": [],
         "tfl_best_routes": [],
         "show_tfl_lines": False,
-        "refresh_timer": 60,
+        "refresh_timer": 300,
     }
 
 

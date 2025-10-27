@@ -1,10 +1,10 @@
 "use client";
 
-import TflLineStatus from "./components/TfL/lines/TflLineStatus";
-import TrainDepartures from "./components/departures/TrainDepartures";
-import TflBestRoute from "./components/TfL/route/TflBestRoute";
-import LastRefreshed from "./components/LastRefreshed";
 import { useEffect, useState } from "react";
+import TrainDepartures from "./components/departures/TrainDepartures";
+import LastRefreshed from "./components/LastRefreshed";
+import TflLineStatus from "./components/TfL/lines/TflLineStatus";
+import TflBestRoute from "./components/TfL/route/TflBestRoute";
 
 type BestRoute = {
   origin: string;
@@ -24,31 +24,34 @@ type ConfigType = {
   tfl_best_routes: BestRoute[];
   rail_departures: DepartureConfig[];
   show_tfl_lines: boolean;
+  refresh_timer: number;
+  forceRefreshTimeStamp: string;
+};
+
+const getConfig = async (): Promise<ConfigType> => {
+  const res = await fetch("/api/config");
+  if (!res.ok) throw new Error(`API error: ${res.status}`);
+  return res.json();
 };
 export default function Home() {
   const [config, setConfig] = useState<ConfigType | null>(null);
 
-  // Auto-refresh the page every 5 minutes
   useEffect(() => {
-    const interval = setInterval(
-      () => {
-        window.location.reload();
-      },
-      5 * 60 * 1000,
-    );
-    return () => clearInterval(interval);
+    // Fetch config on mount
+    getConfig().then((data) => {
+      setConfig({ ...data, forceRefreshTimeStamp: new Date().toISOString() });
+    });
   }, []);
 
   useEffect(() => {
-    fetch("/api/config")
-      .then((res) => {
-        if (!res.ok) throw new Error(`API error: ${res.status}`);
-        return res.json();
-      })
-      .then((data) => {
-        setConfig(data);
+    if (!config?.refresh_timer) return;
+    const interval = setInterval(() => {
+      getConfig().then((data) => {
+        setConfig({ ...data, forceRefreshTimeStamp: new Date().toISOString() });
       });
-  }, []);
+    }, config.refresh_timer * 1000);
+    return () => clearInterval(interval);
+  }, [config?.refresh_timer]);
 
   const hasTrainDepartures =
     config &&
@@ -68,7 +71,10 @@ export default function Home() {
   if (hasTflLines) columnCount++;
 
   return (
-    <main className="w-full min-h-screen p-8 bg-[#181818] font-mono text-[#f8f8f2] relative">
+    <main
+      key={config?.forceRefreshTimeStamp || ""}
+      className="w-full min-h-screen p-8 bg-[#181818] font-mono text-[#f8f8f2] relative"
+    >
       <h1
         className="text-center text-cyan-300 text-4xl font-bold tracking-widest mb-10 drop-shadow-[0_0_2px_white,0_0_8px_#00ffe7] font-mono border-b-4 border-yellow-200 pb-4"
         style={{ letterSpacing: "0.15em" }}
@@ -128,8 +134,9 @@ export default function Home() {
           </div>
         ) : null}
       </div>
-
-      <LastRefreshed />
+      {config?.forceRefreshTimeStamp ? (
+        <LastRefreshed dateTimeString={config.forceRefreshTimeStamp} />
+      ) : null}
       <div className="w-full text-center mt-10">
         <a
           href="/settings"

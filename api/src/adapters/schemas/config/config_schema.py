@@ -28,7 +28,7 @@ class ConfigSchema(Schema):
     tfl_best_routes = fields.List(fields.Nested(TubeRouteSchema), load_default=[])
     rail_departures = fields.List(fields.Nested(RailDepartureSchema), load_default=[])
     show_tfl_lines = fields.Bool(load_default=False)
-    refresh_timer = fields.Int(load_default=60)
+    refresh_timer = fields.Int(load_default=300)
 
     @post_load
     def set_defaults(self, data, **kwargs):
@@ -36,5 +36,5 @@ class ConfigSchema(Schema):
         data.setdefault("tfl_best_routes", [])
         data.setdefault("rail_departures", [])
         data["show_tfl_lines"] = bool(data.get("show_tfl_lines", False))
-        data["refresh_timer"] = int(data.get("refresh_timer", 60))
+        data["refresh_timer"] = int(data.get("refresh_timer", 300))
         return data

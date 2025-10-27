@@ -1,8 +1,12 @@
 import { useMemo } from "react";
 
-export default function LastRefreshed() {
+export default function LastRefreshed({
+  dateTimeString,
+}: {
+  dateTimeString: string;
+}) {
   const lastRefreshed = useMemo(() => {
-    const now = new Date();
+    const now = new Date(dateTimeString);
     return now.toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",

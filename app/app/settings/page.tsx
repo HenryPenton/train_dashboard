@@ -29,6 +29,8 @@ export default function Settings() {
     destinationNaPTANOrATCO: "",
   });
   const [routes, setRoutes] = useState<Array<typeof route>>([]);
+
+  const [refreshTimer, setRefreshTimer] = useState(300);
   const [departure, setDeparture] = useState({
     origin: "",
     originCode: "",
@@ -50,6 +52,9 @@ export default function Settings() {
           setDepartures(
             Array.isArray(data.rail_departures) ? data.rail_departures : [],
           );
+          if (typeof data.refresh_timer === "number") {
+            setRefreshTimer(data.refresh_timer);
+          }
         }
       } catch {
         // ignore errors for now
@@ -133,6 +138,7 @@ export default function Settings() {
       show_tfl_lines: showTflLine,
       tfl_best_routes: routes,
       rail_departures: departures,
+      refresh_timer: refreshTimer,
     };
     try {
       const res = await fetch("/api/save-settings", {
@@ -243,6 +249,25 @@ export default function Settings() {
             setDepartures(departures.filter((_, i) => i !== idx))
           }
         />
+
+        {/* Refresh Timer Section */}
+        <div className="mb-8 p-4 border rounded bg-gray-50">
+          <label className="block font-semibold mb-2" htmlFor="refresh-timer">
+            Auto-Refresh Timer (s)
+          </label>
+          <input
+            id="refresh-timer"
+            type="number"
+            min={10000}
+            step={1000}
+            className="w-full p-2 border rounded"
+            value={refreshTimer}
+            onChange={(e) => setRefreshTimer(Number(e.target.value))}
+          />
+          <div className="text-sm text-gray-600 mt-1">
+            How often the dashboard auto-refreshes.
+          </div>
+        </div>
 
         <button
           onClick={handleSave}

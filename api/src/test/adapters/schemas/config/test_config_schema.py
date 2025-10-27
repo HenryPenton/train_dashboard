@@ -65,7 +65,7 @@ def test_config_schema_refresh_timer_default():
     schema = ConfigSchema()
     data = {}
     result = schema.load(data)
-    assert result["refresh_timer"] == 60
+    assert result["refresh_timer"] == 300
 
 
 def test_config_schema_refresh_timer_custom():
