@@ -33,8 +33,8 @@ export default function TflBestRoute({ from, to }: TflRouteProps) {
         if (!res.ok) throw new Error("Failed to fetch best route");
         const json = await res.json();
 
-        const parsedData = BestRouteSchema.parse(json);
-        setData(parsedData);
+        // const parsedData = BestRouteSchema.parse(json);
+        setData(json);
       } catch (e: unknown) {
         const message = e instanceof Error ? e.message : "Unknown error";
         setError(message);
