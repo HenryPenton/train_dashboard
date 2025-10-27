@@ -59,3 +59,17 @@ def test_config_schema_invalid_types():
     }
     with pytest.raises(Exception):
         schema.load(data)
+
+
+def test_config_schema_refresh_timer_default():
+    schema = ConfigSchema()
+    data = {}
+    result = schema.load(data)
+    assert result["refresh_timer"] == 60
+
+
+def test_config_schema_refresh_timer_custom():
+    schema = ConfigSchema()
+    data = {"refresh_timer": 120}
+    result = schema.load(data)
+    assert result["refresh_timer"] == 120

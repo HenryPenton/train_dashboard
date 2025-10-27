@@ -27,6 +27,7 @@ def test_get_config(monkeypatch):
         "rail_departures": [],
         "tfl_best_routes": [],
         "show_tfl_lines": False,
+        "refresh_timer": 60,
     }
 
 
@@ -78,6 +79,7 @@ def test_set_config(monkeypatch):
             }
         ],
         "show_tfl_lines": True,
+        "refresh_timer": 65,
         "extra_key": "should be removed",
     }
     result = ConfigService.set_config(new_config)
@@ -100,5 +102,6 @@ def test_set_config(monkeypatch):
                 "destinationCode": "codeD",
             }
         ],
+        "refresh_timer": 65,
         "show_tfl_lines": True,
     }
