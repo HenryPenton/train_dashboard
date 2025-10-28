@@ -4,17 +4,11 @@ from src.models.external_to_python.tfl.line.line_model import LineModel
 
 
 class TFLClientError(Exception):
-    """Custom exception for TFLClient errors."""
-
     pass
 
 
 class TFLClient:
     def __init__(self, client: httpx.AsyncClient):
-        """
-        TFL Journey Planner API client.
-        :param client: Injected httpx.AsyncClient instance for making async HTTP requests.
-        """
         self.client = client
         self.api_root = "https://api.tfl.gov.uk"
 

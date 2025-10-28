@@ -16,16 +16,10 @@ class DepartureModel(BaseModel):
 
     @property
     def origins(self) -> List[str]:
-        """
-        Returns a list of station names from the origins list.
-        """
         return [o.description for o in self.origin if isinstance(o, Location)]
 
     @property
     def destinations(self) -> List[str]:
-        """
-        Returns a list of station names from the destinations list.
-        """
         return [d.description for d in self.destination if isinstance(d, Location)]
 
     @property

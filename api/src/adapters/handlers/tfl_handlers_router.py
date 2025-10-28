@@ -11,9 +11,6 @@ router = APIRouter()
 
 @router.get("/tfl/best-route/{from_station}/{to_station}")
 async def get_best_route(from_station: str, to_station: str):
-    """
-    Suggest the best current route from one station to another using the TFL Journey Planner API via TFLClient.
-    """
     try:
         return await tfl_service.get_best_route(from_station, to_station)
     except Exception as e:
@@ -22,9 +19,6 @@ async def get_best_route(from_station: str, to_station: str):
 
 @router.get("/tfl/line-status")
 async def get_tfl_line_status():
-    """
-    Get the status of all TFL lines from the TFL API, simplified.
-    """
     try:
         return await tfl_service.get_line_status()
     except Exception as e:

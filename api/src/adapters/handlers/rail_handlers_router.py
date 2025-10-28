@@ -11,9 +11,6 @@ router = APIRouter()
 
 @router.get("/rail/departures/{origin_station_code}/to/{destination_station_code}")
 async def get_departures(origin_station_code: str, destination_station_code: str):
-    """
-    Get departures from a station using the Real Time Trains API, filtered by destination station code.
-    """
     try:
         return await rail_service.get_departures(
             origin_station_code, destination_station_code
