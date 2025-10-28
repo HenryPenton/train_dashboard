@@ -38,5 +38,4 @@ class TFLClient:
             data = response.json()
             return [LineModel(**line) for line in data]
         except Exception as e:
-            print(e)
             raise TFLClientError(f"TFLClient failed: {str(e)}")

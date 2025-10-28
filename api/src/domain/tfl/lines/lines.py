@@ -17,7 +17,7 @@ class LineStatus:
     @staticmethod
     def _get_status_severity(line) -> int:
         line_statuses = line.line_statuses
-        print(line_statuses)
+
         if line_statuses:
             return min(
                 (s.statusSeverity for s in line_statuses if s.statusSeverity),

@@ -31,8 +31,7 @@ class RTTClient:
                 try:
                     departure_data = DepartureModel(**loc)
                     departures.append(departure_data)
-                except Exception as e:
-                    print(e)
+                except Exception:
                     continue
             return departures
         except Exception as e:
