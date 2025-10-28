@@ -1,6 +1,6 @@
-
-from src.models.external_to_python.departure.departure_model import DepartureModel
 from src.domain.rail.departures.departure_parts.aggregate import RailDepartureAggregate
+from src.DTOs.departure_dto import DepartureDTO
+from src.models.external_to_python.departure.departure_model import DepartureModel
 
 
 class RailDepartures:
@@ -18,5 +18,5 @@ class RailDepartures:
                 departures.append(departure_aggregate.get_rail_departure())
         return departures
 
-    def get_all_rail_departures(self) -> list[dict]:
-        return self.departures
+    def get_all_rail_departures(self) -> list[DepartureDTO]:
+        return [DepartureDTO(**dep) for dep in self.departures]

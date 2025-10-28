@@ -12,7 +12,7 @@ class DepartureModel(BaseModel):
     destination: List[Location] = []
     gbttBookedDeparture: str
     realtimeDeparture: Optional[str] = None
-    platform: Optional[str] = None
+    platform: Optional[str] = "?"
 
     @property
     def origins(self) -> List[str]:

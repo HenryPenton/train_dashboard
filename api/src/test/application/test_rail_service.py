@@ -1,6 +1,7 @@
 import asyncio
 import unittest
 
+from src.DTOs.departure_dto import DepartureDTO
 from src.application.rail_service import RailService
 from src.models.external_to_python.departure.departure_model import DepartureModel
 
@@ -35,14 +36,16 @@ def test_get_departures():
     service = RailService(DummyRailClient())
     result = asyncio.run(service.get_departures("origin", "destination"))
     assert result == [
-        {
-            "origin": "London",
-            "destination": "Manchester",
-            "actual": "1005",
-            "delay": 5,
-            "status": "Late",
-            "platform": "1",
-        }
+        DepartureDTO(
+            **{
+                "origin": "London",
+                "destination": "Manchester",
+                "actual": "1005",
+                "delay": 5,
+                "status": "Late",
+                "platform": "1",
+            }
+        )
     ]
 
 

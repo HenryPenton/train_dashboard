@@ -1,7 +1,8 @@
-from src.models.external_to_python.departure.departure_model import DepartureModel
 from src.domain.rail.departures.rail_departures import (
     RailDepartures,
 )
+from src.DTOs.departure_dto import DepartureDTO
+from src.models.external_to_python.departure.departure_model import DepartureModel
 
 
 class TestMultipleDepartures:
@@ -36,30 +37,36 @@ class TestMultipleDepartures:
             ),
         ]
         expected = [
-            {
-                "actual": "0935",
-                "delay": 5,
-                "destination": "Glasgow",
-                "origin": "Edinburgh",
-                "platform": "5",
-                "status": "Late",
-            },
-            {
-                "actual": "1015",
-                "delay": 0,
-                "destination": "Manchester",
-                "origin": "Oxford",
-                "platform": "2",
-                "status": "On time",
-            },
-            {
-                "actual": "1058",
-                "delay": -2,
-                "destination": "Cardiff",
-                "origin": "Bristol",
-                "platform": "1",
-                "status": "Early",
-            },
+            DepartureDTO(
+                **{
+                    "actual": "0935",
+                    "delay": 5,
+                    "destination": "Glasgow",
+                    "origin": "Edinburgh",
+                    "platform": "5",
+                    "status": "Late",
+                }
+            ),
+            DepartureDTO(
+                **{
+                    "actual": "1015",
+                    "delay": 0,
+                    "destination": "Manchester",
+                    "origin": "Oxford",
+                    "platform": "2",
+                    "status": "On time",
+                }
+            ),
+            DepartureDTO(
+                **{
+                    "actual": "1058",
+                    "delay": -2,
+                    "destination": "Cardiff",
+                    "origin": "Bristol",
+                    "platform": "1",
+                    "status": "Early",
+                }
+            ),
         ]
 
         results = RailDepartures(models).get_all_rail_departures()
