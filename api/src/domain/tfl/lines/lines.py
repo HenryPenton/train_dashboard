@@ -3,7 +3,7 @@ from collections import Counter
 from src.DAOs.tfl.line_dao import LineDAO
 
 
-class LineStatus:
+class LineStatusModel:
     def __init__(self, line: LineDAO) -> None:
         self.status = self._get_status(line)
         self.name = self._get_name(line)
@@ -37,7 +37,7 @@ class LineStatus:
             status_str = ", ".join(status_parts)
             return status_str
 
-    def get_status(self) -> dict:
+    def as_dict(self) -> dict:
         return {
             "name": self.name,
             "status": self.status,
@@ -45,20 +45,17 @@ class LineStatus:
         }
 
 
-class LineStatuses:
+class LineStatusModelList:
     def __init__(self, lines: list[LineDAO]):
         self.line_statuses = self._extract_statuses(lines)
 
     @staticmethod
-    def _extract_statuses(lines: list[LineDAO]) -> list[dict]:
-        lines_statuses: list[dict] = []
+    def _extract_statuses(lines: list[LineDAO]) -> list[LineStatusModel]:
+        lines_status_models: list[LineStatusModel] = []
         for line in lines:
-            line_status_dict = LineStatus(line).get_status()
+            lines_status_models.append(LineStatusModel(line))
 
-            if line_status_dict:
-                lines_statuses.append(line_status_dict)
+        return lines_status_models
 
-        return lines_statuses
-
-    def get_line_statuses(self) -> list[dict]:
+    def get_line_statuses(self) -> list[LineStatusModel]:
         return self.line_statuses

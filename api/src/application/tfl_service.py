@@ -1,6 +1,6 @@
 from src.adapters.clients.tflclient import TFLClient
 from src.domain.tfl.routes.routes import AllRoutes
-from src.domain.tfl.lines.lines import LineStatuses
+from src.domain.tfl.lines.lines import LineStatusModelList
 
 
 class TFLService:
@@ -15,6 +15,6 @@ class TFLService:
         return AllRoutes(journeys).get_best()
 
     async def get_line_status(self):
-        data = await self.client.get_all_lines_status()
-
-        return LineStatuses(data).get_line_statuses()
+        status_DAOs = await self.client.get_all_lines_status()
+        model_list = LineStatusModelList(status_DAOs).get_line_statuses()
+        return model_list

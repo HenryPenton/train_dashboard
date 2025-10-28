@@ -1,7 +1,7 @@
 import pytest
 from pydantic import ValidationError
-from src.domain.tfl.lines.lines import LineStatus, LineStatuses
 from src.DAOs.tfl.line_dao import LineDAO
+from src.domain.tfl.lines.lines import LineStatusModel, LineStatusModelList
 
 
 class TestLineStatus:
@@ -14,8 +14,8 @@ class TestLineStatus:
                 ],
             }
         )
-        result = LineStatus(line).get_status()
-        assert result == {
+        result = LineStatusModel(line)
+        assert (result.as_dict()) == {
             "name": "Victoria",
             "status": "Good Service",
             "statusSeverity": 10,
@@ -34,8 +34,8 @@ class TestLineStatus:
                 ],
             }
         )
-        result = LineStatus(line).get_status()
-        assert result == {
+        result = LineStatusModel(line)
+        assert (result.as_dict()) == {
             "name": "Northern",
             "status": "Minor Delays, Part Suspended",
             "statusSeverity": 4,
@@ -52,8 +52,8 @@ class TestLineStatus:
                 ],
             }
         )
-        result = LineStatus(line).get_status()
-        assert result == {
+        result = LineStatusModel(line)
+        assert (result.as_dict()) == {
             "name": "Mildmay",
             "status": "Part Closure x2, Good Service",
             "statusSeverity": 3,
@@ -66,7 +66,7 @@ class TestLineStatus:
 
 class TestLineStatuses:
     def test_empty(self):
-        assert LineStatuses([]).get_line_statuses() == []
+        assert LineStatusModelList([]).get_line_statuses() == []
 
     def test_one_line(self):
         lines = [
@@ -82,14 +82,12 @@ class TestLineStatuses:
                 }
             )
         ]
-        result = LineStatuses(lines).get_line_statuses()
-        assert result == [
-            {
-                "name": "Victoria",
-                "status": "Good Service",
-                "statusSeverity": 10,
-            }
-        ]
+        result = LineStatusModelList(lines).get_line_statuses()
+        assert (result[0].as_dict()) == {
+            "name": "Victoria",
+            "status": "Good Service",
+            "statusSeverity": 10,
+        }
 
     def test_two_lines(self):
         lines = [
@@ -120,16 +118,14 @@ class TestLineStatuses:
                 }
             ),
         ]
-        result = LineStatuses(lines).get_line_statuses()
-        assert result == [
-            {
-                "name": "Northern",
-                "status": "Minor Delays, Part Suspended",
-                "statusSeverity": 4,
-            },
-            {
-                "name": "Piccadilly",
-                "status": "Good Service",
-                "statusSeverity": 10,
-            },
-        ]
+        result = LineStatusModelList(lines).get_line_statuses()
+        assert (result[0].as_dict()) == {
+            "name": "Northern",
+            "status": "Minor Delays, Part Suspended",
+            "statusSeverity": 4,
+        }
+        assert (result[1].as_dict()) == {
+            "name": "Piccadilly",
+            "status": "Good Service",
+            "statusSeverity": 10,
+        }

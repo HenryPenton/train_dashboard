@@ -62,9 +62,11 @@ def test_get_line_status():
     service = TFLService(DummyTflClient())
     # get_line_status is async, so we need to run it in an event loop
     result = asyncio.run(service.get_line_status())
-    assert result == [
-        {"name": "Central", "status": "Good Service", "statusSeverity": 10}
-    ]
+    assert (result[0].as_dict()) == {
+        "name": "Central",
+        "status": "Good Service",
+        "statusSeverity": 10,
+    }
 
 
 def test_get_line_status_error():
