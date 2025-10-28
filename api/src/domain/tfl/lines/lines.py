@@ -14,27 +14,23 @@ class LineStatus:
         self.statusSeverity = self._get_status_severity(line)
 
     @staticmethod
-    def _get_name(line) -> str | None:
+    def _get_name(line) -> str:
         return line.name
 
     @staticmethod
-    def _get_status_severity(line) -> int | None:
+    def _get_status_severity(line) -> int:
         line_statuses = line.line_statuses
+        print(line_statuses)
         if line_statuses:
             return min(
                 (s.statusSeverity for s in line_statuses if s.statusSeverity),
-                default=None,
             )
 
     @staticmethod
-    def _get_status(line) -> str | None:
+    def _get_status(line) -> str:
         line_statuses = line.line_statuses
         if line_statuses:
-            status_list = [
-                s.statusSeverityDescription
-                for s in line_statuses
-                if s.statusSeverityDescription
-            ]
+            status_list = [s.statusSeverityDescription for s in line_statuses]
             counts = Counter(status_list)
             status_parts = []
             for status, count in counts.items():
@@ -46,16 +42,11 @@ class LineStatus:
             return status_str
 
     def get_status(self) -> dict:
-        has_required_properties = check_group_of_properties_exist(
-            self.name, self.status, self.statusSeverity
-        )
-
-        if has_required_properties:
-            return {
-                "name": self.name,
-                "status": self.status,
-                "statusSeverity": self.statusSeverity,
-            }
+        return {
+            "name": self.name,
+            "status": self.status,
+            "statusSeverity": self.statusSeverity,
+        }
 
 
 class LineStatuses:
