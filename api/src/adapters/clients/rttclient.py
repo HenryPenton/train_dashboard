@@ -2,8 +2,10 @@ import os
 from typing import List
 
 import httpx
-from src.adapters.schemas.rail.departure.departure_schema import DepartureRecordSchema
 from src.domain.rail.departures.departure_record import DepartureRecord
+from src.schemas.external_to_python.departure.departure_schema import (
+    DepartureRecordSchema,
+)
 
 
 class RTTClientError(Exception):

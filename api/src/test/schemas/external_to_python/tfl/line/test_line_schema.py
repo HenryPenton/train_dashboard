@@ -1,5 +1,8 @@
+from src.schemas.external_to_python.tfl.line.line_schema import (
+    LineRecordSchema,
+    LineStatusSchema,
+)
 import pytest
-from src.adapters.schemas.tfl.line.line_schema import LineRecordSchema, LineStatusSchema
 
 
 def valid_line_status():

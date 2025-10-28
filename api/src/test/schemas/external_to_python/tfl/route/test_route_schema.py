@@ -1,5 +1,5 @@
 import pytest
-from src.adapters.schemas.tfl.route.route_schema import (
+from src.schemas.external_to_python.tfl.route.route_schema import (
     FareSchema,
     JourneyRecordSchema,
     LegSchema,

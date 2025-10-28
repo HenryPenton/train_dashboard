@@ -32,7 +32,6 @@ class ConfigSchema(Schema):
 
     @post_load
     def set_defaults(self, data, **kwargs):
-        # Ensure lists are present even if missing
         data.setdefault("tfl_best_routes", [])
         data.setdefault("rail_departures", [])
         data["show_tfl_lines"] = bool(data.get("show_tfl_lines", False))

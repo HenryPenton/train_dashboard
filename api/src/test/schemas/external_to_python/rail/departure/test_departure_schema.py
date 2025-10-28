@@ -1,4 +1,6 @@
-from src.adapters.schemas.rail.departure.departure_schema import DepartureRecordSchema
+
+
+from src.schemas.external_to_python.departure.departure_schema import DepartureRecordSchema
 
 
 def valid_location(description):

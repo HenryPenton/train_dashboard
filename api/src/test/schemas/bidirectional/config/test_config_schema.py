@@ -1,5 +1,5 @@
+from src.schemas.bidirectional.config.config_schema import ConfigSchema
 import pytest
-from src.adapters.schemas.config.config_schema import ConfigSchema
 
 
 def test_config_schema_valid():
