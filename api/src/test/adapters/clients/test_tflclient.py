@@ -1,9 +1,9 @@
+from src.models.external_to_python.tfl.line.line_model import LineModel
 import pytest
 from src.adapters.clients.tflclient import (
     TFLClient,
     TFLClientError,
     JourneyRecord,
-    LineRecord,
 )
 
 
@@ -78,7 +78,7 @@ async def test_get_all_lines_status_success():
     client = TFLClient(MockAsyncClient(mock_response))
     result = await client.get_all_lines_status()
     assert isinstance(result, list)
-    assert all(isinstance(r, LineRecord) for r in result)
+    assert all(isinstance(r, LineModel) for r in result)
     assert result[0].id == "central"
     assert result[0].line_statuses[0]["statusSeverityDescription"] == "Good Service"
 

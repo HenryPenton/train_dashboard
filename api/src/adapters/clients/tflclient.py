@@ -1,9 +1,7 @@
-
+from src.models.external_to_python.tfl.route.route_schema import JourneyRecordSchema
 import httpx
-from src.domain.tfl.lines.line_record import LineRecord
+from src.models.external_to_python.tfl.line.line_model import LineModel
 from src.domain.tfl.routes.journey_record import JourneyRecord
-from src.schemas.external_to_python.tfl.line.line_schema import LineRecordSchema
-from src.schemas.external_to_python.tfl.route.route_schema import JourneyRecordSchema
 
 
 class TFLClientError(Exception):
@@ -24,12 +22,6 @@ class TFLClient:
     async def get_possible_route_journeys(
         self, from_station: str, to_station: str
     ) -> list[JourneyRecord]:
-        """
-        Fetch the best route from TFL Journey Planner API between two stations.
-        :param from_station: Origin station name or code
-        :param to_station: Destination station name or code
-        :return: JourneyRecord containing journeys list
-        """
         url = f"{self.api_root}/Journey/JourneyResults/{from_station}/to/{to_station}"
         try:
             response = await self.client.get(url)
@@ -44,11 +36,7 @@ class TFLClient:
         except Exception as e:
             raise TFLClientError(f"TFLClient failed: {str(e)}")
 
-    async def get_all_lines_status(self) -> list[LineRecord]:
-        """
-        Fetch the status of all major TFL lines (tube, overground, dlr, elizabeth-line, tram).
-        :return: List of LineRecord objects
-        """
+    async def get_all_lines_status(self) -> list[LineModel]:
         url = (
             f"{self.api_root}/Line/Mode/tube,overground,dlr,elizabeth-line,tram/status"
         )
@@ -56,7 +44,7 @@ class TFLClient:
             response = await self.client.get(url)
             response.raise_for_status()
             data = response.json()
-            schema = LineRecordSchema()
-            return [LineRecord(schema.load(line)) for line in data]
+            return [LineModel(**line) for line in data]
         except Exception as e:
+            print(e)
             raise TFLClientError(f"TFLClient failed: {str(e)}")

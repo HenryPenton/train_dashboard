@@ -1,4 +1,4 @@
-from marshmallow import Schema, fields, missing, EXCLUDE
+from marshmallow import EXCLUDE, Schema, fields, missing
 
 
 class ModeSchema(Schema):
