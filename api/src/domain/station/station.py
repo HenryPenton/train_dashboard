@@ -1,7 +1,6 @@
-from dataclasses import dataclass
 
 
-@dataclass
 class Station:
-    naptanID: str
-    CommonName: str
+    @classmethod
+    def sort_by_name(cls, stations):
+        return sorted(stations, key=lambda x: x.commonName.lower())

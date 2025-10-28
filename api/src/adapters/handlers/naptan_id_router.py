@@ -11,7 +11,6 @@ station_service = StationService(STATIONS_PATH)
 @router.get("/naptan-id")
 def get_naptan_ids():
     try:
-        stations = station_service.get_stations()
-        return [station.__dict__ for station in stations]
+        return station_service.get_stations()
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
