@@ -1,4 +1,3 @@
-
 from src.models.external_to_python.departure.departure_model import DepartureModel
 from src.shared.utils.time import twenty_four_hour_string_to_minutes
 from src.shared.utils.check_group_of_properties_exist import (
@@ -44,16 +43,12 @@ class RailDepartureTimes:
     def _get_delay(cls, scheduled_departure: str, real_departure: str) -> int | None:
         sched_min = twenty_four_hour_string_to_minutes(scheduled_departure)
         real_min = twenty_four_hour_string_to_minutes(real_departure)
-        if sched_min is None:
-            return None
         if real_min is not None:
             return real_min - sched_min
         return 0
 
     @staticmethod
-    def _get_status(delay: int) -> str | None:
-        if delay is None:
-            return None
+    def _get_status(delay: int) -> str:
         if delay > 0:
             return "Late"
         if delay < 0:
