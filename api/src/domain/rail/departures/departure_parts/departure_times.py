@@ -1,4 +1,5 @@
-from src.adapters.clients.rttclient import DepartureRecord
+
+from src.models.external_to_python.departure.departure_model import DepartureModel
 from src.shared.utils.time import twenty_four_hour_string_to_minutes
 from src.shared.utils.check_group_of_properties_exist import (
     check_group_of_properties_exist,
@@ -6,7 +7,7 @@ from src.shared.utils.check_group_of_properties_exist import (
 
 
 class RailDepartureTimes:
-    def __init__(self, service: DepartureRecord) -> None:
+    def __init__(self, service: DepartureModel) -> None:
         self.scheduled_departure = self._get_scheduled_departure(service)
         self.real_departure = self._get_real_departure(service)
         self.actual = self.real_departure or self.scheduled_departure
@@ -17,11 +18,11 @@ class RailDepartureTimes:
         self.status = self._get_status(self.delay)
 
     @staticmethod
-    def _get_scheduled_departure(service: DepartureRecord) -> str:
+    def _get_scheduled_departure(service: DepartureModel) -> str:
         return service.scheduled_departure
 
     @staticmethod
-    def _get_real_departure(service: DepartureRecord) -> str:
+    def _get_real_departure(service: DepartureModel) -> str:
         return service.real_departure
 
     @staticmethod

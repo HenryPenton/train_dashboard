@@ -2,10 +2,7 @@ import os
 from typing import List
 
 import httpx
-from src.domain.rail.departures.departure_record import DepartureRecord
-from src.schemas.external_to_python.departure.departure_schema import (
-    DepartureRecordSchema,
-)
+from src.models.external_to_python.departure.departure_model import DepartureModel
 
 
 class RTTClientError(Exception):
@@ -24,7 +21,7 @@ class RTTClient:
 
     async def get_departures(
         self, from_station: str, to_station: str
-    ) -> List[DepartureRecord]:
+    ) -> List[DepartureModel]:
         """
         Fetch departures from Real Time Trains API between two stations.
         Returns a list of Departure records.
@@ -41,11 +38,9 @@ class RTTClient:
             departures = []
             for service in data.get("services", []):
                 loc = service.get("locationDetail", {})
-                schema = DepartureRecordSchema()
                 try:
-                    departure_data = schema.load(loc)
-                    departure_record = DepartureRecord(departure_data)
-                    departures.append(departure_record)
+                    departure_data = DepartureModel(**loc)
+                    departures.append(departure_data)
                 except Exception as e:
                     print(e)
                     continue
