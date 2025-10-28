@@ -1,8 +1,5 @@
 from collections import Counter
 
-from src.shared.utils.check_group_of_properties_exist import (
-    check_group_of_properties_exist,
-)
 
 from src.models.external_to_python.tfl.line.line_model import LineModel
 
