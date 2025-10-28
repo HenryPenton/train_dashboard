@@ -34,6 +34,7 @@ export async function GET(
       fare: data.fare,
     });
   } catch (e: unknown) {
+    console.error("Error fetching best route:", e);
     const message = e instanceof Error ? e.message : "Unknown error";
 
     return NextResponse.json({ error: message }, { status: 500 });

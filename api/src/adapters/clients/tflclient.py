@@ -1,7 +1,6 @@
-from src.models.external_to_python.tfl.route.route_schema import JourneyRecordSchema
+from src.models.external_to_python.tfl.route.route_model import JourneyModel
 import httpx
 from src.models.external_to_python.tfl.line.line_model import LineModel
-from src.domain.tfl.routes.journey_record import JourneyRecord
 
 
 class TFLClientError(Exception):
@@ -21,7 +20,7 @@ class TFLClient:
 
     async def get_possible_route_journeys(
         self, from_station: str, to_station: str
-    ) -> list[JourneyRecord]:
+    ) -> list[JourneyModel]:
         url = f"{self.api_root}/Journey/JourneyResults/{from_station}/to/{to_station}"
         try:
             response = await self.client.get(url)
@@ -29,8 +28,7 @@ class TFLClient:
             data = response.json().get("journeys", [])
             journeys = []
             for journey in data:
-                schema = JourneyRecordSchema()
-                journey_record = JourneyRecord(schema.load(journey))
+                journey_record = JourneyModel(**journey)
                 journeys.append(journey_record)
             return journeys
         except Exception as e:

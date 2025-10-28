@@ -1,9 +1,9 @@
-from src.adapters.clients.tflclient import JourneyRecord
 from src.domain.tfl.routes.best_route.best_route import BestRoute
+from src.models.external_to_python.tfl.route.route_model import JourneyModel
 
 
 class AllRoutes:
-    def __init__(self, journeys: list[JourneyRecord]) -> None:
+    def __init__(self, journeys: list[JourneyModel]) -> None:
         self.journeys = journeys
 
     def get_best(self) -> dict:

@@ -1,21 +1,21 @@
-from src.adapters.clients.tflclient import JourneyRecord
+from src.models.external_to_python.tfl.route.route_model import JourneyModel
 
 
 class BestRoute:
-    def __init__(self, best: JourneyRecord) -> None:
+    def __init__(self, best: JourneyModel) -> None:
         self.duration = best.duration
         self.arrival = best.arrival
         self.legs = [
             {
-                "mode": leg.get("mode", {}).get("name"),
-                "instruction": leg.get("instruction", {}).get("summary"),
-                "departure": leg.get("departurePoint", {}).get("commonName"),
-                "arrival": leg.get("arrivalPoint", {}).get("commonName"),
-                "line": leg.get("routeOptions", [{}])[0].get("name"),
+                "mode": leg.mode.name,
+                "instruction": leg.instruction.summary,
+                "departure": leg.departurePoint.commonName,
+                "arrival": leg.arrivalPoint.commonName,
+                "line": leg.routeOptions[0].name,
             }
             for leg in best.legs
         ]
-        self.fare = best.fare
+        self.fare = best.fare_total_cost
 
     def get_best_route_summary(self) -> dict:
         return {
