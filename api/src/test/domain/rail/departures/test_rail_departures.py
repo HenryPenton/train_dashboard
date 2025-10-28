@@ -6,7 +6,7 @@ from src.domain.rail.departures.rail_departures import (
 
 class TestMultipleDepartures:
     def test_multiple_departures(self):
-        records = [
+        models = [
             DepartureModel(
                 **{
                     "origin": [{"description": "Edinburgh"}],
@@ -62,6 +62,6 @@ class TestMultipleDepartures:
             },
         ]
 
-        results = RailDepartures(records).get_all_rail_departures()
+        results = RailDepartures(models).get_all_rail_departures()
 
         assert results == expected

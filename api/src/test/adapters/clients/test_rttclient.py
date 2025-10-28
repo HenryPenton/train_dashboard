@@ -63,13 +63,13 @@ async def test_get_departures_success():
     assert isinstance(result, list)
     assert len(result) == 2
     assert all(isinstance(r, DepartureModel) for r in result)
-    # Check first Record fields
+    # Check first Model fields
     assert result[0].origins == ["Edinburgh"]
     assert result[0].destinations == ["Glasgow"]
     assert result[0].scheduled_departure == "0930"
     assert result[0].real_departure == "0935"
     assert result[0].platform == "5"
-    # Check second Record fields
+    # Check second Model fields
     assert result[1].origins == ["Oxford", "London"]
     assert result[1].destinations == ["Manchester", "Liverpool"]
     assert result[1].scheduled_departure == "1015"
@@ -92,7 +92,7 @@ async def test_get_departures_error():
 
 
 @pytest.mark.asyncio
-async def test_get_departures_invalid_record():
+async def test_get_departures_invalid_model():
     # One valid, one invalid (missing required field 'origin')
     mock_json = {
         "services": [
@@ -117,7 +117,7 @@ async def test_get_departures_invalid_record():
     client = RTTClient(MockAsyncClient(mock_response))
     result = await client.get_departures("ABC", "XYZ")
 
-    # Only the valid record should be returned
+    # Only the valid model should be returned
     assert isinstance(result, list)
     assert len(result) == 1
     assert result[0].origins == ["Edinburgh"]

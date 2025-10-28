@@ -22,8 +22,8 @@ class TFLClient:
             data = response.json().get("journeys", [])
             journeys = []
             for journey in data:
-                journey_record = JourneyModel(**journey)
-                journeys.append(journey_record)
+                journey_model = JourneyModel(**journey)
+                journeys.append(journey_model)
             return journeys
         except Exception as e:
             raise TFLClientError(f"TFLClient failed: {str(e)}")
