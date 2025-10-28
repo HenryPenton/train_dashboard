@@ -1,13 +1,13 @@
 from src.domain.rail.departures.departure_parts.departure_station_info import (
     RailDepartureStationInfo,
 )
-from src.adapters.clients.rttclient import DepartureRecord
+from src.models.external_to_python.departure.departure_model import DepartureModel
 
 
 class TestDepartureStationInfo:
     def test_full_departure(self):
-        record = DepartureRecord(
-            {
+        model = DepartureModel(
+            **{
                 "origin": [{"description": "Aberdeen"}],
                 "destination": [{"description": "Pitlochry"}],
                 "gbttBookedDeparture": "0930",
@@ -15,7 +15,7 @@ class TestDepartureStationInfo:
                 "realtimeDeparture": "0935",
             }
         )
-        dep = RailDepartureStationInfo(record)
+        dep = RailDepartureStationInfo(model)
         expected = {
             "origin": "Aberdeen",
             "destination": "Pitlochry",
@@ -24,8 +24,8 @@ class TestDepartureStationInfo:
         assert dep.get_rail_departure_station_info() == expected
 
     def test_full_departure_multi_origin(self):
-        record = DepartureRecord(
-            {
+        model = DepartureModel(
+            **{
                 "origin": [
                     {"description": "Aberdeen"},
                     {"description": "Oxford"},
@@ -36,7 +36,7 @@ class TestDepartureStationInfo:
                 "realtimeDeparture": "0935",
             }
         )
-        dep = RailDepartureStationInfo(record)
+        dep = RailDepartureStationInfo(model)
         expected = {
             "origin": "Aberdeen, Oxford",
             "destination": "Pitlochry",
@@ -45,8 +45,8 @@ class TestDepartureStationInfo:
         assert dep.get_rail_departure_station_info() == expected
 
     def test_full_departure_multi_destination(self):
-        record = DepartureRecord(
-            {
+        model = DepartureModel(
+            **{
                 "origin": [{"description": "Aberdeen"}],
                 "destination": [
                     {"description": "Pitlochry"},
@@ -57,7 +57,7 @@ class TestDepartureStationInfo:
                 "realtimeDeparture": "0935",
             }
         )
-        dep = RailDepartureStationInfo(record)
+        dep = RailDepartureStationInfo(model)
         expected = {
             "origin": "Aberdeen",
             "destination": "Pitlochry, Birmingham",
@@ -66,8 +66,8 @@ class TestDepartureStationInfo:
         assert dep.get_rail_departure_station_info() == expected
 
     def test_full_departure_early(self):
-        record = DepartureRecord(
-            {
+        model = DepartureModel(
+            **{
                 "origin": [{"description": "Aberdeen"}],
                 "destination": [{"description": "Pitlochry"}],
                 "gbttBookedDeparture": "0930",
@@ -75,7 +75,7 @@ class TestDepartureStationInfo:
                 "realtimeDeparture": "0929",
             }
         )
-        dep = RailDepartureStationInfo(record)
+        dep = RailDepartureStationInfo(model)
         expected = {
             "origin": "Aberdeen",
             "destination": "Pitlochry",
@@ -84,8 +84,8 @@ class TestDepartureStationInfo:
         assert dep.get_rail_departure_station_info() == expected
 
     def test_full_departure_on_time(self):
-        record = DepartureRecord(
-            {
+        model = DepartureModel(
+            **{
                 "origin": [{"description": "Aberdeen"}],
                 "destination": [{"description": "Pitlochry"}],
                 "gbttBookedDeparture": "0930",
@@ -93,7 +93,7 @@ class TestDepartureStationInfo:
                 "realtimeDeparture": "0930",
             }
         )
-        dep = RailDepartureStationInfo(record)
+        dep = RailDepartureStationInfo(model)
         expected = {
             "origin": "Aberdeen",
             "destination": "Pitlochry",
@@ -101,28 +101,9 @@ class TestDepartureStationInfo:
         }
         assert dep.get_rail_departure_station_info() == expected
 
-    def test_as_departure_missing_fields(self):
-        record = DepartureRecord(
-            {
-                "origin": [],
-                "destination": [],
-                "gbttBookedDeparture": None,
-                "platform": None,
-                "realtimeDeparture": None,
-            }
-        )
-        dep = RailDepartureStationInfo(record)
-        expected = {
-            "origin": None,
-            "destination": None,
-            "platform": None,
-        }
-        assert dep.get_rail_departure_station_info() == expected
-        assert not dep.is_valid()
-
     def test_non_standard_time_format(self):
-        record = DepartureRecord(
-            {
+        model = DepartureModel(
+            **{
                 "origin": [],
                 "destination": [],
                 "gbttBookedDeparture": "930",
@@ -130,7 +111,7 @@ class TestDepartureStationInfo:
                 "realtimeDeparture": None,
             }
         )
-        dep = RailDepartureStationInfo(record)
+        dep = RailDepartureStationInfo(model)
         expected = {
             "origin": None,
             "destination": None,

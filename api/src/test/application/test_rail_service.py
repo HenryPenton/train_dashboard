@@ -1,8 +1,8 @@
 import asyncio
 import unittest
 
-from src.adapters.clients.rttclient import DepartureRecord
 from src.application.rail_service import RailService
+from src.models.external_to_python.departure.departure_model import DepartureModel
 
 
 class TestRailService(unittest.TestCase):
@@ -14,8 +14,8 @@ class TestRailService(unittest.TestCase):
 class DummyRailClient:
     async def get_departures(self, origin, destination):
         return [
-            DepartureRecord(
-                {
+            DepartureModel(
+                **{
                     "origin": [{"description": "London"}],
                     "destination": [{"description": "Manchester"}],
                     "gbttBookedDeparture": "1000",

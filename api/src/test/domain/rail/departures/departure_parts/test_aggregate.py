@@ -1,11 +1,11 @@
 from src.domain.rail.departures.departure_parts.aggregate import RailDepartureAggregate
-from src.adapters.clients.rttclient import DepartureRecord
+from src.models.external_to_python.departure.departure_model import DepartureModel
 
 
 class TestRailDepartureAggregate:
     def test_aggregate_returns_combined_dict(self):
-        record = DepartureRecord(
-            {
+        model = DepartureModel(
+            **{
                 "origin": [{"description": "Origin Station"}],
                 "destination": [{"description": "Destination Station"}],
                 "gbttBookedDeparture": "0930",
@@ -13,7 +13,7 @@ class TestRailDepartureAggregate:
                 "realtimeDeparture": "0935",
             }
         )
-        aggregate = RailDepartureAggregate(record)
+        aggregate = RailDepartureAggregate(model)
         result = aggregate.get_rail_departure()
         # Check keys from both times and info
         assert "origin" in result

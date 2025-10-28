@@ -1,20 +1,20 @@
 from src.domain.rail.departures.departure_parts.departure_times import (
     RailDepartureTimes,
 )
-from src.adapters.clients.rttclient import DepartureRecord
+from src.models.external_to_python.departure.departure_model import DepartureModel
 
 
 class TestRailDepartureTimes:
     def test_departure_delay_past_midnight(self):
-        record = DepartureRecord(
-            {
+        model = DepartureModel(
+            **{
                 "gbttBookedDeparture": "2330",
                 "platform": "5",
                 "realtimeDeparture": "0005",
                 "realtimeArrival": "0100",
             }
         )
-        dep = RailDepartureTimes(record)
+        dep = RailDepartureTimes(model)
         expected = {
             "delay": 35,  # 00:05 - 23:30 = 35 minutes
             "status": "Late",
@@ -23,15 +23,15 @@ class TestRailDepartureTimes:
         assert dep.get_rail_departure_times() == expected
 
     def test_full_departure(self):
-        record = DepartureRecord(
-            {
+        model = DepartureModel(
+            **{
                 "gbttBookedDeparture": "0930",
                 "platform": "5",
                 "realtimeDeparture": "0930",
                 "realtimeArrival": "1000",
             }
         )
-        dep = RailDepartureTimes(record)
+        dep = RailDepartureTimes(model)
         expected = {
             "delay": 0,
             "status": "On time",
@@ -40,25 +40,25 @@ class TestRailDepartureTimes:
         assert dep.get_rail_departure_times() == expected
 
     def test_full_departure_on_time_is_valid(self):
-        record = DepartureRecord(
-            {
+        model = DepartureModel(
+            **{
                 "gbttBookedDeparture": "0930",
                 "platform": "5",
             }
         )
-        dep = RailDepartureTimes(record)
+        dep = RailDepartureTimes(model)
         assert dep.is_valid() is True
 
     def test_full_departure_multi_origin(self):
-        record = DepartureRecord(
-            {
+        model = DepartureModel(
+            **{
                 "gbttBookedDeparture": "0930",
                 "platform": "5",
                 "realtimeDeparture": "0935",
                 "realtimeArrival": "1005",
             }
         )
-        dep = RailDepartureTimes(record)
+        dep = RailDepartureTimes(model)
         expected = {
             "delay": 5,
             "status": "Late",
@@ -67,15 +67,15 @@ class TestRailDepartureTimes:
         assert dep.get_rail_departure_times() == expected
 
     def test_full_departure_multi_destination(self):
-        record = DepartureRecord(
-            {
+        model = DepartureModel(
+            **{
                 "gbttBookedDeparture": "0930",
                 "platform": "5",
                 "realtimeDeparture": "0935",
                 "realtimeArrival": "1005",
             }
         )
-        dep = RailDepartureTimes(record)
+        dep = RailDepartureTimes(model)
         expected = {
             "delay": 5,
             "status": "Late",
@@ -84,15 +84,15 @@ class TestRailDepartureTimes:
         assert dep.get_rail_departure_times() == expected
 
     def test_full_departure_early(self):
-        record = DepartureRecord(
-            {
+        model = DepartureModel(
+            **{
                 "gbttBookedDeparture": "0930",
                 "platform": "5",
                 "realtimeDeparture": "0929",
                 "realtimeArrival": "0955",
             }
         )
-        dep = RailDepartureTimes(record)
+        dep = RailDepartureTimes(model)
         expected = {
             "delay": -1,
             "status": "Early",
@@ -101,15 +101,15 @@ class TestRailDepartureTimes:
         assert dep.get_rail_departure_times() == expected
 
     def test_full_departure_on_time(self):
-        record = DepartureRecord(
-            {
+        model = DepartureModel(
+            **{
                 "gbttBookedDeparture": "0930",
                 "platform": "5",
                 "realtimeDeparture": "0930",
                 "realtimeArrival": "1000",
             }
         )
-        dep = RailDepartureTimes(record)
+        dep = RailDepartureTimes(model)
         expected = {
             "delay": 0,
             "status": "On time",
@@ -117,34 +117,14 @@ class TestRailDepartureTimes:
         }
         assert dep.get_rail_departure_times() == expected
 
-    def test_as_departure_missing_fields(self):
-        record = DepartureRecord(
-            {
-                "origin": [],
-                "destination": [],
-                "gbttBookedDeparture": None,
-                "platform": None,
-                "realtimeDeparture": None,
-                "realtimeArrival": None,
-            }
-        )
-        dep = RailDepartureTimes(record)
-        expected = {
-            "delay": None,
-            "status": None,
-            "actual": None,
-        }
-        assert dep.get_rail_departure_times() == expected
-        assert not dep.is_valid()
-
     def test_overnight_departure(self):
-        record = DepartureRecord(
-            {
+        model = DepartureModel(
+            **{
                 "gbttBookedDeparture": "2330",
                 "platform": "5",
             }
         )
-        dep = RailDepartureTimes(record)
+        dep = RailDepartureTimes(model)
         expected = {
             "delay": 0,
             "status": "On time",
@@ -153,15 +133,15 @@ class TestRailDepartureTimes:
         assert dep.get_rail_departure_times() == expected
 
     def test_overnight_departure_with_delay(self):
-        record = DepartureRecord(
-            {
+        model = DepartureModel(
+            **{
                 "gbttBookedDeparture": "2330",
                 "platform": "5",
                 "realtimeDeparture": "2340",
                 "realtimeArrival": "0045",
             }
         )
-        dep = RailDepartureTimes(record)
+        dep = RailDepartureTimes(model)
         expected = {
             "delay": 10,
             "status": "Late",

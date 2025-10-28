@@ -1,14 +1,14 @@
+from src.models.external_to_python.departure.departure_model import DepartureModel
 from src.domain.rail.departures.rail_departures import (
     RailDepartures,
 )
-from src.adapters.clients.rttclient import DepartureRecord
 
 
 class TestMultipleDepartures:
     def test_multiple_departures(self):
         records = [
-            DepartureRecord(
-                {
+            DepartureModel(
+                **{
                     "origin": [{"description": "Edinburgh"}],
                     "destination": [{"description": "Glasgow"}],
                     "gbttBookedDeparture": "0930",
@@ -16,8 +16,8 @@ class TestMultipleDepartures:
                     "realtimeDeparture": "0935",
                 }
             ),
-            DepartureRecord(
-                {
+            DepartureModel(
+                **{
                     "origin": [{"description": "Oxford"}],
                     "destination": [{"description": "Manchester"}],
                     "gbttBookedDeparture": "1015",
@@ -25,8 +25,8 @@ class TestMultipleDepartures:
                     "realtimeDeparture": "1015",
                 }
             ),
-            DepartureRecord(
-                {
+            DepartureModel(
+                **{
                     "origin": [{"description": "Bristol"}],
                     "destination": [{"description": "Cardiff"}],
                     "gbttBookedDeparture": "1100",
