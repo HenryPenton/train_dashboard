@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from src.application.station_service import StationService
-
+from src.DTOs.station_dto import StationDTO
 from src.models.external_to_python.station.station_model import StationModel
 
 
@@ -38,8 +38,8 @@ def test_get_stations(monkeypatch):
     stations = service.get_stations()
 
     assert stations == [
-        {"naptanID": "123", "CommonName": "Alpha"},
-        {"naptanID": "456", "CommonName": "Beta"},
+        StationDTO(naptanID="123", CommonName="Alpha"),
+        StationDTO(naptanID="456", CommonName="Beta"),
     ]
 
 

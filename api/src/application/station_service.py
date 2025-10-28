@@ -16,12 +16,10 @@ class StationService:
             stations_path, postprocess_fn=naptan_postprocess
         )
 
-    def get_stations(self) -> list[dict]:
+    def get_stations(self) -> list[StationDTO]:
         stations = self.reader.read_json()  # stations is List[StationModel]
         stations = Station.sort_by_name(stations)
         return [
-            StationDTO(
-                naptanID=station.naptanID, CommonName=station.commonName
-            ).model_dump()
+            StationDTO(naptanID=station.naptanID, CommonName=station.commonName)
             for station in stations
         ]
