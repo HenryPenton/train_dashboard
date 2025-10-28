@@ -8,7 +8,6 @@ class LineStatusModel(BaseModel):
 
 
 class LineModel(BaseModel):
-    id: str
     name: str
     lineStatuses: List[LineStatusModel]
 
