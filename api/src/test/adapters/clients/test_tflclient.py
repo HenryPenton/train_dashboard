@@ -1,10 +1,10 @@
-from src.models.external_to_python.tfl.line.line_model import LineModel
 import pytest
 from src.adapters.clients.tflclient import (
     TFLClient,
     TFLClientError,
-    JourneyRecord,
 )
+from src.models.external_to_python.tfl.line.line_model import LineModel
+from src.models.external_to_python.tfl.route.route_model import JourneyModel
 
 
 class MockAsyncClient:
@@ -43,7 +43,7 @@ async def test_get_best_route_success():
     mock_response = MockResponse(json_data=mock_json)
     client = TFLClient(MockAsyncClient(mock_response))
     result = await client.get_possible_route_journeys("Paddington", "Liverpool Street")
-    assert all(isinstance(r, JourneyRecord) for r in result)
+    assert all(isinstance(r, JourneyModel) for r in result)
 
     assert result[0].legs == []
     assert result[0].duration == 25
@@ -67,7 +67,6 @@ async def test_get_best_route_error():
 async def test_get_all_lines_status_success():
     mock_json = [
         {
-            "id": "central",
             "name": "Central",
             "lineStatuses": [
                 {"statusSeverityDescription": "Good Service", "statusSeverity": 10}
@@ -79,8 +78,8 @@ async def test_get_all_lines_status_success():
     result = await client.get_all_lines_status()
     assert isinstance(result, list)
     assert all(isinstance(r, LineModel) for r in result)
-    assert result[0].id == "central"
-    assert result[0].line_statuses[0]["statusSeverityDescription"] == "Good Service"
+
+    assert result[0].line_statuses[0].statusSeverityDescription == "Good Service"
 
 
 @pytest.mark.asyncio
