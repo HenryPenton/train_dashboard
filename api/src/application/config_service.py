@@ -1,8 +1,9 @@
 from pathlib import Path
 
+from src.models.bidirectional.config.config_model import ConfigModel
 from src.adapters.file_handlers.json.json_file_read import JSONFileReader
 from src.adapters.file_handlers.json.json_file_write import JSONFileWriter
-from src.schemas.bidirectional.config.config_model import ConfigModel
+
 
 CONFIG_PATH = Path(__file__).parent.parent.parent / "config/config.json"
 
