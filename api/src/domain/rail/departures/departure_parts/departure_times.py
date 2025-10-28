@@ -27,7 +27,7 @@ class RailDepartureTimes:
     @staticmethod
     def _adjust_delay_for_overnight(
         delay, booked_departure=None, real_departure=None
-    ) -> int | None:
+    ) -> int:
         # A negative delay can represent one of two things, the train is early, or the train was late
         # and its lateness took the departure time past midnight. Here we make the possibly naive assumption
         # that a train is never more than 12 hours late or early to deal with this situation (720 minutes).
@@ -40,7 +40,7 @@ class RailDepartureTimes:
         return delay
 
     @classmethod
-    def _get_delay(cls, scheduled_departure: str, real_departure: str) -> int | None:
+    def _get_delay(cls, scheduled_departure: str, real_departure: str) -> int:
         sched_min = twenty_four_hour_string_to_minutes(scheduled_departure)
         real_min = twenty_four_hour_string_to_minutes(real_departure)
         if real_min is not None:
