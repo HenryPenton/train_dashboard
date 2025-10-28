@@ -23,7 +23,7 @@ async def get_best_route(from_station: str, to_station: str):
 @router.get("/tfl/line-status", response_model=List[LineDTO])
 async def get_tfl_line_status():
     try:
-        line_status_models = await tfl_service.get_line_status()
+        line_status_models = await tfl_service.get_line_statuses()
         line_status_dtos = [
             LineDTO(**(status_model.as_dict())) for status_model in line_status_models
         ]

@@ -14,7 +14,7 @@ class TFLService:
 
         return AllRoutes(journeys).get_best()
 
-    async def get_line_status(self):
+    async def get_line_statuses(self):
         status_DAOs = await self.client.get_all_lines_status()
         model_list = LineStatusModelList(status_DAOs).get_line_statuses()
         return model_list

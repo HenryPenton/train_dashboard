@@ -7,8 +7,16 @@ class DummyTFLService:
     async def get_best_route(self, from_station, to_station):
         return {"route": [from_station, "X", to_station]}
 
-    async def get_line_status(self):
-        return [{"line": "Central", "status": "Good Service"}]
+    async def get_line_statuses(self):
+        class DummyLineStatus:
+            def as_dict(self):
+                return {
+                    "name": "Central",
+                    "status": "Good Service",
+                    "statusSeverity": 10,
+                }
+
+        return [DummyLineStatus()]
 
 
 def test_get_best_route(monkeypatch):
@@ -30,7 +38,9 @@ def test_get_line_status(monkeypatch):
 
     response = client.get("/tfl/line-status")
     assert response.status_code == 200
-    assert response.json() == [{"line": "Central", "status": "Good Service"}]
+    assert response.json() == [
+        {"name": "Central", "status": "Good Service", "statusSeverity": 10}
+    ]
 
 
 def test_get_best_route_error(monkeypatch):
@@ -38,7 +48,7 @@ def test_get_best_route_error(monkeypatch):
         async def get_best_route(self, from_station, to_station):
             raise Exception("fail")
 
-        async def get_line_status(self):
+        async def get_line_statuses(self):
             return []
 
     monkeypatch.setattr(tfl_handler, "tfl_service", FailingTFLService())
@@ -55,7 +65,7 @@ def test_get_line_status_error(monkeypatch):
         async def get_best_route(self, from_station, to_station):
             return {}
 
-        async def get_line_status(self):
+        async def get_line_statuses(self):
             raise Exception("fail")
 
     monkeypatch.setattr(tfl_handler, "tfl_service", FailingTFLService())

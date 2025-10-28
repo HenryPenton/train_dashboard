@@ -61,7 +61,7 @@ class FailingTflClient:
 def test_get_line_status():
     service = TFLService(DummyTflClient())
     # get_line_status is async, so we need to run it in an event loop
-    result = asyncio.run(service.get_line_status())
+    result = asyncio.run(service.get_line_statuses())
     assert (result[0].as_dict()) == {
         "name": "Central",
         "status": "Good Service",
@@ -72,7 +72,7 @@ def test_get_line_status():
 def test_get_line_status_error():
     service = TFLService(FailingTflClient())
     try:
-        asyncio.run(service.get_line_status())
+        asyncio.run(service.get_line_statuses())
         assert False, "Expected Exception"
     except Exception as e:
         assert str(e) == "TFL API error"
