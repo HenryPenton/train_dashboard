@@ -1,7 +1,8 @@
-from src.application.tfl_service import TFLService
-from src.adapters.clients.tflclient import LineRecord
-
 import asyncio
+
+from src.application.tfl_service import TFLService
+from src.models.external_to_python.tfl.line.line_model import LineModel
+from src.models.external_to_python.tfl.route.route_model import JourneyModel
 
 
 class DummyTflClient:
@@ -9,11 +10,9 @@ class DummyTflClient:
         pass
 
     async def get_possible_route_journeys(self, from_station, to_station):
-        from src.adapters.clients.tflclient import JourneyRecord
-
         return [
-            JourneyRecord(
-                {
+            JourneyModel(
+                **{
                     "legs": [
                         {
                             "mode": {"name": "tube"},
@@ -31,10 +30,10 @@ class DummyTflClient:
         ]
 
     async def get_all_lines_status(self):
-        # Return a list of line dicts as expected by LineRecord
+        # Return a list of line dicts as expected by LineModel
         return [
-            LineRecord(
-                {
+            LineModel(
+                **{
                     "id": "central",
                     "name": "Central",
                     "lineStatuses": [
