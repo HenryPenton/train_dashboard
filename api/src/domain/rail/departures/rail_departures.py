@@ -1,15 +1,15 @@
 from src.domain.rail.departures.departure_parts.aggregate import RailDepartureAggregate
-from src.DTOs.departure_dto import DepartureDTO
-from src.models.external_to_python.departure.departure_model import DepartureModel
+from src.DTOs.rail.departure_dto import DepartureDTO
+from src.DAOs.rail.departure_dao import DepartureDAO
 
 
 class RailDepartures:
-    def __init__(self, all_services: list[DepartureModel]) -> None:
+    def __init__(self, all_services: list[DepartureDAO]) -> None:
         self.departures = self._extract_departures(all_services)
 
     @staticmethod
     def _extract_departures(
-        all_services: list[DepartureModel],
+        all_services: list[DepartureDAO],
     ) -> list[dict]:
         departures = []
         for dep in all_services:

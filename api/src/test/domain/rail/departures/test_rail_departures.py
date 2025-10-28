@@ -1,14 +1,14 @@
+from src.DAOs.rail.departure_dao import DepartureDAO
 from src.domain.rail.departures.rail_departures import (
     RailDepartures,
 )
-from src.DTOs.departure_dto import DepartureDTO
-from src.models.external_to_python.departure.departure_model import DepartureModel
+from src.DTOs.rail.departure_dto import DepartureDTO
 
 
 class TestMultipleDepartures:
     def test_multiple_departures(self):
         models = [
-            DepartureModel(
+            DepartureDAO(
                 **{
                     "origin": [{"description": "Edinburgh"}],
                     "destination": [{"description": "Glasgow"}],
@@ -17,7 +17,7 @@ class TestMultipleDepartures:
                     "realtimeDeparture": "0935",
                 }
             ),
-            DepartureModel(
+            DepartureDAO(
                 **{
                     "origin": [{"description": "Oxford"}],
                     "destination": [{"description": "Manchester"}],
@@ -26,7 +26,7 @@ class TestMultipleDepartures:
                     "realtimeDeparture": "1015",
                 }
             ),
-            DepartureModel(
+            DepartureDAO(
                 **{
                     "origin": [{"description": "Bristol"}],
                     "destination": [{"description": "Cardiff"}],

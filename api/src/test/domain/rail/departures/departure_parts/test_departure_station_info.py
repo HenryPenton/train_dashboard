@@ -1,12 +1,12 @@
 from src.domain.rail.departures.departure_parts.departure_station_info import (
     RailDepartureStationInfo,
 )
-from src.models.external_to_python.departure.departure_model import DepartureModel
+from src.DAOs.rail.departure_dao import DepartureDAO
 
 
 class TestDepartureStationInfo:
     def test_full_departure(self):
-        model = DepartureModel(
+        model = DepartureDAO(
             **{
                 "origin": [{"description": "Aberdeen"}],
                 "destination": [{"description": "Pitlochry"}],
@@ -24,7 +24,7 @@ class TestDepartureStationInfo:
         assert dep.get_rail_departure_station_info() == expected
 
     def test_full_departure_multi_origin(self):
-        model = DepartureModel(
+        model = DepartureDAO(
             **{
                 "origin": [
                     {"description": "Aberdeen"},
@@ -45,7 +45,7 @@ class TestDepartureStationInfo:
         assert dep.get_rail_departure_station_info() == expected
 
     def test_full_departure_multi_destination(self):
-        model = DepartureModel(
+        model = DepartureDAO(
             **{
                 "origin": [{"description": "Aberdeen"}],
                 "destination": [
@@ -66,7 +66,7 @@ class TestDepartureStationInfo:
         assert dep.get_rail_departure_station_info() == expected
 
     def test_full_departure_early(self):
-        model = DepartureModel(
+        model = DepartureDAO(
             **{
                 "origin": [{"description": "Aberdeen"}],
                 "destination": [{"description": "Pitlochry"}],
@@ -84,7 +84,7 @@ class TestDepartureStationInfo:
         assert dep.get_rail_departure_station_info() == expected
 
     def test_full_departure_on_time(self):
-        model = DepartureModel(
+        model = DepartureDAO(
             **{
                 "origin": [{"description": "Aberdeen"}],
                 "destination": [{"description": "Pitlochry"}],
@@ -102,7 +102,7 @@ class TestDepartureStationInfo:
         assert dep.get_rail_departure_station_info() == expected
 
     def test_non_standard_time_format(self):
-        model = DepartureModel(
+        model = DepartureDAO(
             **{
                 "origin": [],
                 "destination": [],

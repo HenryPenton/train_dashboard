@@ -1,11 +1,10 @@
 from collections import Counter
 
-
-from src.models.external_to_python.tfl.line.line_model import LineModel
+from src.DAOs.tfl.line_dao import LineDAO
 
 
 class LineStatus:
-    def __init__(self, line: LineModel) -> None:
+    def __init__(self, line: LineDAO) -> None:
         self.status = self._get_status(line)
         self.name = self._get_name(line)
         self.statusSeverity = self._get_status_severity(line)
@@ -47,11 +46,11 @@ class LineStatus:
 
 
 class LineStatuses:
-    def __init__(self, lines: list[LineModel]):
+    def __init__(self, lines: list[LineDAO]):
         self.line_statuses = self._extract_statuses(lines)
 
     @staticmethod
-    def _extract_statuses(lines: list[LineModel]) -> list[dict]:
+    def _extract_statuses(lines: list[LineDAO]) -> list[dict]:
         lines_statuses: list[dict] = []
         for line in lines:
             line_status_dict = LineStatus(line).get_status()

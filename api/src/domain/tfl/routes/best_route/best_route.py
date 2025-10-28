@@ -1,8 +1,8 @@
-from src.models.external_to_python.tfl.route.route_model import JourneyModel
+from src.DAOs.tfl.route_dao import JourneyDAO
 
 
 class BestRoute:
-    def __init__(self, best: JourneyModel) -> None:
+    def __init__(self, best: JourneyDAO) -> None:
         self.duration = best.duration
         self.arrival = best.arrival
         self.legs = [

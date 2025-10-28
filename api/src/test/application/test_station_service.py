@@ -1,8 +1,8 @@
 from pathlib import Path
 
 from src.application.station_service import StationService
-from src.DTOs.station_dto import StationDTO
-from src.models.external_to_python.station.station_model import StationModel
+from src.DTOs.station.station_dto import StationDTO
+from src.DAOs.station.station_dao import StationDAO
 
 
 class DummyJSONFileReader:
@@ -14,8 +14,8 @@ class DummyJSONFileReader:
 
     def read_json(self):
         return [
-            StationModel(**{"naptanID": "123", "commonName": "Alpha"}),
-            StationModel(**{"naptanID": "456", "commonName": "Beta"}),
+            StationDAO(**{"naptanID": "123", "commonName": "Alpha"}),
+            StationDAO(**{"naptanID": "456", "commonName": "Beta"}),
         ]
 
 

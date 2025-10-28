@@ -7,7 +7,7 @@ class Location(BaseModel):
     description: str
 
 
-class DepartureModel(BaseModel):
+class DepartureDAO(BaseModel):
     origin: List[Location] = []
     destination: List[Location] = []
     gbttBookedDeparture: str

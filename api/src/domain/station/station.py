@@ -1,7 +1,7 @@
-from src.models.external_to_python.station.station_model import StationModel
+from src.DAOs.station.station_dao import StationDAO
 
 
 class Station:
     @classmethod
-    def sort_by_name(cls, stations: list[StationModel]) -> list[StationModel]:
+    def sort_by_name(cls, stations: list[StationDAO]) -> list[StationDAO]:
         return sorted(stations, key=lambda x: x.commonName.lower())

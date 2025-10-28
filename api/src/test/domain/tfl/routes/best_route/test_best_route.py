@@ -1,10 +1,10 @@
 from src.domain.tfl.routes.routes import BestRoute
-from src.models.external_to_python.tfl.route.route_model import JourneyModel
+from src.DAOs.tfl.route_dao import JourneyDAO
 
 
 class TestBestRoute:
     def test_basic_journey(self):
-        best = JourneyModel(
+        best = JourneyDAO(
             **{
                 "duration": 45,
                 "arrivalDateTime": "2025-10-17T09:45:00",
@@ -37,7 +37,7 @@ class TestBestRoute:
         }
 
     def test_multiple_legs(self):
-        best = JourneyModel(
+        best = JourneyDAO(
             **{
                 "duration": 60,
                 "arrivalDateTime": "2025-10-17T10:00:00",
@@ -84,7 +84,7 @@ class TestBestRoute:
         }
 
     def test_multiple_modes(self):
-        best = JourneyModel(
+        best = JourneyDAO(
             **{
                 "duration": 30,
                 "arrivalDateTime": "2025-10-17T08:30:00",

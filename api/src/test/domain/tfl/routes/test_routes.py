@@ -1,11 +1,11 @@
 from src.domain.tfl.routes.routes import AllRoutes
-from src.models.external_to_python.tfl.route.route_model import JourneyModel
+from src.DAOs.tfl.route_dao import JourneyDAO
 
 
 class TestAllRoutes:
     def test_get_best_with_journeys(self):
         journeys = [
-            JourneyModel(
+            JourneyDAO(
                 **{
                     "duration": 25,
                     "arrivalDateTime": "2025-10-19T10:30:00Z",
@@ -44,7 +44,7 @@ class TestAllRoutes:
 
     def test_get_best_picks_first_journey(self):
         journeys = [
-            JourneyModel(
+            JourneyDAO(
                 **{
                     "duration": 10,
                     "arrivalDateTime": "2025-10-19T09:00:00Z",
@@ -59,7 +59,7 @@ class TestAllRoutes:
                     ],
                 }
             ),
-            JourneyModel(
+            JourneyDAO(
                 **{
                     "duration": 25,
                     "arrivalDateTime": "2025-10-19T10:30:00Z",

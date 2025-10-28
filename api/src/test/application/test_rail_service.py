@@ -1,9 +1,9 @@
 import asyncio
 import unittest
 
-from src.DTOs.departure_dto import DepartureDTO
 from src.application.rail_service import RailService
-from src.models.external_to_python.departure.departure_model import DepartureModel
+from src.DAOs.rail.departure_dao import DepartureDAO
+from src.DTOs.rail.departure_dto import DepartureDTO
 
 
 class TestRailService(unittest.TestCase):
@@ -15,7 +15,7 @@ class TestRailService(unittest.TestCase):
 class DummyRailClient:
     async def get_departures(self, origin, destination):
         return [
-            DepartureModel(
+            DepartureDAO(
                 **{
                     "origin": [{"description": "London"}],
                     "destination": [{"description": "Manchester"}],

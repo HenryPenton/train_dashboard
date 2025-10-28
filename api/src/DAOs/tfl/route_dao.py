@@ -3,39 +3,39 @@ from typing import List, Optional
 from pydantic import BaseModel
 
 
-class ModeModel(BaseModel):
+class ModeDAO(BaseModel):
     name: str
 
 
-class InstructionModel(BaseModel):
+class InstructionDAO(BaseModel):
     summary: str
 
 
-class PointModel(BaseModel):
+class PointDAO(BaseModel):
     commonName: str
 
 
-class RouteOptionModel(BaseModel):
+class RouteOptionDAO(BaseModel):
     name: str
 
 
-class LegModel(BaseModel):
-    mode: ModeModel
-    instruction: InstructionModel
-    departurePoint: PointModel
-    arrivalPoint: PointModel
-    routeOptions: List[RouteOptionModel]
+class LegDAO(BaseModel):
+    mode: ModeDAO
+    instruction: InstructionDAO
+    departurePoint: PointDAO
+    arrivalPoint: PointDAO
+    routeOptions: List[RouteOptionDAO]
 
 
-class FareModel(BaseModel):
+class FareDAO(BaseModel):
     totalCost: Optional[int] = None
 
 
-class JourneyModel(BaseModel):
-    legs: List[LegModel] = []
+class JourneyDAO(BaseModel):
+    legs: List[LegDAO] = []
     duration: int
     arrivalDateTime: str
-    fare: Optional[FareModel] = None
+    fare: Optional[FareDAO] = None
 
     @property
     def arrival(self) -> str:

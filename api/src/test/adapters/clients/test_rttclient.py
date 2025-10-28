@@ -1,6 +1,6 @@
-from src.models.external_to_python.departure.departure_model import DepartureModel
 import pytest
 from src.adapters.clients.rttclient import RTTClient, RTTClientError
+from src.DAOs.rail.departure_dao import DepartureDAO
 
 
 class MockAsyncClient:
@@ -62,7 +62,7 @@ async def test_get_departures_success():
 
     assert isinstance(result, list)
     assert len(result) == 2
-    assert all(isinstance(r, DepartureModel) for r in result)
+    assert all(isinstance(r, DepartureDAO) for r in result)
     # Check first Model fields
     assert result[0].origins == ["Edinburgh"]
     assert result[0].destinations == ["Glasgow"]

@@ -1,8 +1,8 @@
 import asyncio
 
 from src.application.tfl_service import TFLService
-from src.models.external_to_python.tfl.line.line_model import LineModel
-from src.models.external_to_python.tfl.route.route_model import JourneyModel
+from src.DAOs.tfl.line_dao import LineDAO
+from src.DAOs.tfl.route_dao import JourneyDAO
 
 
 class DummyTflClient:
@@ -11,7 +11,7 @@ class DummyTflClient:
 
     async def get_possible_route_journeys(self, from_station, to_station):
         return [
-            JourneyModel(
+            JourneyDAO(
                 **{
                     "legs": [
                         {
@@ -30,9 +30,9 @@ class DummyTflClient:
         ]
 
     async def get_all_lines_status(self):
-        # Return a list of line dicts as expected by LineModel
+        # Return a list of line dicts as expected by LineDAO
         return [
-            LineModel(
+            LineDAO(
                 **{
                     "id": "central",
                     "name": "Central",

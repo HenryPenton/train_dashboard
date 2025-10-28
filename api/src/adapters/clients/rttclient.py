@@ -2,7 +2,7 @@ import os
 from typing import List
 
 import httpx
-from src.models.external_to_python.departure.departure_model import DepartureModel
+from src.DAOs.rail.departure_dao import DepartureDAO
 
 
 class RTTClientError(Exception):
@@ -15,7 +15,7 @@ class RTTClient:
 
     async def get_departures(
         self, from_station: str, to_station: str
-    ) -> List[DepartureModel]:
+    ) -> List[DepartureDAO]:
         REALTIME_TRAINS_API_USER = os.getenv("RTT_API_USER", "your_username")
         REALTIME_TRAINS_API_PASS = os.getenv("RTT_API_PASS", "your_password")
         url = f"https://api.rtt.io/api/v1/json/search/{from_station}/to/{to_station}"
@@ -29,8 +29,8 @@ class RTTClient:
             for service in data.get("services", []):
                 loc = service.get("locationDetail", {})
                 try:
-                    departure_data = DepartureModel(**loc)
-                    departures.append(departure_data)
+                    departure_dao = DepartureDAO(**loc)
+                    departures.append(departure_dao)
                 except Exception:
                     continue
             return departures

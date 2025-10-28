@@ -1,12 +1,12 @@
 from src.domain.rail.departures.departure_parts.departure_times import (
     RailDepartureTimes,
 )
-from src.models.external_to_python.departure.departure_model import DepartureModel
+from src.DAOs.rail.departure_dao import DepartureDAO
 
 
 class TestRailDepartureTimes:
     def test_departure_delay_past_midnight(self):
-        model = DepartureModel(
+        model = DepartureDAO(
             **{
                 "gbttBookedDeparture": "2330",
                 "platform": "5",
@@ -23,7 +23,7 @@ class TestRailDepartureTimes:
         assert dep.get_rail_departure_times() == expected
 
     def test_full_departure(self):
-        model = DepartureModel(
+        model = DepartureDAO(
             **{
                 "gbttBookedDeparture": "0930",
                 "platform": "5",
@@ -40,7 +40,7 @@ class TestRailDepartureTimes:
         assert dep.get_rail_departure_times() == expected
 
     def test_full_departure_on_time_is_valid(self):
-        model = DepartureModel(
+        model = DepartureDAO(
             **{
                 "gbttBookedDeparture": "0930",
                 "platform": "5",
@@ -50,7 +50,7 @@ class TestRailDepartureTimes:
         assert dep.is_valid() is True
 
     def test_full_departure_multi_origin(self):
-        model = DepartureModel(
+        model = DepartureDAO(
             **{
                 "gbttBookedDeparture": "0930",
                 "platform": "5",
@@ -67,7 +67,7 @@ class TestRailDepartureTimes:
         assert dep.get_rail_departure_times() == expected
 
     def test_full_departure_multi_destination(self):
-        model = DepartureModel(
+        model = DepartureDAO(
             **{
                 "gbttBookedDeparture": "0930",
                 "platform": "5",
@@ -84,7 +84,7 @@ class TestRailDepartureTimes:
         assert dep.get_rail_departure_times() == expected
 
     def test_full_departure_early(self):
-        model = DepartureModel(
+        model = DepartureDAO(
             **{
                 "gbttBookedDeparture": "0930",
                 "platform": "5",
@@ -101,7 +101,7 @@ class TestRailDepartureTimes:
         assert dep.get_rail_departure_times() == expected
 
     def test_full_departure_on_time(self):
-        model = DepartureModel(
+        model = DepartureDAO(
             **{
                 "gbttBookedDeparture": "0930",
                 "platform": "5",
@@ -118,7 +118,7 @@ class TestRailDepartureTimes:
         assert dep.get_rail_departure_times() == expected
 
     def test_overnight_departure(self):
-        model = DepartureModel(
+        model = DepartureDAO(
             **{
                 "gbttBookedDeparture": "2330",
                 "platform": "5",
@@ -133,7 +133,7 @@ class TestRailDepartureTimes:
         assert dep.get_rail_departure_times() == expected
 
     def test_overnight_departure_with_delay(self):
-        model = DepartureModel(
+        model = DepartureDAO(
             **{
                 "gbttBookedDeparture": "2330",
                 "platform": "5",

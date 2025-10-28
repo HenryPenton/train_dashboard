@@ -1,9 +1,10 @@
 from src.domain.tfl.routes.best_route.best_route import BestRoute
-from src.models.external_to_python.tfl.route.route_model import JourneyModel
+
+from src.DAOs.tfl.route_dao import JourneyDAO
 
 
 class AllRoutes:
-    def __init__(self, journeys: list[JourneyModel]) -> None:
+    def __init__(self, journeys: list[JourneyDAO]) -> None:
         self.journeys = journeys
 
     def get_best(self) -> dict:

@@ -1,10 +1,10 @@
 from src.domain.rail.departures.departure_parts.aggregate import RailDepartureAggregate
-from src.models.external_to_python.departure.departure_model import DepartureModel
+from src.DAOs.rail.departure_dao import DepartureDAO
 
 
 class TestRailDepartureAggregate:
     def test_aggregate_returns_combined_dict(self):
-        model = DepartureModel(
+        model = DepartureDAO(
             **{
                 "origin": [{"description": "Origin Station"}],
                 "destination": [{"description": "Destination Station"}],

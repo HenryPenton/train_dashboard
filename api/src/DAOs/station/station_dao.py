@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
 
-class StationModel(BaseModel):
+class StationDAO(BaseModel):
     naptanID: str
     commonName: str

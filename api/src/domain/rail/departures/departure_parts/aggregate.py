@@ -1,14 +1,14 @@
+from src.DAOs.rail.departure_dao import DepartureDAO
 from src.domain.rail.departures.departure_parts.departure_station_info import (
     RailDepartureStationInfo,
 )
 from src.domain.rail.departures.departure_parts.departure_times import (
     RailDepartureTimes,
 )
-from src.models.external_to_python.departure.departure_model import DepartureModel
 
 
 class RailDepartureAggregate:
-    def __init__(self, departure: DepartureModel) -> None:
+    def __init__(self, departure: DepartureDAO) -> None:
         self.rail_departure_times = RailDepartureTimes(departure)
         self.rail_departure_info = RailDepartureStationInfo(departure)
 

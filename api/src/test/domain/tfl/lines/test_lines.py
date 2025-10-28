@@ -1,12 +1,12 @@
 import pytest
 from pydantic import ValidationError
 from src.domain.tfl.lines.lines import LineStatus, LineStatuses
-from src.models.external_to_python.tfl.line.line_model import LineModel
+from src.DAOs.tfl.line_dao import LineDAO
 
 
 class TestLineStatus:
     def test_one_status(self):
-        line = LineModel(
+        line = LineDAO(
             **{
                 "name": "Victoria",
                 "lineStatuses": [
@@ -22,7 +22,7 @@ class TestLineStatus:
         }
 
     def test_two_statuses(self):
-        line = LineModel(
+        line = LineDAO(
             **{
                 "name": "Northern",
                 "lineStatuses": [
@@ -42,7 +42,7 @@ class TestLineStatus:
         }
 
     def test_two_same_statuses(self):
-        line = LineModel(
+        line = LineDAO(
             **{
                 "name": "Mildmay",
                 "lineStatuses": [
@@ -61,7 +61,7 @@ class TestLineStatus:
 
     def test_empty(self):
         with pytest.raises(ValidationError):
-            LineModel(**{})
+            LineDAO(**{})
 
 
 class TestLineStatuses:
@@ -70,7 +70,7 @@ class TestLineStatuses:
 
     def test_one_line(self):
         lines = [
-            LineModel(
+            LineDAO(
                 **{
                     "name": "Victoria",
                     "lineStatuses": [
@@ -93,7 +93,7 @@ class TestLineStatuses:
 
     def test_two_lines(self):
         lines = [
-            LineModel(
+            LineDAO(
                 **{
                     "name": "Northern",
                     "lineStatuses": [
@@ -108,7 +108,7 @@ class TestLineStatuses:
                     ],
                 }
             ),
-            LineModel(
+            LineDAO(
                 **{
                     "name": "Piccadilly",
                     "lineStatuses": [
