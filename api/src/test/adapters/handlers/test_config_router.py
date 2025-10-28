@@ -62,3 +62,20 @@ def test_set_config_error(monkeypatch, test_app):
     response = test_app.post("/config", json={"bad": "data"})
     assert response.status_code == 500
     assert "fail" in response.json()["detail"]
+
+
+def test_get_config_raises_exception(monkeypatch):
+    class FailingConfigService:
+        def set_config(self, new_config):
+            return True
+
+        def get_config(self):
+            raise Exception("Something went wrong!")
+
+    monkeypatch.setattr(config_handler, "config_service", FailingConfigService())
+    app = FastAPI()
+    app.include_router(config_handler.router)
+    client = TestClient(app)
+    response = client.get("/config")
+    assert response.status_code == 500
+    assert response.json()["detail"] == "Something went wrong!"

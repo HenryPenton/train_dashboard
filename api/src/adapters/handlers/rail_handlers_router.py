@@ -15,7 +15,6 @@ async def get_departures(origin_station_code: str, destination_station_code: str
         return await rail_service.get_departures(
             origin_station_code, destination_station_code
         )
-    except HTTPException as e:
-        raise e
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
