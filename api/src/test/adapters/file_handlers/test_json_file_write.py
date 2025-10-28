@@ -1,7 +1,8 @@
-import tempfile
 import json
+import tempfile
 from pathlib import Path
-from src.adapters.file_handlers.json_file_write import JSONFileWriter
+
+from src.adapters.file_handlers.json.json_file_write import JSONFileWriter
 
 
 def test_write_json_writes_file():

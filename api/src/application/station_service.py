@@ -1,6 +1,7 @@
 from pathlib import Path
 from typing import List
-from src.adapters.file_handlers.json_file_read import JSONFileReader
+
+from src.adapters.file_handlers.json.json_file_read import JSONFileReader
 from src.domain.station.station import Station
 
 
