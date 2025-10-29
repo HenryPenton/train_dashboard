@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { FrontEndRailDeparturesSchema } from "../../validators/frontend-validators/RailDepartureSchema";
-import DepartureError from "./DepartureError";
-import DepartureList from "./DepartureList";
 import Loading from "../Loading";
 import SectionHeading from "../SectionHeading";
+import DepartureError from "./DepartureError";
+import DepartureList from "./DepartureList";
 
-type Departure = {
+export type Departure = {
+  url: string;
   origin: string;
   destination: string;
   actual: string;

@@ -12,6 +12,8 @@ class TestRailDepartureTimes:
                 "platform": "5",
                 "realtimeDeparture": "0005",
                 "realtimeArrival": "0100",
+                "serviceUid": "EDG123",
+                "runDate": "2025-10-29",
             }
         )
         dep = RailDepartureTimes(model)
@@ -29,6 +31,8 @@ class TestRailDepartureTimes:
                 "platform": "5",
                 "realtimeDeparture": "0930",
                 "realtimeArrival": "1000",
+                "serviceUid": "EDG124",
+                "runDate": "2025-10-29",
             }
         )
         dep = RailDepartureTimes(model)
@@ -44,6 +48,8 @@ class TestRailDepartureTimes:
             **{
                 "gbttBookedDeparture": "0930",
                 "platform": "5",
+                "serviceUid": "EDG125",
+                "runDate": "2025-10-29",
             }
         )
         dep = RailDepartureTimes(model)
@@ -56,6 +62,8 @@ class TestRailDepartureTimes:
                 "platform": "5",
                 "realtimeDeparture": "0935",
                 "realtimeArrival": "1005",
+                "serviceUid": "EDG126",
+                "runDate": "2025-10-29",
             }
         )
         dep = RailDepartureTimes(model)
@@ -73,6 +81,8 @@ class TestRailDepartureTimes:
                 "platform": "5",
                 "realtimeDeparture": "0935",
                 "realtimeArrival": "1005",
+                "serviceUid": "EDG127",
+                "runDate": "2025-10-29",
             }
         )
         dep = RailDepartureTimes(model)
@@ -90,6 +100,8 @@ class TestRailDepartureTimes:
                 "platform": "5",
                 "realtimeDeparture": "0929",
                 "realtimeArrival": "0955",
+                "serviceUid": "EDG128",
+                "runDate": "2025-10-29",
             }
         )
         dep = RailDepartureTimes(model)
@@ -107,6 +119,8 @@ class TestRailDepartureTimes:
                 "platform": "5",
                 "realtimeDeparture": "0930",
                 "realtimeArrival": "1000",
+                "serviceUid": "EDG129",
+                "runDate": "2025-10-29",
             }
         )
         dep = RailDepartureTimes(model)
@@ -122,6 +136,8 @@ class TestRailDepartureTimes:
             **{
                 "gbttBookedDeparture": "2330",
                 "platform": "5",
+                "serviceUid": "EDG130",
+                "runDate": "2025-10-29",
             }
         )
         dep = RailDepartureTimes(model)
@@ -139,6 +155,8 @@ class TestRailDepartureTimes:
                 "platform": "5",
                 "realtimeDeparture": "2340",
                 "realtimeArrival": "0045",
+                "serviceUid": "EDG131",
+                "runDate": "2025-10-29",
             }
         )
         dep = RailDepartureTimes(model)

@@ -1,14 +1,5 @@
-import React from "react";
 import DepartureListItem from "./DepartureListItem";
-
-type Departure = {
-  origin: string;
-  destination: string;
-  actual: string;
-  platform: string;
-  delay: number;
-  status: "Early" | "On time" | "Late";
-};
+import { Departure } from "./TrainDepartures";
 
 export default function DepartureList({
   departures,

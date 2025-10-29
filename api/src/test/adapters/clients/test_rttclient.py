@@ -34,6 +34,8 @@ async def test_get_departures_success():
     mock_json = {
         "services": [
             {
+                "serviceUid": "gb-nr:12345",
+                "runDate": "2024-06-01",
                 "locationDetail": {
                     "origin": [{"description": "Edinburgh"}],
                     "destination": [{"description": "Glasgow"}],
@@ -43,6 +45,8 @@ async def test_get_departures_success():
                 }
             },
             {
+                "serviceUid": "gb-nr:67890",
+                "runDate": "2024-06-01",
                 "locationDetail": {
                     "origin": [{"description": "Oxford"}, {"description": "London"}],
                     "destination": [
@@ -97,6 +101,8 @@ async def test_get_departures_invalid_model():
     mock_json = {
         "services": [
             {
+                "serviceUid": "gb-nr:12345",
+                "runDate": "2024-06-01",
                 "locationDetail": {
                     "origin": [{"description": "Edinburgh"}],
                     "destination": [{"description": "Glasgow"}],

@@ -14,6 +14,7 @@ const mockDepartures = [
     platform: "2",
     delay: 0,
     status: "On time",
+    url: "https://www.realtimetrains.co.uk/service/gb-nr:12345/2024-06-01",
   },
   {
     origin: "Paddington",
@@ -22,6 +23,7 @@ const mockDepartures = [
     platform: "3",
     delay: 5,
     status: "Late",
+    url: "https://www.realtimetrains.co.uk/service/gb-nr:67890/2024-06-01",
   },
 ];
 

@@ -2,6 +2,7 @@ from pydantic import BaseModel
 
 
 class DepartureDTO(BaseModel):
+    url: str
     delay: int
     status: str
     actual: str

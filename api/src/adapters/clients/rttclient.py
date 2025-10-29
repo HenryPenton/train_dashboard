@@ -27,9 +27,13 @@ class RTTClient:
             data = response.json()
             departures = []
             for service in data.get("services", []):
-                loc = service.get("locationDetail", {})
+                locationDetail = service.get("locationDetail", {})
+                serviceUid = service.get("serviceUid", {})
+                runDate = service.get("runDate", {})
                 try:
-                    departure_dao = DepartureDAO(**loc)
+                    departure_dao = DepartureDAO(
+                        **locationDetail, serviceUid=serviceUid, runDate=runDate
+                    )
                     departures.append(departure_dao)
                 except Exception:
                     continue

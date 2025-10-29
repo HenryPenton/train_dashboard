@@ -11,6 +11,8 @@ class TestRailDepartureAggregate:
                 "gbttBookedDeparture": "0930",
                 "platform": "5",
                 "realtimeDeparture": "0935",
+                "serviceUid": "EDG123",
+                "runDate": "2025-10-29",
             }
         )
         aggregate = RailDepartureAggregate(model)
@@ -22,5 +24,6 @@ class TestRailDepartureAggregate:
         assert "delay" in result
         assert "status" in result
         assert "actual" in result
+        assert "url" in result
         assert "gbttBookedDeparture" not in result  # Should be processed
         assert aggregate.is_valid() is True

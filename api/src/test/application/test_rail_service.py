@@ -21,6 +21,8 @@ class DummyRailClient:
                     "gbttBookedDeparture": "1000",
                     "realtimeDeparture": "1005",
                     "platform": "1",
+                    "serviceUid": "LONMAN123",
+                    "runDate": "2024-06-01",
                 }
             )
         ]
@@ -41,6 +43,7 @@ def test_get_departures():
         "delay": 5,
         "status": "Late",
         "platform": "1",
+        "url": "https://www.realtimetrains.co.uk/service/gb-nr:LONMAN123/2024-06-01",
     }
 
 

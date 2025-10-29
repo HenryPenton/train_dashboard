@@ -1,13 +1,5 @@
-import React from "react";
-
-type Departure = {
-  origin: string;
-  destination: string;
-  actual: string;
-  platform: string;
-  delay: number;
-  status: "Early" | "On time" | "Late";
-};
+import Link from "next/link";
+import { Departure } from "./TrainDepartures";
 
 function renderDepartureStatus(dep: Departure) {
   return (
@@ -27,7 +19,9 @@ export default function DepartureListItem({ dep }: { dep: Departure }) {
       role="listitem"
       aria-label={`Departure from ${dep.origin} to ${dep.destination}`}
     >
-      <strong>{dep.origin}</strong> → <strong>{dep.destination}</strong>
+      <Link href={dep.url}>
+        <strong>{dep.origin}</strong> → <strong>{dep.destination}</strong>
+      </Link>
       <br />
       <span aria-label="Departure details">
         Departs: {renderDepartureStatus(dep)} {" | Platform: "}

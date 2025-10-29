@@ -14,6 +14,7 @@ class DummyRailService:
                     "origin": "AAA",
                     "destination": "BBB",
                     "platform": "1",
+                    "url": "https://www.realtimetrains.co.uk/service/gb-nr:12345/2024-06-01",
                 }
 
         return [DummyRailAggregate()]
@@ -35,6 +36,7 @@ def test_get_departures(monkeypatch):
             "platform": "1",
             "status": "Late",
             "delay": 5,
+            "url": "https://www.realtimetrains.co.uk/service/gb-nr:12345/2024-06-01",
         }
     ]
 

@@ -7,6 +7,7 @@ export const RailDepartureSchema = z.object({
   platform: z.string(),
   origin: z.string(),
   destination: z.string(),
+  url: z.string(),
 });
 
 export const ApiRailDeparturesSchema = z.array(RailDepartureSchema);

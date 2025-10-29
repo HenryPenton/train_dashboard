@@ -9,6 +9,7 @@ class RailDepartureStationInfo:
         self.origin = self._get_origin(departure)
         self.destination = self._get_destination(departure)
         self.platform = self._get_platform(departure)
+        self.url = self._get_url(departure)
 
     @staticmethod
     def _get_origin(departure: DepartureDAO) -> str | None:
@@ -31,6 +32,10 @@ class RailDepartureStationInfo:
             return "?"
         return platform
 
+    @staticmethod
+    def _get_url(departure: DepartureDAO) -> str:
+        return f"https://www.realtimetrains.co.uk/service/gb-nr:{departure.serviceUid}/{departure.runDate}"
+
     def is_valid(self) -> bool:
         return check_group_of_properties_exist(
             self.origin,
@@ -43,4 +48,5 @@ class RailDepartureStationInfo:
             "origin": self.origin,
             "destination": self.destination,
             "platform": self.platform,
+            "url": self.url,
         }

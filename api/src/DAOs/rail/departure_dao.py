@@ -11,6 +11,8 @@ class DepartureDAO(BaseModel):
     origin: List[Location] = []
     destination: List[Location] = []
     gbttBookedDeparture: str
+    serviceUid: str
+    runDate: str
     realtimeDeparture: Optional[str] = None
     platform: Optional[str] = None
 
