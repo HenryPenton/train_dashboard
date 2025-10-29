@@ -25,8 +25,11 @@ class RailDepartureStationInfo:
         return ", ".join([destination for destination in destinations])
 
     @staticmethod
-    def _get_platform(departure: DepartureDAO) -> str | None:
-        return departure.platform
+    def _get_platform(departure: DepartureDAO) -> str:
+        platform = departure.platform
+        if platform is None:
+            return "?"
+        return platform
 
     def is_valid(self) -> bool:
         return check_group_of_properties_exist(

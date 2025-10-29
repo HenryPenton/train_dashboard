@@ -3,7 +3,6 @@ import unittest
 
 from src.application.rail_service import RailService
 from src.DAOs.rail.departure_dao import DepartureDAO
-from src.DTOs.rail.departure_dto import DepartureDTO
 
 
 class TestRailService(unittest.TestCase):
@@ -35,18 +34,14 @@ class FailingRailClient:
 def test_get_departures():
     service = RailService(DummyRailClient())
     result = asyncio.run(service.get_departures("origin", "destination"))
-    assert result == [
-        DepartureDTO(
-            **{
-                "origin": "London",
-                "destination": "Manchester",
-                "actual": "1005",
-                "delay": 5,
-                "status": "Late",
-                "platform": "1",
-            }
-        )
-    ]
+    assert result[0].as_dict() == {
+        "origin": "London",
+        "destination": "Manchester",
+        "actual": "1005",
+        "delay": 5,
+        "status": "Late",
+        "platform": "1",
+    }
 
 
 def test_get_departures_error():

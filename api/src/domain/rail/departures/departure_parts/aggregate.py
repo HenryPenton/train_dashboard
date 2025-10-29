@@ -12,7 +12,7 @@ class RailDepartureAggregate:
         self.rail_departure_times = RailDepartureTimes(departure)
         self.rail_departure_info = RailDepartureStationInfo(departure)
 
-    def get_rail_departure(self) -> dict:
+    def as_dict(self) -> dict:
         departure_times = self.rail_departure_times.get_rail_departure_times()
         departure_info = self.rail_departure_info.get_rail_departure_station_info()
         return {**departure_times, **departure_info}

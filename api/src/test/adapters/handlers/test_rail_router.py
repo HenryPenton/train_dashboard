@@ -5,14 +5,18 @@ from src.adapters.handlers import rail_handlers_router as rail_handler
 
 class DummyRailService:
     async def get_departures(self, origin, destination):
-        return [
-            {
-                "scheduled": "10:00",
-                "actual": "10:05",
-                "origin": "AAA",
-                "destination": "BBB",
-            }
-        ]
+        class DummyRailAggregate:
+            def as_dict(self):
+                return {
+                    "delay": 5,
+                    "status": "Late",
+                    "actual": "10:05",
+                    "origin": "AAA",
+                    "destination": "BBB",
+                    "platform": "1",
+                }
+
+        return [DummyRailAggregate()]
 
 
 def test_get_departures(monkeypatch):
@@ -24,7 +28,14 @@ def test_get_departures(monkeypatch):
     response = client.get("/rail/departures/AAA/to/BBB")
     assert response.status_code == 200
     assert response.json() == [
-        {"scheduled": "10:00", "actual": "10:05", "origin": "AAA", "destination": "BBB"}
+        {
+            "actual": "10:05",
+            "origin": "AAA",
+            "destination": "BBB",
+            "platform": "1",
+            "status": "Late",
+            "delay": 5,
+        }
     ]
 
 

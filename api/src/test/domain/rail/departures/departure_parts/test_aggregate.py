@@ -14,7 +14,7 @@ class TestRailDepartureAggregate:
             }
         )
         aggregate = RailDepartureAggregate(model)
-        result = aggregate.get_rail_departure()
+        result = aggregate.as_dict()
         # Check keys from both times and info
         assert "origin" in result
         assert "destination" in result

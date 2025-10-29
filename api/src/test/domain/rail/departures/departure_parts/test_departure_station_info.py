@@ -1,12 +1,12 @@
+from src.DAOs.rail.departure_dao import DepartureDAO
 from src.domain.rail.departures.departure_parts.departure_station_info import (
     RailDepartureStationInfo,
 )
-from src.DAOs.rail.departure_dao import DepartureDAO
 
 
 class TestDepartureStationInfo:
     def test_full_departure(self):
-        model = DepartureDAO(
+        dao = DepartureDAO(
             **{
                 "origin": [{"description": "Aberdeen"}],
                 "destination": [{"description": "Pitlochry"}],
@@ -15,7 +15,7 @@ class TestDepartureStationInfo:
                 "realtimeDeparture": "0935",
             }
         )
-        dep = RailDepartureStationInfo(model)
+        dep = RailDepartureStationInfo(dao)
         expected = {
             "origin": "Aberdeen",
             "destination": "Pitlochry",
@@ -24,7 +24,7 @@ class TestDepartureStationInfo:
         assert dep.get_rail_departure_station_info() == expected
 
     def test_full_departure_multi_origin(self):
-        model = DepartureDAO(
+        dao = DepartureDAO(
             **{
                 "origin": [
                     {"description": "Aberdeen"},
@@ -36,7 +36,7 @@ class TestDepartureStationInfo:
                 "realtimeDeparture": "0935",
             }
         )
-        dep = RailDepartureStationInfo(model)
+        dep = RailDepartureStationInfo(dao)
         expected = {
             "origin": "Aberdeen, Oxford",
             "destination": "Pitlochry",
@@ -45,7 +45,7 @@ class TestDepartureStationInfo:
         assert dep.get_rail_departure_station_info() == expected
 
     def test_full_departure_multi_destination(self):
-        model = DepartureDAO(
+        dao = DepartureDAO(
             **{
                 "origin": [{"description": "Aberdeen"}],
                 "destination": [
@@ -57,7 +57,7 @@ class TestDepartureStationInfo:
                 "realtimeDeparture": "0935",
             }
         )
-        dep = RailDepartureStationInfo(model)
+        dep = RailDepartureStationInfo(dao)
         expected = {
             "origin": "Aberdeen",
             "destination": "Pitlochry, Birmingham",
@@ -66,7 +66,7 @@ class TestDepartureStationInfo:
         assert dep.get_rail_departure_station_info() == expected
 
     def test_full_departure_early(self):
-        model = DepartureDAO(
+        dao = DepartureDAO(
             **{
                 "origin": [{"description": "Aberdeen"}],
                 "destination": [{"description": "Pitlochry"}],
@@ -75,7 +75,7 @@ class TestDepartureStationInfo:
                 "realtimeDeparture": "0929",
             }
         )
-        dep = RailDepartureStationInfo(model)
+        dep = RailDepartureStationInfo(dao)
         expected = {
             "origin": "Aberdeen",
             "destination": "Pitlochry",
@@ -84,7 +84,7 @@ class TestDepartureStationInfo:
         assert dep.get_rail_departure_station_info() == expected
 
     def test_full_departure_on_time(self):
-        model = DepartureDAO(
+        dao = DepartureDAO(
             **{
                 "origin": [{"description": "Aberdeen"}],
                 "destination": [{"description": "Pitlochry"}],
@@ -93,7 +93,7 @@ class TestDepartureStationInfo:
                 "realtimeDeparture": "0930",
             }
         )
-        dep = RailDepartureStationInfo(model)
+        dep = RailDepartureStationInfo(dao)
         expected = {
             "origin": "Aberdeen",
             "destination": "Pitlochry",
@@ -102,7 +102,7 @@ class TestDepartureStationInfo:
         assert dep.get_rail_departure_station_info() == expected
 
     def test_non_standard_time_format(self):
-        model = DepartureDAO(
+        dao = DepartureDAO(
             **{
                 "origin": [],
                 "destination": [],
@@ -111,11 +111,49 @@ class TestDepartureStationInfo:
                 "realtimeDeparture": None,
             }
         )
-        dep = RailDepartureStationInfo(model)
+        dep = RailDepartureStationInfo(dao)
         expected = {
             "origin": None,
             "destination": None,
-            "platform": None,
+            "platform": '?',
         }
         assert dep.get_rail_departure_station_info() == expected
         assert not dep.is_valid()
+
+    def test_platform_present(self):
+        dao = DepartureDAO(
+            **{
+                "origin": [{"description": "Aberdeen"}],
+                "destination": [{"description": "Pitlochry"}],
+                "gbttBookedDeparture": "0930",
+                "platform": "5",
+                "realtimeDeparture": "0930",
+            }
+        )
+        info = RailDepartureStationInfo(dao)
+        assert info.platform == "5"
+
+    def test_platform_none(self):
+        dao = DepartureDAO(
+            **{
+                "origin": [{"description": "Aberdeen"}],
+                "destination": [{"description": "Pitlochry"}],
+                "gbttBookedDeparture": "0930",
+                "platform": None,
+                "realtimeDeparture": "0930",
+            }
+        )
+        info = RailDepartureStationInfo(dao)
+        assert info.platform == "?"
+
+    def test_platform_missing(self):
+        dao = DepartureDAO(
+            **{
+                "origin": [{"description": "Aberdeen"}],
+                "destination": [{"description": "Pitlochry"}],
+                "gbttBookedDeparture": "0930",
+                "realtimeDeparture": "0930",
+            }
+        )
+        info = RailDepartureStationInfo(dao)
+        assert info.platform == "?"

@@ -2,7 +2,6 @@ from src.DAOs.rail.departure_dao import DepartureDAO
 from src.domain.rail.departures.rail_departures import (
     RailDepartures,
 )
-from src.DTOs.rail.departure_dto import DepartureDTO
 
 
 class TestMultipleDepartures:
@@ -36,39 +35,32 @@ class TestMultipleDepartures:
                 }
             ),
         ]
-        expected = [
-            DepartureDTO(
-                **{
-                    "actual": "0935",
-                    "delay": 5,
-                    "destination": "Glasgow",
-                    "origin": "Edinburgh",
-                    "platform": "5",
-                    "status": "Late",
-                }
-            ),
-            DepartureDTO(
-                **{
-                    "actual": "1015",
-                    "delay": 0,
-                    "destination": "Manchester",
-                    "origin": "Oxford",
-                    "platform": "2",
-                    "status": "On time",
-                }
-            ),
-            DepartureDTO(
-                **{
-                    "actual": "1058",
-                    "delay": -2,
-                    "destination": "Cardiff",
-                    "origin": "Bristol",
-                    "platform": "1",
-                    "status": "Early",
-                }
-            ),
-        ]
 
         results = RailDepartures(models).get_all_rail_departures()
 
-        assert results == expected
+        assert results[0].as_dict() == {
+            "actual": "0935",
+            "delay": 5,
+            "destination": "Glasgow",
+            "origin": "Edinburgh",
+            "platform": "5",
+            "status": "Late",
+        }
+
+        assert results[1].as_dict() == {
+            "actual": "1015",
+            "delay": 0,
+            "destination": "Manchester",
+            "origin": "Oxford",
+            "platform": "2",
+            "status": "On time",
+        }
+
+        assert results[2].as_dict() == {
+            "actual": "1058",
+            "delay": -2,
+            "destination": "Cardiff",
+            "origin": "Bristol",
+            "platform": "1",
+            "status": "Early",
+        }
