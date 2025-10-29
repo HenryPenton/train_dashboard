@@ -6,7 +6,7 @@ from src.adapters.file_handlers.json.generators.station_model_generator import (
 )
 from src.adapters.file_handlers.json.json_file_read import JSONFileReader
 from src.DAOs.station.station_dao import StationDAO
-from src.domain.station.station import Station
+from src.domain.station.stations import Stations
 from src.DTOs.station.station_dto import StationDTO
 
 
@@ -18,7 +18,7 @@ class StationService:
 
     def get_stations(self) -> list[StationDTO]:
         stations = self.reader.read_json()
-        stations = Station.sort_by_name(stations)
+        stations = Stations.sort_by_name(stations)
         return [
             StationDTO(naptanID=station.naptanID, CommonName=station.commonName)
             for station in stations
