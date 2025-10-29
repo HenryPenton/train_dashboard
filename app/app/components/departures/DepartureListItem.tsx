@@ -19,7 +19,7 @@ export default function DepartureListItem({ dep }: { dep: Departure }) {
       role="listitem"
       aria-label={`Departure from ${dep.origin} to ${dep.destination}`}
     >
-      <Link href={dep.url}>
+      <Link target="_blank" href={dep.url}>
         <strong>{dep.origin}</strong> → <strong>{dep.destination}</strong>
       </Link>
       <br />
