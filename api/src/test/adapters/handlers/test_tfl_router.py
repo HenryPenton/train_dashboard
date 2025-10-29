@@ -5,7 +5,24 @@ from src.adapters.handlers import tfl_handlers_router as tfl_handler
 
 class DummyTFLService:
     async def get_best_route(self, from_station, to_station):
-        return {"route": [from_station, "X", to_station]}
+        class DummyRoute:
+            def as_dict(self):
+                return {
+                    "legs": [
+                        {
+                            "mode": "tube",
+                            "instruction": "Take the Central Line",
+                            "departure": "Oxford Circus",
+                            "arrival": "Liverpool Street",
+                            "line": "Central",
+                        }
+                    ],
+                    "duration": 15,
+                    "arrival": "2025-10-22T10:00:00Z",
+                    "fare": 300,
+                }
+
+        return DummyRoute()
 
     async def get_line_statuses(self):
         class DummyLineStatus:
@@ -27,7 +44,20 @@ def test_get_best_route(monkeypatch):
 
     response = client.get("/tfl/best-route/A/B")
     assert response.status_code == 200
-    assert response.json() == {"route": ["A", "X", "B"]}
+    assert response.json() == {
+        "arrival": "2025-10-22T10:00:00Z",
+        "duration": 15,
+        "fare": 300,
+        "legs": [
+            {
+                "arrival": "Liverpool Street",
+                "departure": "Oxford Circus",
+                "instruction": "Take the Central Line",
+                "line": "Central",
+                "mode": "tube",
+            },
+        ],
+    }
 
 
 def test_get_line_status(monkeypatch):

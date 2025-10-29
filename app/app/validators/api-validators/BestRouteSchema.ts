@@ -12,5 +12,5 @@ export const BackendResponseSchema = z.object({
   duration: z.number(),
   arrival: z.string(),
   legs: z.array(BackendLegSchema),
-  fare: z.number().nullable(),
+  fare: z.number().optional(),
 });

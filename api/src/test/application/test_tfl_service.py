@@ -81,7 +81,7 @@ def test_get_line_status_error():
 def test_get_best_route():
     service = TFLService(DummyTflClient())
     result = asyncio.run(service.get_best_route("Oxford Circus", "Liverpool Street"))
-    assert result == {
+    assert result.as_dict() == {
         "duration": 15,
         "arrival": "2025-10-22T10:00:00Z",
         "fare": 300,

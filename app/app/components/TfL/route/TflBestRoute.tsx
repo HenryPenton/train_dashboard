@@ -9,7 +9,7 @@ interface BestRouteData {
   route: string[];
   duration: number;
   arrival: string;
-  fare: number | null;
+  fare?: number;
 }
 
 type TflRouteProps = {

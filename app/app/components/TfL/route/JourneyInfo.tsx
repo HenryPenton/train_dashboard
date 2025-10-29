@@ -3,7 +3,7 @@ interface JourneyInfoProps {
   to: string;
   duration: number;
   arrival: string;
-  fare: number | null;
+  fare?: number;
 }
 
 export default function JourneyInfo({
@@ -29,7 +29,7 @@ export default function JourneyInfo({
         <span className="mx-2">|</span>
         <span className="font-bold">Arrival:</span>{" "}
         {new Date(arrival).toLocaleTimeString()}
-        {typeof fare === "number" && (
+        {fare && typeof fare === "number" && (
           <span>
             <span className="mx-2">|</span>
             <span className="font-bold">Fare:</span> £{(fare / 100).toFixed(2)}

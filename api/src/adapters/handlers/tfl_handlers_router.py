@@ -5,6 +5,7 @@ from fastapi import APIRouter, HTTPException
 from src.adapters.clients.tflclient import TFLClient
 from src.application.tfl_service import TFLService
 from src.DTOs.tfl.line_dto import LineDTO
+from src.DTOs.tfl.route_dto import RouteDTO
 
 tfl_client: TFLClient = TFLClient(httpx.AsyncClient())
 tfl_service = TFLService(tfl_client)
@@ -12,11 +13,19 @@ tfl_service = TFLService(tfl_client)
 router = APIRouter()
 
 
-@router.get("/tfl/best-route/{from_station}/{to_station}")
+@router.get(
+    "/tfl/best-route/{from_station}/{to_station}",
+    response_model=RouteDTO,
+    response_model_exclude_none=True,
+)
 async def get_best_route(from_station: str, to_station: str):
     try:
-        return await tfl_service.get_best_route(from_station, to_station)
+        route_model = await tfl_service.get_best_route(from_station, to_station)
+        route_dto = RouteDTO(**(route_model.as_dict()))
+
+        return route_dto
     except Exception as e:
+        print(e)
         raise HTTPException(status_code=500, detail=str(e))
 
 
