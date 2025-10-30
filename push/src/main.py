@@ -1,4 +1,5 @@
 import logging
+import os
 import time
 
 import requests
@@ -7,14 +8,23 @@ from dotenv import load_dotenv
 from python_ntfy import NtfyClient
 
 from src.schedules import get_schedules_with_topic
+from src.formatters.best_route import format_best_route_markdown
+from src.formatters.departures import format_departures_markdown
 
 load_dotenv()
 
-API_BASE = "http://train_dashboard_api:8000"  # Replace with your API server
+API_BASE = os.environ.get("SERVER_URL", "http://localhost:8000")
 
 
 def fetch_rail_departure(from_station, to_station):
     url = f"{API_BASE}/rail/departures/{from_station}/to/{to_station}"
+    resp = requests.get(url)
+    resp.raise_for_status()
+    return resp.json()
+
+
+def fetch_best_route(from_station, to_station):
+    url = f"{API_BASE}/tfl/best-route/{from_station}/{to_station}"
     resp = requests.get(url)
     resp.raise_for_status()
     return resp.json()
@@ -42,31 +52,20 @@ def job_rail_departure(schedule):
         )
 
 
-def format_departures_markdown(departures, from_station_name, to_station_name):
-    if not departures:
-        return "No departures found."
+def job_best_route(schedule):
+    from_code = schedule["from_code"]
+    to_code = schedule["to_code"]
+    from_name = schedule["from_name"]
+    to_name = schedule["to_name"]
 
-    lines = [
-        f"# 🚆 Upcoming Departures from {from_station_name} to {to_station_name}",
-        "",
-    ]
-    for dep in departures[:10]:
-        formatted_status = ""
-        delay_time = dep.get("delay", 0)
-        status = dep.get("status", "").lower()
-        minsmin = "mins" if delay_time != 1 else "min"
-        if status in ["late", "delayed"]:
-            emoji = "🔴"
-            formatted_status = f"**{dep.get('status', '')} ({delay_time} {minsmin})**"
-        else:
-            formatted_status = f"**{dep.get('status', '')}**"
-            emoji = "🟢"
-
-        lines.append(
-            f"{emoji} **{dep.get('origin', '')}** -> **{dep.get('destination', '')}** is {formatted_status} "
-            f"and departs from platform **{dep.get('platform', '')}** at **{dep.get('actual', '')}**\n"
+    try:
+        info = fetch_best_route(from_code, to_code)
+        msg = format_best_route_markdown(info, from_name, to_name)
+        send_ntfy_notification(schedule["topic"], msg)
+    except Exception:
+        logging.exception(
+            f"Error fetching best route information between {from_name} and {to_name}"
         )
-    return "\n".join(lines)
 
 
 def schedule_jobs():
@@ -83,6 +82,18 @@ def schedule_jobs():
                 timezone="UTC",
                 args=[sched],
                 id=f"rail_{sched['from_station_code']}_{sched['to_station_code']}_{sched['time']}",
+            )
+        elif sched["type"] == "best_route":
+            hour, minute = map(int, sched["time"].split(":"))
+            scheduler.add_job(
+                job_best_route,
+                "cron",
+                hour=hour,
+                minute=minute,
+                day_of_week=sched["day_of_week"],
+                timezone="UTC",
+                args=[sched],
+                id=f"best_route_{sched['from_code']}_{sched['to_code']}_{sched['time']}",
             )
     scheduler.start()
     return scheduler

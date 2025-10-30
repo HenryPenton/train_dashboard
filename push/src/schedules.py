@@ -32,14 +32,27 @@ def get_schedules():
             "day_of_week": "mon-wed,fri,sat",
             "time": "17:05",
         },
+        # New best_route schedule example
+        {
+            "type": "best_route",
+            "from_code": "910GABWDXR",
+            "to_code": "940GZZCRWOD",
+            "from_name": "Abbey Wood",
+            "to_name": "Woodside Tram Stop",
+            "day_of_week": "mon,thu",
+            "time": "18:28",
+        },
     ]
     return schedules
 
 
 def get_schedules_with_topic():
     rail_topic = os.environ.get("RAIL_TOPIC", "")
+    best_route_topic = os.environ.get("BEST_ROUTE_TOPIC", "")
     schedules = get_schedules()
     for sched in schedules:
         if sched["type"] == "rail_departure":
             sched["topic"] = rail_topic
+        elif sched["type"] == "best_route":
+            sched["topic"] = best_route_topic
     return schedules
