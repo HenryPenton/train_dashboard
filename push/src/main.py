@@ -79,6 +79,7 @@ def schedule_jobs():
                 "cron",
                 hour=hour,
                 minute=minute,
+                day_of_week=sched["day_of_week"],
                 timezone="UTC",
                 args=[sched],
                 id=f"rail_{sched['from_station_code']}_{sched['to_station_code']}_{sched['time']}",
