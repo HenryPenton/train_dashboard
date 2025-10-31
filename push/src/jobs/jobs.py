@@ -15,21 +15,21 @@ def job_tube_line_status(schedule):
     try:
         info = fetch_tube_line_status()
         msg = format_line_status_markdown(info)
-        send_ntfy_notification(schedule["topic"], msg)
+        send_ntfy_notification(schedule.topic, msg)
     except Exception:
         logging.exception("Error fetching tube line status information")
 
 
 def job_rail_departure(schedule):
-    from_station = schedule["from_station_code"]
-    to_station = schedule["to_station_code"]
-    from_station_name = schedule["from_station_name"]
-    to_station_name = schedule["to_station_name"]
+    from_station = schedule.from_station_code
+    to_station = schedule.to_station_code
+    from_station_name = schedule.from_station_name
+    to_station_name = schedule.to_station_name
 
     try:
         info = fetch_rail_departure(from_station, to_station)
         msg = format_departures_markdown(info, from_station_name, to_station_name)
-        send_ntfy_notification(schedule["topic"], msg)
+        send_ntfy_notification(schedule.topic, msg)
     except Exception:
         logging.exception(
             f"Error fetching rail departure information between {from_station_name} and {to_station_name}"
@@ -37,15 +37,15 @@ def job_rail_departure(schedule):
 
 
 def job_best_route(schedule):
-    from_code = schedule["from_code"]
-    to_code = schedule["to_code"]
-    from_name = schedule["from_name"]
-    to_name = schedule["to_name"]
+    from_code = schedule.from_code
+    to_code = schedule.to_code
+    from_name = schedule.from_name
+    to_name = schedule.to_name
 
     try:
         info = fetch_best_route(from_code, to_code)
         msg = format_best_route_markdown(info, from_name, to_name)
-        send_ntfy_notification(schedule["topic"], msg)
+        send_ntfy_notification(schedule.topic, msg)
     except Exception:
         logging.exception(
             f"Error fetching best route information between {from_name} and {to_name}"

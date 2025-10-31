@@ -1,4 +1,11 @@
 import os
+
+from src.models.best_route import (
+    BestRouteSchedule,
+    RailSchedule,
+    TubeLineStatusSchedule,
+)
+
 # schedules.py
 
 
@@ -20,7 +27,7 @@ def get_schedules():
             "from_station_name": "Oxford",
             "day_of_week": "fri",
             "to_station_name": "Paddington",
-            "time": "11:01",
+            "time": "11:35",
         },
         # Example invalid schedule for testing error handling
         {
@@ -40,28 +47,35 @@ def get_schedules():
             "from_name": "Abbey Wood",
             "to_name": "Woodside Tram Stop",
             "day_of_week": "mon,fri",
-            "time": "11:01",
+            "time": "11:35",
         },
         {
             "type": "tube_line_status",
             "day_of_week": "mon,fri",
-            "time": "11:01",
+            "time": "11:35",
         },
     ]
 
     return schedules
 
 
-def get_schedules_with_topic():
+def get_schedules_with_topic() -> list[
+    BestRouteSchedule | RailSchedule | TubeLineStatusSchedule
+]:
     rail_topic = os.environ.get("RAIL_TOPIC", "")
     best_route_topic = os.environ.get("BEST_ROUTE_TOPIC", "")
     line_status_topic = os.environ.get("LINE_STATUS_TOPIC", "")
     schedules = get_schedules()
+    schedule_models = []
     for sched in schedules:
         if sched["type"] == "rail_departure":
-            sched["topic"] = rail_topic
+            schedule_models.append(RailSchedule(**sched, topic=rail_topic))
+
         elif sched["type"] == "best_route":
-            sched["topic"] = best_route_topic
+            schedule_models.append(BestRouteSchedule(**sched, topic=best_route_topic))
+
         elif sched["type"] == "tube_line_status":
-            sched["topic"] = line_status_topic
-    return schedules
+            schedule_models.append(
+                TubeLineStatusSchedule(**sched, topic=line_status_topic)
+            )
+    return schedule_models
