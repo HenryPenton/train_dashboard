@@ -1,5 +1,7 @@
 import os
 
+import requests
+
 from src.models.best_route import (
     BestRouteSchedule,
     RailSchedule,
@@ -10,53 +12,16 @@ from src.models.best_route import (
 
 
 def get_schedules():
-    schedules = [
-        {
-            "type": "rail_departure",
-            "from_station_code": "GLC",
-            "to_station_code": "EUS",
-            "from_station_name": "Glasgow Central",
-            "day_of_week": "mon-wed,fri,sat",
-            "to_station_name": "Euston",
-            "time": "17:38",
-        },
-        {
-            "type": "rail_departure",
-            "from_station_code": "OXF",
-            "to_station_code": "PAD",
-            "from_station_name": "Oxford",
-            "day_of_week": "fri",
-            "to_station_name": "Paddington",
-            "time": "11:35",
-        },
-        # Example invalid schedule for testing error handling
-        {
-            "type": "rail_departure",
-            "from_station_code": "POL",
-            "to_station_code": "MAN",
-            "from_station_name": "Polsloe Bridge",
-            "to_station_name": "Manchester Piccadilly",
-            "day_of_week": "mon-wed,fri,sat",
-            "time": "17:05",
-        },
-        # New best_route schedule example
-        {
-            "type": "best_route",
-            "from_code": "910GABWDXR",
-            "to_code": "940GZZCRWOD",
-            "from_name": "Abbey Wood",
-            "to_name": "Woodside Tram Stop",
-            "day_of_week": "mon,fri",
-            "time": "11:35",
-        },
-        {
-            "type": "tube_line_status",
-            "day_of_week": "mon,fri",
-            "time": "11:35",
-        },
-    ]
-
-    return schedules
+    api_url = os.environ.get("SERVER_URL", "http://localhost:8000")
+    try:
+        resp = requests.get(f"{api_url}/schedules")
+        resp.raise_for_status()
+        data = resp.json()
+        # Expecting {"schedules": [...]}
+        return data.get("schedules", [])
+    except Exception as e:
+        print(f"Error fetching schedules from API: {e}")
+        return []
 
 
 def get_schedules_with_topic() -> list[

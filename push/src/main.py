@@ -12,9 +12,9 @@ load_dotenv()
 API_BASE = os.environ.get("SERVER_URL", "http://localhost:8000")
 
 
-def schedule_jobs():
+def schedule_jobs(schedules=[]):
     scheduler = BackgroundScheduler()
-    for sched in get_schedules_with_topic():
+    for sched in schedules:
         if sched.type == "rail_departure":
             hour, minute = map(int, sched.time.split(":"))
             scheduler.add_job(
@@ -56,11 +56,14 @@ def schedule_jobs():
 
 
 def main():
-    scheduler = schedule_jobs()
+    scheduler = schedule_jobs(get_schedules_with_topic())
     print("Push notification server started. Waiting for scheduled jobs...")
     try:
         while True:
             time.sleep(60)
+
+            scheduler.remove_all_jobs()
+            scheduler = schedule_jobs(get_schedules_with_topic())
     except (KeyboardInterrupt, SystemExit):
         scheduler.shutdown()
         print("Shutting down push server.")
