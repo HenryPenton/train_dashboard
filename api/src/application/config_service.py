@@ -1,10 +1,9 @@
 from pathlib import Path
 
-from src.DTOs.config.config_dto import ConfigDTO
-from src.DAOs.config.config_dao import ConfigDAO
 from src.adapters.file_handlers.json.json_file_read import JSONFileReader
 from src.adapters.file_handlers.json.json_file_write import JSONFileWriter
-
+from src.DAOs.config.config_dao import ConfigDAO
+from src.DTOs.config.config_dto import ConfigDTO
 
 CONFIG_PATH = Path(__file__).parent.parent.parent / "config/config.json"
 
@@ -19,6 +18,9 @@ class ConfigService:
 
     @staticmethod
     def get_config():
-        adapter = JSONFileReader(CONFIG_PATH)
-        config = ConfigDTO(**adapter.read_json())
+        reader = JSONFileReader(CONFIG_PATH)
+        if not CONFIG_PATH.exists():
+            writer = JSONFileWriter(CONFIG_PATH)
+            writer.write_json(ConfigDAO().model_dump())
+        config = ConfigDTO(**reader.read_json())
         return config.model_dump()

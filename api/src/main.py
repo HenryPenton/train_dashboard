@@ -8,6 +8,7 @@ from fastapi.middleware.gzip import GZipMiddleware
 from src.adapters.handlers.config_router import router as config_router
 from src.adapters.handlers.naptan_id_router import router as naptan_id_router
 from src.adapters.handlers.rail_handlers_router import router as rail_router
+from src.adapters.handlers.schedules_router import router as schedules_router
 from src.adapters.handlers.tfl_handlers_router import router as tfl_router
 
 load_dotenv()
@@ -29,3 +30,4 @@ app.include_router(config_router)
 app.include_router(naptan_id_router)
 app.include_router(rail_router)
 app.include_router(tfl_router)
+app.include_router(schedules_router)

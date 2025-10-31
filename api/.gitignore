@@ -172,3 +172,4 @@ pyrightconfig.json
 
 .env
 config.json
+schedules.json
