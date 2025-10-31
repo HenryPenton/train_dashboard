@@ -18,9 +18,9 @@ def get_schedules():
             "from_station_code": "OXF",
             "to_station_code": "PAD",
             "from_station_name": "Oxford",
-            "day_of_week": "thu",
+            "day_of_week": "fri",
             "to_station_name": "Paddington",
-            "time": "17:38",
+            "time": "11:01",
         },
         # Example invalid schedule for testing error handling
         {
@@ -39,20 +39,29 @@ def get_schedules():
             "to_code": "940GZZCRWOD",
             "from_name": "Abbey Wood",
             "to_name": "Woodside Tram Stop",
-            "day_of_week": "mon,thu",
-            "time": "18:28",
+            "day_of_week": "mon,fri",
+            "time": "11:01",
+        },
+        {
+            "type": "tube_line_status",
+            "day_of_week": "mon,fri",
+            "time": "11:01",
         },
     ]
+
     return schedules
 
 
 def get_schedules_with_topic():
     rail_topic = os.environ.get("RAIL_TOPIC", "")
     best_route_topic = os.environ.get("BEST_ROUTE_TOPIC", "")
+    line_status_topic = os.environ.get("LINE_STATUS_TOPIC", "")
     schedules = get_schedules()
     for sched in schedules:
         if sched["type"] == "rail_departure":
             sched["topic"] = rail_topic
         elif sched["type"] == "best_route":
             sched["topic"] = best_route_topic
+        elif sched["type"] == "tube_line_status":
+            sched["topic"] = line_status_topic
     return schedules
