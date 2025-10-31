@@ -1,4 +1,5 @@
 from typing import List, Union
+
 from pydantic import BaseModel
 
 
@@ -6,7 +7,6 @@ class ScheduleBaseDAO(BaseModel):
     type: str
     day_of_week: str
     time: str
-    topic: str
 
 
 class BestRouteScheduleDAO(ScheduleBaseDAO):
