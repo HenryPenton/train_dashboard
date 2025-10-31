@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET() {
   try {
@@ -19,5 +19,21 @@ export async function GET() {
       { error: "Config fetch failed." },
       { status: 500 },
     );
+  }
+}
+
+export async function POST(req: NextRequest) {
+  const data = await req.json();
+
+  // Forward the settings to the FastAPI backend
+  const apiRes = await fetch(`${process.env.SERVER_URL}/config`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (apiRes.ok) {
+    return NextResponse.json({ status: "ok" });
+  } else {
+    return NextResponse.json({ status: "error" }, { status: apiRes.status });
   }
 }

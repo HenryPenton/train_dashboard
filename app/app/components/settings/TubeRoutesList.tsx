@@ -15,7 +15,7 @@ export default function TubeRoutesList({
   onRemove,
 }: TubeRoutesListProps) {
   return (
-    <div className="mb-10">
+    <div className="mb-8">
       <h4 className="font-semibold mb-2">Tube Routes</h4>
       <ul>
         {routes.map((r, i) => (

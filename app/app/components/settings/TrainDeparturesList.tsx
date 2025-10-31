@@ -15,7 +15,7 @@ export default function TrainDeparturesList({
   onRemove,
 }: TrainDeparturesListProps) {
   return (
-    <div>
+    <div className="mb-8">
       <h4 className="font-semibold mb-2">Train Departures</h4>
       <ul>
         {departures.map((d, i) => (

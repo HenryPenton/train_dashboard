@@ -137,7 +137,7 @@ export default function Settings() {
       refresh_timer: refreshTimer,
     };
     try {
-      const res = await fetch("/api/save-settings", {
+      const res = await fetch("/api/config", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
