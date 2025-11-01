@@ -18,7 +18,9 @@ class ConfigService:
 
     @staticmethod
     def get_config():
-        adapter = JSONFileReader(CONFIG_PATH)
-        config = ConfigDTO(**adapter.read_json())
-
+        reader = JSONFileReader(CONFIG_PATH)
+        if not CONFIG_PATH.exists():
+            writer = JSONFileWriter(CONFIG_PATH)
+            writer.write_json(ConfigDAO().model_dump())
+        config = ConfigDTO(**reader.read_json())
         return config.model_dump()
