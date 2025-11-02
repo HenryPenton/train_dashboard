@@ -22,6 +22,7 @@ export default function TflLineStatus() {
       setTflError("");
       try {
         const res = await fetch("/api/line-status");
+        if (!res.ok) throw new Error(`Failed to fetch TFL line statuses`);
 
         const data = await res.json();
         const validated = FrontEndLineStatusesSchema.parse(data);

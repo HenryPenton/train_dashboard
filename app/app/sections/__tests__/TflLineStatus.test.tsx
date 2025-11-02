@@ -1,4 +1,3 @@
-import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import TflLineStatus from "../TfL/TflLineStatus";
 
@@ -50,6 +49,42 @@ describe("TflLineStatus", () => {
       expect(
         screen.getByLabelText("Line status Part Suspended"),
       ).toHaveTextContent("Part Suspended");
+    });
+  });
+  it("renders error message from thrown Error", async () => {
+    jest.spyOn(global, "fetch").mockImplementation(async () => {
+      throw new Error("Something went wrong");
+    });
+    render(<TflLineStatus />);
+    await waitFor(() => {
+      expect(screen.getByRole("alert")).toHaveTextContent(
+        "Something went wrong",
+      );
+    });
+  });
+
+  it("renders 'Unknown error' for non-Error thrown values", async () => {
+    jest.spyOn(global, "fetch").mockImplementation(async () => {
+      throw "not an error object";
+    });
+    render(<TflLineStatus />);
+    await waitFor(() => {
+      expect(screen.getByRole("alert")).toHaveTextContent("Unknown error");
+    });
+  });
+  it("renders error message from not ok response", async () => {
+    jest.spyOn(global, "fetch").mockImplementation(async () => {
+      return {
+        ok: false,
+        statusText: "Not Found",
+      } as Response;
+    });
+    render(<TflLineStatus />);
+
+    await waitFor(() => {
+      expect(screen.getByRole("alert")).toHaveTextContent(
+        "Failed to fetch TFL line statuses",
+      );
     });
   });
 });
