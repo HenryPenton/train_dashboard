@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Sidebar from "../components/settings/Sidebar";
+import Sidebar from "../components/lists/Sidebar";
 import { SchedulesSchema } from "../validators/frontend-validators/ScheduleSchema";
 type SidebarItem = {
   CommonName: string;

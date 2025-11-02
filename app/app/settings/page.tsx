@@ -2,11 +2,12 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import SectionHeading from "../components/SectionHeading";
+import SectionHeading from "../components/text/SectionHeading";
 import AddItemForm from "../components/forms/AddItemForm";
-import Sidebar from "../components/settings/Sidebar";
+import Sidebar from "../components/lists/Sidebar";
 import ItemList from "../components/lists/ItemList";
 import { ConfigSchema } from "../validators/frontend-validators/ConfigSchema";
+import TfLStationSidebarListItem from "../components/settings/TfL/TfLStationSidebarListItem";
 
 type SidebarItem = {
   CommonName: string;
@@ -153,7 +154,7 @@ export default function Settings() {
   return (
     <main className="p-8 max-w-4xl mx-auto flex flex-col md:flex-row">
       <div className="w-full md:w-64 md:mr-8 md:mb-0 mb-8 p-0 border-0 md:border-r md:pr-4">
-        <Sidebar
+        <Sidebar<SidebarItem>
           items={filtered}
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
@@ -163,6 +164,15 @@ export default function Settings() {
               sidebarItems.find((item) => item.naptanID === id) || null;
             setSelectedSidebarItem(found);
           }}
+          renderItem={(item, selectedId, onClick) => (
+            <TfLStationSidebarListItem
+              key={item.naptanID}
+              item={item}
+              matchingId={selectedId}
+              onClick={onClick}
+            />
+          )}
+          title="Stations"
         />
       </div>
       {/* Main content */}
@@ -222,10 +232,26 @@ export default function Settings() {
 
         <AddItemForm
           fields={[
-            { name: "origin", value: route.origin, placeholder: "Origin Station" },
-            { name: "originNaPTANOrATCO", value: route.originNaPTANOrATCO, placeholder: "Origin NaPTAN or ATCO Code" },
-            { name: "destination", value: route.destination, placeholder: "Destination Station" },
-            { name: "destinationNaPTANOrATCO", value: route.destinationNaPTANOrATCO, placeholder: "Destination NaPTAN or ATCO Code" },
+            {
+              name: "origin",
+              value: route.origin,
+              placeholder: "Origin Station",
+            },
+            {
+              name: "originNaPTANOrATCO",
+              value: route.originNaPTANOrATCO,
+              placeholder: "Origin NaPTAN or ATCO Code",
+            },
+            {
+              name: "destination",
+              value: route.destination,
+              placeholder: "Destination Station",
+            },
+            {
+              name: "destinationNaPTANOrATCO",
+              value: route.destinationNaPTANOrATCO,
+              placeholder: "Destination NaPTAN or ATCO Code",
+            },
           ]}
           onChange={handleRouteChange}
           onAdd={handleAddRoute}
@@ -236,17 +262,35 @@ export default function Settings() {
 
         <ItemList
           items={routes}
-          getLabel={(r) => `${r.origin} (${r.originNaPTANOrATCO}) → ${r.destination} (${r.destinationNaPTANOrATCO})`}
+          getLabel={(r) =>
+            `${r.origin} (${r.originNaPTANOrATCO}) → ${r.destination} (${r.destinationNaPTANOrATCO})`
+          }
           onRemove={(idx) => setRoutes(routes.filter((_, i) => i !== idx))}
           heading="Tube Routes"
         />
 
         <AddItemForm
           fields={[
-            { name: "origin", value: departure.origin, placeholder: "Origin Station" },
-            { name: "originCode", value: departure.originCode, placeholder: "Origin Code" },
-            { name: "destination", value: departure.destination, placeholder: "Destination Station" },
-            { name: "destinationCode", value: departure.destinationCode, placeholder: "Destination Code" },
+            {
+              name: "origin",
+              value: departure.origin,
+              placeholder: "Origin Station",
+            },
+            {
+              name: "originCode",
+              value: departure.originCode,
+              placeholder: "Origin CRS or TIPLOC",
+            },
+            {
+              name: "destination",
+              value: departure.destination,
+              placeholder: "Destination Station",
+            },
+            {
+              name: "destinationCode",
+              value: departure.destinationCode,
+              placeholder: "Destination CRS or TIPLOC",
+            },
           ]}
           onChange={handleDepartureChange}
           onAdd={handleAddDeparture}
@@ -257,8 +301,12 @@ export default function Settings() {
 
         <ItemList
           items={departures}
-          getLabel={(d) => `${d.origin} (${d.originCode}) → ${d.destination} (${d.destinationCode})`}
-          onRemove={(idx) => setDepartures(departures.filter((_, i) => i !== idx))}
+          getLabel={(d) =>
+            `${d.origin} (${d.originCode}) → ${d.destination} (${d.destinationCode})`
+          }
+          onRemove={(idx) =>
+            setDepartures(departures.filter((_, i) => i !== idx))
+          }
           heading="Train Departures"
         />
 

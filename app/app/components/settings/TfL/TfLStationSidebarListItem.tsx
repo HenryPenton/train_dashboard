@@ -1,19 +1,18 @@
-import React from "react";
-
-type SidebarItem = {
+export type SidebarItem = {
   CommonName: string;
   naptanID: string;
 };
 
-export default function SidebarListItem({
+export default function TfLStationSidebarListItem({
   item,
-  selected,
+  matchingId,
   onClick,
 }: {
   item: SidebarItem;
-  selected: boolean;
+  matchingId: string | null;
   onClick: (id: string) => void;
 }) {
+  const selected = item.naptanID === matchingId;
   return (
     <li
       className={`mb-2 cursor-pointer px-2 py-1 rounded ${selected ? "bg-blue-100" : ""}`}

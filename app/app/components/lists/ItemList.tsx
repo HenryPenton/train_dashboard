@@ -1,5 +1,3 @@
-import React from "react";
-
 interface ItemListProps<T> {
   items: T[];
   getLabel: (item: T) => string;
@@ -7,7 +5,12 @@ interface ItemListProps<T> {
   heading: string;
 }
 
-export default function ItemList<T>({ items, getLabel, onRemove, heading }: ItemListProps<T>) {
+export default function ItemList<T>({
+  items,
+  getLabel,
+  onRemove,
+  heading,
+}: ItemListProps<T>) {
   return (
     <div className="mb-8">
       <h4 className="font-semibold mb-2">{heading}</h4>
