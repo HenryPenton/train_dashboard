@@ -1,5 +1,5 @@
 import DepartureListItem from "./DepartureListItem";
-import { Departure } from "./TrainDepartures";
+import { Departure } from "../../sections/rail/TrainDepartures";
 
 export default function DepartureList({
   departures,

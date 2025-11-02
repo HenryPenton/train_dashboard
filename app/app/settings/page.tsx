@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import SectionHeading from "../components/SectionHeading";
 import AddItemForm from "../components/forms/AddItemForm";
 import Sidebar from "../components/settings/Sidebar";
-import ItemList from "../components/settings/ItemList";
+import ItemList from "../components/lists/ItemList";
 import { ConfigSchema } from "../validators/frontend-validators/ConfigSchema";
 
 type SidebarItem = {

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { FrontEndRailDeparturesSchema } from "../../validators/frontend-validators/RailDepartureSchema";
-import Loading from "../Loading";
-import SectionHeading from "../SectionHeading";
-import DepartureError from "./DepartureError";
-import DepartureList from "./DepartureList";
+import Loading from "../../components/Loading";
+import SectionHeading from "../../components/SectionHeading";
+import DepartureError from "../../components/departures/DepartureError";
+import DepartureList from "../../components/departures/DepartureList";
 
 export type Departure = {
   url: string;

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Departure } from "./TrainDepartures";
+import { Departure } from "../../sections/rail/TrainDepartures";
 
 function renderDepartureStatus(dep: Departure) {
   return (
