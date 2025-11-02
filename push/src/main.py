@@ -57,10 +57,13 @@ def schedule_jobs(schedules=[]):
 
 def main():
     scheduler = schedule_jobs(get_schedules_with_topic())
+    sleep_time = os.environ.get("SCHEDULE_REFRESH_INTERVAL", 60)
+    sleep_time = int(sleep_time)
     print("Push notification server started. Waiting for scheduled jobs...")
+    print(f"Fetching updated schedules every {sleep_time} seconds...")
     try:
         while True:
-            time.sleep(60)
+            time.sleep(sleep_time)
 
             scheduler.remove_all_jobs()
             scheduler = schedule_jobs(get_schedules_with_topic())
