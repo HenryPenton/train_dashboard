@@ -5,8 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import SectionHeading from "../components/SectionHeading";
 import AddItemForm from "../components/forms/AddItemForm";
 import Sidebar from "../components/settings/Sidebar";
-import TrainDeparturesList from "../components/settings/TrainDeparturesList";
-import TubeRoutesList from "../components/settings/TubeRoutesList";
+import ItemList from "../components/settings/ItemList";
 import { ConfigSchema } from "../validators/frontend-validators/ConfigSchema";
 
 type SidebarItem = {
@@ -235,9 +234,11 @@ export default function Settings() {
           buttonColorClass="bg-blue-600 hover:bg-blue-700"
         />
 
-        <TubeRoutesList
-          routes={routes}
+        <ItemList
+          items={routes}
+          getLabel={(r) => `${r.origin} (${r.originNaPTANOrATCO}) → ${r.destination} (${r.destinationNaPTANOrATCO})`}
           onRemove={(idx) => setRoutes(routes.filter((_, i) => i !== idx))}
+          heading="Tube Routes"
         />
 
         <AddItemForm
@@ -254,11 +255,11 @@ export default function Settings() {
           buttonColorClass="bg-green-600 hover:bg-green-700"
         />
 
-        <TrainDeparturesList
-          departures={departures}
-          onRemove={(idx) =>
-            setDepartures(departures.filter((_, i) => i !== idx))
-          }
+        <ItemList
+          items={departures}
+          getLabel={(d) => `${d.origin} (${d.originCode}) → ${d.destination} (${d.destinationCode})`}
+          onRemove={(idx) => setDepartures(departures.filter((_, i) => i !== idx))}
+          heading="Train Departures"
         />
 
         {/* Refresh Timer Section */}
