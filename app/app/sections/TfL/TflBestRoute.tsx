@@ -1,8 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
-import SectionHeading from "../../SectionHeading";
-import RouteLegs from "./RouteLegs";
-import JourneyInfo from "./JourneyInfo";
+import SectionHeading from "../../components/SectionHeading";
+import RouteLegs from "../../components/TfL/RouteLegs";
+import JourneyInfo from "../../components/TfL/JourneyInfo";
 import { BestRouteSchema } from "@/app/validators/frontend-validators/BestRouteSchema";
 
 interface BestRouteData {

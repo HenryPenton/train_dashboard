@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { FrontEndLineStatusesSchema } from "../../../validators/frontend-validators/LineStatusSchema";
-import TflLineStatusList from "./TflLineStatusList";
-import SectionHeading from "../../SectionHeading";
+import { FrontEndLineStatusesSchema } from "../../validators/frontend-validators/LineStatusSchema";
+import TflLineStatusList from "../../components/TfL/TflLineStatusList";
+import SectionHeading from "../../components/SectionHeading";
 
 type TflLineStatusType = {
   name: string;

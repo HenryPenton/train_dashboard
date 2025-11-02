@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import TrainDepartures from "./components/departures/TrainDepartures";
 import LastRefreshed from "./components/LastRefreshed";
-import TflLineStatus from "./components/TfL/lines/TflLineStatus";
-import TflBestRoute from "./components/TfL/route/TflBestRoute";
+import TflLineStatus from "./sections/TfL/TflLineStatus";
+import TflBestRoute from "./sections/TfL/TflBestRoute";
 
 type BestRoute = {
   origin: string;

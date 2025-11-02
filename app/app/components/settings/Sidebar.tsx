@@ -1,4 +1,3 @@
-import React from "react";
 import SidebarListItem from "./SidebarListItem";
 
 type SidebarItem = {
