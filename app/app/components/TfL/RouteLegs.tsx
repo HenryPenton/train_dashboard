@@ -1,5 +1,3 @@
-import React from "react";
-
 interface RouteLegsProps {
   route: string[];
 }
@@ -8,9 +6,11 @@ const colorMap: Record<string, string> = {
   tube: "text-yellow-300",
   "elizabeth-line": "text-purple-400",
   bus: "text-red-400",
-  walk: "text-green-400",
+  walking: "text-green-400",
   overground: "text-orange-400",
   train: "text-blue-400",
+  tram: "text-lime-400",
+  "national-rail": "text-indigo-400",
 };
 
 export default function RouteLegs({ route }: RouteLegsProps) {
@@ -20,7 +20,10 @@ export default function RouteLegs({ route }: RouteLegsProps) {
         const match = stage.match(/^([\w\s-]+):\s*(.*)$/i);
         const method = match ? match[1] : null;
         const rest = match ? match[2] : stage;
-        const color = method ? colorMap[method.toLowerCase()] : "text-cyan-300";
+
+        //if the method doesn't exist, index by blank string to get default color
+        const color = colorMap[method?.toLowerCase() || ""] ?? "text-cyan-300";
+
         return (
           <div
             key={idx}
