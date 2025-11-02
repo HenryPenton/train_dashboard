@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import TrainDepartures from "./sections/rail/TrainDepartures";
-import LastRefreshed from "./components/text/LastRefreshed";
+import LastRefreshed from "./sections/LastRefreshed";
 import TflLineStatus from "./sections/TfL/TflLineStatus";
 import TflBestRoute from "./sections/TfL/TflBestRoute";
 

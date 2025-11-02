@@ -2,14 +2,15 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import AddItemForm from "../components/generic/forms/AddItemForm";
 import SectionHeading from "../components/text/SectionHeading";
-import AddItemForm from "../components/forms/AddItemForm";
-import Sidebar from "../components/lists/Sidebar";
-import ItemList from "../components/lists/ItemList";
-import { ConfigSchema } from "../validators/frontend-validators/ConfigSchema";
+
+import ItemList from "../components/generic/lists/ItemList";
+import Sidebar from "../components/generic/lists/Sidebar";
 import TfLStationSidebarListItem, {
   SidebarItem,
-} from "../components/settings/TfL/TfLStationSidebarListItem";
+} from "../components/TfL/lists/TfLStationSidebarListItem";
+import { ConfigSchema } from "../validators/frontend-validators/ConfigSchema";
 
 export default function Settings() {
   // Example data for sidebar
