@@ -3,8 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import SectionHeading from "../components/SectionHeading";
-import AddTrainDepartureForm from "../components/settings/AddTrainDepartureForm";
-import AddTubeRouteForm from "../components/settings/AddTubeRouteForm";
+import AddItemForm from "../components/forms/AddItemForm";
 import Sidebar from "../components/settings/Sidebar";
 import TrainDeparturesList from "../components/settings/TrainDeparturesList";
 import TubeRoutesList from "../components/settings/TubeRoutesList";
@@ -222,10 +221,18 @@ export default function Settings() {
           Show Tube Line Status
         </label>
 
-        <AddTubeRouteForm
-          route={route}
+        <AddItemForm
+          fields={[
+            { name: "origin", value: route.origin, placeholder: "Origin Station" },
+            { name: "originNaPTANOrATCO", value: route.originNaPTANOrATCO, placeholder: "Origin NaPTAN or ATCO Code" },
+            { name: "destination", value: route.destination, placeholder: "Destination Station" },
+            { name: "destinationNaPTANOrATCO", value: route.destinationNaPTANOrATCO, placeholder: "Destination NaPTAN or ATCO Code" },
+          ]}
           onChange={handleRouteChange}
           onAdd={handleAddRoute}
+          title="Add Tube Route"
+          buttonText="Add Route"
+          buttonColorClass="bg-blue-600 hover:bg-blue-700"
         />
 
         <TubeRoutesList
@@ -233,10 +240,18 @@ export default function Settings() {
           onRemove={(idx) => setRoutes(routes.filter((_, i) => i !== idx))}
         />
 
-        <AddTrainDepartureForm
-          departure={departure}
+        <AddItemForm
+          fields={[
+            { name: "origin", value: departure.origin, placeholder: "Origin Station" },
+            { name: "originCode", value: departure.originCode, placeholder: "Origin Code" },
+            { name: "destination", value: departure.destination, placeholder: "Destination Station" },
+            { name: "destinationCode", value: departure.destinationCode, placeholder: "Destination Code" },
+          ]}
           onChange={handleDepartureChange}
           onAdd={handleAddDeparture}
+          title="Add Train Departure"
+          buttonText="Add Departure"
+          buttonColorClass="bg-green-600 hover:bg-green-700"
         />
 
         <TrainDeparturesList
