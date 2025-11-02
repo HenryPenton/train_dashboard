@@ -8,7 +8,6 @@ type SidebarItem = {
   naptanID: string;
 };
 
-
 async function fetchSchedules() {
   try {
     const res = await fetch("/api/schedules");

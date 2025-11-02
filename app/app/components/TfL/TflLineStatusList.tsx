@@ -1,5 +1,3 @@
-import React from "react";
-
 type TflLineStatusType = {
   name: string;
   status: string;
