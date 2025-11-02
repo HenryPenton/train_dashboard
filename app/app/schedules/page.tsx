@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Sidebar from "../components/TfL/lists/Sidebar";
 import { SchedulesSchema } from "../validators/frontend-validators/ScheduleSchema";
+import Sidebar from "../components/generic/lists/Sidebar";
+import TfLStationSidebarListItem from "../components/TfL/lists/TfLStationSidebarListItem";
 type SidebarItem = {
   CommonName: string;
   naptanID: string;
@@ -250,7 +251,7 @@ export default function SchedulesPage() {
   return (
     <main className="p-8 max-w-4xl mx-auto flex flex-col md:flex-row">
       <div className="w-full md:w-64 md:mr-8 md:mb-0 mb-8 p-0 border-0 md:border-r md:pr-4">
-        <Sidebar
+        <Sidebar<SidebarItem>
           items={filteredSidebarItems}
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
@@ -260,6 +261,15 @@ export default function SchedulesPage() {
               sidebarItems.find((item) => item.naptanID === id) || null;
             setSelectedSidebarItem(found);
           }}
+          renderItem={(item, selectedId, onClick) => (
+            <TfLStationSidebarListItem
+              key={item.naptanID}
+              item={item}
+              matchingId={selectedId}
+              onClick={onClick}
+            />
+          )}
+          title="Stations"
         />
       </div>
       {/* Main content */}
