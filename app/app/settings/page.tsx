@@ -7,12 +7,9 @@ import AddItemForm from "../components/forms/AddItemForm";
 import Sidebar from "../components/lists/Sidebar";
 import ItemList from "../components/lists/ItemList";
 import { ConfigSchema } from "../validators/frontend-validators/ConfigSchema";
-import TfLStationSidebarListItem from "../components/settings/TfL/TfLStationSidebarListItem";
-
-type SidebarItem = {
-  CommonName: string;
-  naptanID: string;
-};
+import TfLStationSidebarListItem, {
+  SidebarItem,
+} from "../components/settings/TfL/TfLStationSidebarListItem";
 
 export default function Settings() {
   // Example data for sidebar
