@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
-import TflBestRoute from "../../sections/TfL/TflBestRoute";
+import TflBestRoute from "../TfL/TflBestRoute";
 
 afterEach(() => {
   jest.restoreAllMocks();

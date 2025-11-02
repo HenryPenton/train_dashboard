@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import TrainDepartures from "../../sections/rail/TrainDepartures";
+import TrainDepartures from "../rail/TrainDepartures";
 
 const mockProps = {
   fromStation: { stationName: "Paddington", stationCode: "PAD" },

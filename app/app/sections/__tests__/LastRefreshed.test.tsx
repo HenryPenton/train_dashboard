@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
-import LastRefreshed from "../../sections/LastRefreshed";
+import LastRefreshed from "../LastRefreshed";
 
 describe("LastRefreshed", () => {
   it("renders the correct last refreshed time", () => {

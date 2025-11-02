@@ -25,7 +25,7 @@ export default function DepartureListItem({ dep }: { dep: Departure }) {
       <br />
       <span aria-label="Departure details">
         Departs: {renderDepartureStatus(dep)} {" | Platform: "}
-        {dep.platform || "-"}
+        {dep.platform}
         {typeof dep.delay === "number" && (
           <>
             {" | Delay: "}
