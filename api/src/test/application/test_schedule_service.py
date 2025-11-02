@@ -1,8 +1,9 @@
-import pytest
-from pathlib import Path
-from src.application.schedule_service import ScheduleService, SCHEDULES_PATH
 import shutil
 import tempfile
+from pathlib import Path
+
+import pytest
+from src.application.schedule_service import ScheduleService
 
 
 # Use a temp file for isolation
