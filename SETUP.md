@@ -47,7 +47,20 @@
   docker compose logs -f
   ```
 
-## 4. Configure Application Settings
+## 4. (Optional) Set Up Push Notification Server
+
+If you want to receive push notifications via [ntfy](https://ntfy.sh), you can set up the notification server. This is optional but recommended for real-time alerts.
+
+1. **Run push notification server:**
+   Add the push notification server listed under the docker compose. You can set how often new schedules are looked for, but if you don't this will be polled at a rate of once per minute by default.
+2. **Configure the notification topics:**
+   Add one or more topics to the environment for the new push server.
+3. **Test notifications:**
+   Visit the /schedules endpoint on the main dashboard to set up cron based push notification timings.
+
+---
+
+## 5. Configure Application Settings
 
 - Access the app at [http://localhost:3000](http://localhost:3000).
 - Go to the settings page.

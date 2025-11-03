@@ -6,6 +6,8 @@ services:
       - api
     env_file:
       - .env
+    environment:
+      - SERVER_URL=http://train_dashboard_api:8000
     ports:
       - "3000:3000"
 
@@ -16,5 +18,27 @@ services:
       - ./config:/app/config:rw
     env_file:
       - .env
+    environment:
+      - RTT_API_USER=
+      - RTT_API_PASS=
+      - APP_URL=http://train_dashboard_app:3000
+
     ports:
       - "8000:8000"
+
+  # Optional push server
+  # Currently the timezone parameter is unused. Push notifications are sent based on UTC time.
+  push:
+    container_name: train_dashboard_push
+    image: henrypenton/train-dashboard-push:stable
+    env_file:
+      - .env
+    environment:
+      - TZ=Europe/London
+      - SERVER_URL=http://train_dashboard_api:8000
+      - RAIL_TOPIC=
+      - BEST_ROUTE_TOPIC=
+      - LINE_STATUS_TOPIC=
+      - SCHEDULE_REFRESH_INTERVAL=30
+    depends_on:
+      - api
