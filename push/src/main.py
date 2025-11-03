@@ -4,7 +4,7 @@ import time
 from apscheduler.schedulers.background import BackgroundScheduler
 from dotenv import load_dotenv
 
-from src.jobs.jobs import job_best_route, job_rail_departure, job_tube_line_status
+from src.jobs.jobs import job_best_route, job_rail_departures, job_tube_line_statuses
 from src.schedules import get_schedules_with_topic
 
 load_dotenv()
@@ -18,7 +18,7 @@ def schedule_jobs(schedules=[]):
         if sched.type == "rail_departure":
             hour, minute = map(int, sched.time.split(":"))
             scheduler.add_job(
-                job_rail_departure,
+                job_rail_departures,
                 "cron",
                 hour=hour,
                 minute=minute,
@@ -42,7 +42,7 @@ def schedule_jobs(schedules=[]):
         elif sched.type == "tube_line_status":
             hour, minute = map(int, sched.time.split(":"))
             scheduler.add_job(
-                job_tube_line_status,
+                job_tube_line_statuses,
                 "cron",
                 hour=hour,
                 minute=minute,

@@ -1,6 +1,6 @@
 from unittest.mock import patch
 
-from src.jobs.jobs import job_best_route, job_rail_departure, job_tube_line_status
+from src.jobs.jobs import job_best_route, job_rail_departures, job_tube_line_statuses
 
 
 class DummySchedule:
@@ -8,23 +8,23 @@ class DummySchedule:
         self.__dict__.update(kwargs)
 
 
-def test_job_tube_line_status_exception():
+def test_job_tube_line_statuses_exception():
     schedule = DummySchedule(topic="topic1")
     with (
-        patch("src.jobs.jobs.fetch_tube_line_status", side_effect=Exception("fail")),
+        patch("src.jobs.jobs.fetch_tube_line_statuses", side_effect=Exception("fail")),
         patch("src.jobs.jobs.format_line_status_markdown"),
         patch("src.jobs.jobs.send_ntfy_notification"),
         patch("src.jobs.jobs.logging.exception") as log_mock,
     ):
-        job_tube_line_status(schedule)
+        job_tube_line_statuses(schedule)
         log_mock.assert_called_once_with("Error fetching tube line status information")
 
 
-def test_job_tube_line_status():
+def test_job_tube_line_statuses():
     schedule = DummySchedule(topic="topic1")
     with (
         patch(
-            "src.jobs.jobs.fetch_tube_line_status",
+            "src.jobs.jobs.fetch_tube_line_statuses",
             return_value=[{"name": "Central", "status": "Good Service"}],
         ) as fetch_mock,
         patch(
@@ -32,7 +32,7 @@ def test_job_tube_line_status():
         ) as format_mock,
         patch("src.jobs.jobs.send_ntfy_notification") as send_mock,
     ):
-        job_tube_line_status(schedule)
+        job_tube_line_statuses(schedule)
         fetch_mock.assert_called_once_with()
         format_mock.assert_called_once_with(
             [{"name": "Central", "status": "Good Service"}]
@@ -40,7 +40,7 @@ def test_job_tube_line_status():
         send_mock.assert_called_once_with("topic1", "formatted")
 
 
-def test_job_rail_departure_exception():
+def test_job_rail_departures_exception():
     schedule = DummySchedule(
         topic="topic2",
         from_station_code="AAA",
@@ -49,18 +49,18 @@ def test_job_rail_departure_exception():
         to_station_name="Beta",
     )
     with (
-        patch("src.jobs.jobs.fetch_rail_departure", side_effect=Exception("fail")),
+        patch("src.jobs.jobs.fetch_rail_departures", side_effect=Exception("fail")),
         patch("src.jobs.jobs.format_departures_markdown"),
         patch("src.jobs.jobs.send_ntfy_notification"),
         patch("src.jobs.jobs.logging.exception") as log_mock,
     ):
-        job_rail_departure(schedule)
+        job_rail_departures(schedule)
         log_mock.assert_called_once_with(
             "Error fetching rail departure information between Alpha and Beta"
         )
 
 
-def test_job_rail_departure():
+def test_job_rail_departures():
     schedule = DummySchedule(
         topic="topic2",
         from_station_code="AAA",
@@ -70,7 +70,7 @@ def test_job_rail_departure():
     )
     with (
         patch(
-            "src.jobs.jobs.fetch_rail_departure",
+            "src.jobs.jobs.fetch_rail_departures",
             return_value=[{"origin": "Alpha", "destination": "Beta"}],
         ) as fetch_mock,
         patch(
@@ -78,7 +78,7 @@ def test_job_rail_departure():
         ) as format_mock,
         patch("src.jobs.jobs.send_ntfy_notification") as send_mock,
     ):
-        job_rail_departure(schedule)
+        job_rail_departures(schedule)
         fetch_mock.assert_called_once_with("AAA", "BBB")
         format_mock.assert_called_once_with(
             [{"origin": "Alpha", "destination": "Beta"}], "Alpha", "Beta"
