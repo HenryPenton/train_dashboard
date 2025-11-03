@@ -34,3 +34,23 @@ def test_format_best_route_markdown_no_arrival():
         "## Route Details:"
     )
     assert result == expected
+
+
+def test_format_best_route_markdown_invalid_arrival():
+    best_route = {
+        "duration": 20,
+        "arrival": "not-a-date",
+        "legs": [
+            {"mode": "bus", "instruction": "Take the bus from D to E"},
+        ],
+    }
+    result = format_best_route_markdown(best_route, "D", "E")
+    expected = (
+        "# 🗺️ Best Route from D to E\n"
+        "**Total duration:** 20 min\n"
+        "**Arrive by:** not-a-date\n"
+        "\n"
+        "## Route Details:\n"
+        "🚌 Take the bus from D to E\n"
+    )
+    assert result == expected
