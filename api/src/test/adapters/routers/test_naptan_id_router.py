@@ -4,9 +4,9 @@ from src.adapters.routers import naptan_id_router as naptan_id_handler
 
 
 class DummyStation:
-    def __init__(self, naptanID, CommonName):
+    def __init__(self, naptanID, commonName):
         self.naptanID = naptanID
-        self.CommonName = CommonName
+        self.commonName = commonName
 
 
 class DummyStationService:
@@ -17,11 +17,12 @@ class DummyStationService:
         ]
 
 
-def test_get_naptan_ids(monkeypatch):
-    # Patch the station_service in the handler
-    monkeypatch.setattr(naptan_id_handler, "station_service", DummyStationService())
+def test_get_naptan_ids():
     app = FastAPI()
     app.include_router(naptan_id_handler.router)
+    app.dependency_overrides[naptan_id_handler.get_station_service] = (
+        lambda: DummyStationService()
+    )
     client = TestClient(app)
 
     response = client.get("/naptan-id")
@@ -32,14 +33,16 @@ def test_get_naptan_ids(monkeypatch):
     ]
 
 
-def test_get_naptan_ids_error(monkeypatch):
+def test_get_naptan_ids_error():
     class FailingStationService:
         def get_stations(self):
             raise Exception("fail")
 
-    monkeypatch.setattr(naptan_id_handler, "station_service", FailingStationService())
     app = FastAPI()
     app.include_router(naptan_id_handler.router)
+    app.dependency_overrides[naptan_id_handler.get_station_service] = (
+        lambda: FailingStationService()
+    )
     client = TestClient(app)
     response = client.get("/naptan-id")
     assert response.status_code == 500

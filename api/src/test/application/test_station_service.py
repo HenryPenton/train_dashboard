@@ -1,8 +1,6 @@
-from pathlib import Path
-
 from src.application.station_service import StationService
-from src.DTOs.station.station_dto import StationDTO
 from src.DAOs.station.station_dao import StationDAO
+from src.domain.station.stations import Station
 
 
 class DummyJSONFileReader:
@@ -14,8 +12,8 @@ class DummyJSONFileReader:
 
     def read_json(self):
         return [
-            StationDAO(**{"naptanID": "123", "commonName": "Alpha"}),
-            StationDAO(**{"naptanID": "456", "commonName": "Beta"}),
+            StationDAO(naptanID="123", commonName="Alpha"),
+            StationDAO(naptanID="456", commonName="Beta"),
         ]
 
 
@@ -30,24 +28,19 @@ class FailingJSONFileReader:
         raise FileNotFoundError("Stations file not found")
 
 
-def test_get_stations(monkeypatch):
-    monkeypatch.setattr(
-        "src.application.station_service.JSONFileReader", DummyJSONFileReader
-    )
-    service = StationService(Path("dummy"))
+def test_get_stations():
+    reader = DummyJSONFileReader(None)
+    service = StationService(reader)
     stations = service.get_stations()
-
     assert stations == [
-        StationDTO(naptanID="123", CommonName="Alpha"),
-        StationDTO(naptanID="456", CommonName="Beta"),
+        Station(naptanID="123", commonName="Alpha"),
+        Station(naptanID="456", commonName="Beta"),
     ]
 
 
-def test_get_stations_file_not_found(monkeypatch):
-    monkeypatch.setattr(
-        "src.application.station_service.JSONFileReader", FailingJSONFileReader
-    )
-    service = StationService(Path("dummy"))
+def test_get_stations_file_not_found():
+    reader = FailingJSONFileReader(None)
+    service = StationService(reader)
     try:
         service.get_stations()
         assert False, "Expected FileNotFoundError"
