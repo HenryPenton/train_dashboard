@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-from src.adapters.handlers import tfl_handlers_router as tfl_handler
+from src.adapters.routers import tfl_handlers_router as tfl_handler
 
 
 class DummyTFLService:

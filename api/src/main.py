@@ -5,11 +5,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 
-from src.adapters.handlers.config_router import router as config_router
-from src.adapters.handlers.naptan_id_router import router as naptan_id_router
-from src.adapters.handlers.rail_handlers_router import router as rail_router
-from src.adapters.handlers.schedules_router import router as schedules_router
-from src.adapters.handlers.tfl_handlers_router import router as tfl_router
+from src.adapters.routers.config_router import router as config_router
+from src.adapters.routers.naptan_id_router import router as naptan_id_router
+from src.adapters.routers.rail_handlers_router import router as rail_router
+from src.adapters.routers.schedules_router import router as schedules_router
+from src.adapters.routers.tfl_handlers_router import router as tfl_router
 
 load_dotenv()
 origins = [os.getenv("APP_URL", "http://localhost:3000")]

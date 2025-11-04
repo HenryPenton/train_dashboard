@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-from src.adapters.handlers import naptan_id_router as naptan_id_handler
+from src.adapters.routers import naptan_id_router as naptan_id_handler
 
 
 class DummyStation:

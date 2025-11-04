@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-from src.adapters.handlers import rail_handlers_router as rail_handler
+from src.adapters.routers import rail_handlers_router as rail_handler
 
 
 class DummyRailService:
