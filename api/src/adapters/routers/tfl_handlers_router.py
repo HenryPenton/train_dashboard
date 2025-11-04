@@ -25,7 +25,6 @@ async def get_best_route(from_station: str, to_station: str):
 
         return route_dto
     except Exception as e:
-        print(e)
         raise HTTPException(status_code=500, detail=str(e))
 
 

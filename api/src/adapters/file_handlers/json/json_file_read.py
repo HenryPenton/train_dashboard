@@ -1,15 +1,25 @@
 from typing import TypeVar, Generic, Callable, Any, Optional
 import json
 from pathlib import Path
+from abc import ABC, abstractmethod
 
 T = TypeVar("T")
 
 
-class JSONFileReader(Generic[T]):
+class AbstractFileReader(ABC, Generic[T]):
+    def __init__(self, file_path: Path):
+        self.file_path = file_path
+
+    @abstractmethod
+    def read_json(self) -> T:
+        pass
+
+
+class JSONFileReader(AbstractFileReader[T]):
     def __init__(
         self, config_path: Path, postprocess_fn: Optional[Callable[[Any], T]] = None
     ):
-        self.file_path = config_path
+        super().__init__(config_path)
         self.postprocess_fn = postprocess_fn
 
     def read_json(self) -> T:

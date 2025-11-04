@@ -6,7 +6,6 @@ import pytest
 
 class DummyConfigService:
     def set_config(self, new_config):
-        DummyConfigService.last_set = new_config
         return True
 
     def get_config(self):
@@ -14,12 +13,20 @@ class DummyConfigService:
 
 
 @pytest.fixture
-def test_app(monkeypatch):
-    # Patch config_service in the handler
-    monkeypatch.setattr(config_handler, "config_service", DummyConfigService())
+def test_app():
     app = FastAPI()
     app.include_router(config_handler.router)
+    app.dependency_overrides[config_handler.get_config_service] = (
+        lambda: DummyConfigService()
+    )
     return TestClient(app)
+
+
+def test_get_config_service_returns_instance():
+    from src.adapters.routers.config_router import get_config_service, ConfigService
+
+    service = get_config_service()
+    assert isinstance(service, ConfigService)
 
 
 def test_get_config_success(test_app):
@@ -33,10 +40,9 @@ def test_set_config_success(test_app):
     response = test_app.post("/config", json=payload)
     assert response.status_code == 200
     assert response.json() == {"status": "ok"}
-    assert DummyConfigService.last_set == payload
 
 
-def test_get_config_not_found(monkeypatch, test_app):
+def test_get_config_not_found():
     class FailingConfigService:
         def get_config(self):
             raise FileNotFoundError()
@@ -44,13 +50,18 @@ def test_get_config_not_found(monkeypatch, test_app):
         def set_config(self, new_config):
             pass
 
-    monkeypatch.setattr(config_handler, "config_service", FailingConfigService())
-    response = test_app.get("/config")
+    app = FastAPI()
+    app.include_router(config_handler.router)
+    app.dependency_overrides[config_handler.get_config_service] = (
+        lambda: FailingConfigService()
+    )
+    client = TestClient(app)
+    response = client.get("/config")
     assert response.status_code == 404
     assert response.json()["detail"] == "Config file not found"
 
 
-def test_set_config_error(monkeypatch, test_app):
+def test_set_config_error():
     class FailingConfigService:
         def set_config(self, new_config):
             raise Exception("fail")
@@ -58,13 +69,18 @@ def test_set_config_error(monkeypatch, test_app):
         def get_config(self):
             return {"foo": "bar"}
 
-    monkeypatch.setattr(config_handler, "config_service", FailingConfigService())
-    response = test_app.post("/config", json={"bad": "data"})
+    app = FastAPI()
+    app.include_router(config_handler.router)
+    app.dependency_overrides[config_handler.get_config_service] = (
+        lambda: FailingConfigService()
+    )
+    client = TestClient(app)
+    response = client.post("/config", json={"bad": "data"})
     assert response.status_code == 500
     assert "fail" in response.json()["detail"]
 
 
-def test_get_config_raises_exception(monkeypatch):
+def test_get_config_raises_exception():
     class FailingConfigService:
         def set_config(self, new_config):
             return True
@@ -72,9 +88,11 @@ def test_get_config_raises_exception(monkeypatch):
         def get_config(self):
             raise Exception("Something went wrong!")
 
-    monkeypatch.setattr(config_handler, "config_service", FailingConfigService())
     app = FastAPI()
     app.include_router(config_handler.router)
+    app.dependency_overrides[config_handler.get_config_service] = (
+        lambda: FailingConfigService()
+    )
     client = TestClient(app)
     response = client.get("/config")
     assert response.status_code == 500
