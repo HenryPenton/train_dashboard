@@ -23,4 +23,5 @@ FROM gcr.io/distroless/nodejs24-debian12
 WORKDIR /app
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
+EXPOSE 3000
 CMD ["server.js"]
