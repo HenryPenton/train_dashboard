@@ -1,3 +1,4 @@
+from src.DTOs.config.config_dto import ConfigDTO
 import pytest
 from src.application.config_service import ConfigService
 
@@ -70,7 +71,7 @@ def test_set_config_happy():
         config_path=mock_path,
     )
     # Set config
-    assert service.set_config(valid_config) is True
+    assert service.set_config(ConfigDTO(**valid_config)) is True
 
 
 def test_get_config_happy():
@@ -85,7 +86,7 @@ def test_get_config_happy():
         config_path=mock_path,
     )
     reader._data = valid_config
-    result = service.get_config()
+    result = service.get_config().model_dump()
     expected_result = {
         "tfl_best_routes": [
             {
@@ -135,6 +136,6 @@ def test_get_config_creates_file():
         config_path=mock_path,
     )
     # Should create file and return default
-    result = service.get_config()
+    result = service.get_config().model_dump()
     assert "rail_departures" in result
     assert "tfl_best_routes" in result

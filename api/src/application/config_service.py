@@ -14,8 +14,8 @@ class ConfigService:
         self.writer = writer
         self.config_path = config_path
 
-    def set_config(self, new_config: dict):
-        config = ConfigDAO(**new_config)
+    def set_config(self, new_config: ConfigDTO):
+        config = ConfigDAO(**new_config.model_dump())
         self.writer.write_json(config.model_dump())
         return True
 
@@ -23,4 +23,4 @@ class ConfigService:
         if not self.config_path.exists():
             self.writer.write_json(ConfigDAO().model_dump())
         config = ConfigDTO(**self.reader.read_json())
-        return config.model_dump()
+        return config

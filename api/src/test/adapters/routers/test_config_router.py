@@ -32,7 +32,13 @@ def test_get_config_service_returns_instance():
 def test_get_config_success(test_app):
     response = test_app.get("/config")
     assert response.status_code == 200
-    assert response.json() == {"foo": "bar"}
+    # config replaced by default if its missing - wrong properties are removed
+    assert response.json() == {
+        "rail_departures": [],
+        "refresh_timer": 300,
+        "show_tfl_lines": False,
+        "tfl_best_routes": [],
+    }
 
 
 def test_set_config_success(test_app):
