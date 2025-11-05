@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { SchedulesSchema } from "../validators/frontend-validators/ScheduleSchema";
 import Sidebar from "../components/generic/lists/Sidebar";
 import TfLStationSidebarListItem from "../components/TfL/lists/TfLStationSidebarListItem";
+import Button from "../components/generic/Button";
 type SidebarItem = {
   CommonName: string;
   naptanID: string;
@@ -289,27 +290,33 @@ export default function SchedulesPage() {
         )}
         <h1 className="text-2xl font-bold mb-4">Schedules</h1>
         <div className="mb-4 flex gap-3">
-          <button
+          <Button
             type="button"
-            className="inline-flex items-center px-4 py-2 rounded-md bg-blue-600 text-white font-semibold shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition"
+            variant="primary"
+            className="px-4 py-2"
             onClick={() => handleAdd("rail_departure")}
+            icon={<span className="mr-2">🚆</span>}
           >
-            <span className="mr-2">🚆</span> Add National Rail Departure
-          </button>
-          <button
+            Add National Rail Departure
+          </Button>
+          <Button
             type="button"
-            className="inline-flex items-center px-4 py-2 rounded-md bg-green-600 text-white font-semibold shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 transition"
+            variant="success"
+            className="px-4 py-2"
             onClick={() => handleAdd("tube_line_status")}
+            icon={<span className="mr-2">🚇</span>}
           >
-            <span className="mr-2">🚇</span> Add Tube Line Status
-          </button>
-          <button
+            Add Tube Line Status
+          </Button>
+          <Button
             type="button"
-            className="inline-flex items-center px-4 py-2 rounded-md bg-purple-600 text-white font-semibold shadow hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2 transition"
+            variant="info"
+            className="px-4 py-2"
             onClick={() => handleAdd("best_route")}
+            icon={<span className="mr-2">⭐</span>}
           >
-            <span className="mr-2">⭐</span> Add Best TfL Route
-          </button>
+            Add Best TfL Route
+          </Button>
         </div>
         <form
           onSubmit={(e) => {
@@ -331,13 +338,14 @@ export default function SchedulesPage() {
                 <span className="font-semibold capitalize">
                   {sched.type.replaceAll("_", " ")}
                 </span>
-                <button
+                <Button
                   type="button"
-                  className="text-red-500"
+                  variant="danger"
+                  className="text-red-500 px-2 py-1"
                   onClick={() => handleDelete(idx)}
                 >
                   Delete
-                </button>
+                </Button>
               </div>
               {sched.type === "rail_departure" && (
                 <div className="flex flex-col gap-2 mb-2">
@@ -511,39 +519,15 @@ export default function SchedulesPage() {
               )}
             </div>
           ))}
-          <button
+          <Button
             type="submit"
-            className="mt-2 w-full inline-flex items-center justify-center px-4 py-2 rounded-md bg-indigo-600 text-white font-semibold shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 transition disabled:opacity-60 disabled:cursor-not-allowed"
-            disabled={saving}
+            variant="info"
+            className="mt-2 w-full justify-center"
+            loading={saving}
+            icon={<span className="mr-2">💾</span>}
           >
-            {saving ? (
-              <>
-                <svg
-                  className="animate-spin h-5 w-5 mr-2 text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-                  ></path>
-                </svg>
-                Saving...
-              </>
-            ) : (
-              <>💾 Save Schedules</>
-            )}
-          </button>
+            Save Schedules
+          </Button>
         </form>
       </section>
     </main>

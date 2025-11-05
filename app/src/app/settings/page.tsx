@@ -4,12 +4,12 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import AddItemForm from "../components/generic/forms/AddItemForm";
 import SectionHeading from "../components/text/SectionHeading";
-
 import ItemList from "../components/generic/lists/ItemList";
 import Sidebar from "../components/generic/lists/Sidebar";
 import TfLStationSidebarListItem, {
   SidebarItem,
 } from "../components/TfL/lists/TfLStationSidebarListItem";
+import Button from "../components/generic/Button";
 import { ConfigSchema } from "../validators/frontend-validators/ConfigSchema";
 
 export default function Settings() {
@@ -191,8 +191,9 @@ export default function Settings() {
               {selectedSidebarItem.naptanID}
             </div>
             <div className="flex gap-4 mt-4">
-              <button
-                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+              <Button
+                variant="primary"
+                className="px-4 py-2"
                 onClick={() =>
                   setRoute((r) => ({
                     ...r,
@@ -202,9 +203,10 @@ export default function Settings() {
                 }
               >
                 Set as Origin
-              </button>
-              <button
-                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+              </Button>
+              <Button
+                variant="success"
+                className="px-4 py-2"
                 onClick={() =>
                   setRoute((r) => ({
                     ...r,
@@ -214,7 +216,7 @@ export default function Settings() {
                 }
               >
                 Set as Destination
-              </button>
+              </Button>
             </div>
           </div>
         )}
@@ -327,12 +329,15 @@ export default function Settings() {
           </div>
         </div>
 
-        <button
+        <Button
+          type="submit"
+          variant="info"
+          className="mt-2 w-full justify-center"
           onClick={handleSave}
-          className="mt-8 bg-purple-600 text-white px-6 py-2 rounded hover:bg-purple-700 w-full"
+          icon={<span className="mr-2">💾</span>}
         >
           Save Settings
-        </button>
+        </Button>
       </section>
     </main>
   );
