@@ -28,12 +28,15 @@
 
 - List required variables and their purpose in `.env`.
 - Example:
+
   ```env
   RTT_API_USER=your_rtt_user
   RTT_API_PASS=your_rtt_pass
   APP_URL=http://localhost:3000
   SERVER_URL=http://localhost:8000
   ```
+
+  Real time trains api keys can be obtained at https://www.realtimetrains.co.uk/about/developer/
 
 ## 3. Start the Example Docker Compose
 

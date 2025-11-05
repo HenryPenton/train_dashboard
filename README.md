@@ -1,101 +1,54 @@
-# Travel Dashboard
+# Travel Dashboard# Travel Dashboard
 
 THIS PROJECT IS UNDER VERY HEAVY DEVELOPMENT!
 
-![Dashboard Screenshot](Dashboard.png)
-![Tube lines Screenshot](TubeLines.png)
+A full-stack application for live train and tube status, route planning, and departures, built with Next.js (frontend), FastAPI (backend), and a Python push server for notifications and background jobs.
 
-A full-stack application for live train and tube status, route planning, and departures, built with Next.js (frontend) and FastAPI (backend).
+---
+
+![Dashboard Screenshot](Dashboard.png)
+
+![Tube lines Screenshot](TubeLines.png)
 
 ## Overview
 
-**Frontend (app/):** Next.js, React, Tailwind CSS. Responsive dashboard UI for train departures, tube line status, and best route suggestions. Fetches live data from the FastAPI backend.
+A full-stack application for live train and tube status, route planning, and departures, built with Next.js (frontend) and FastAPI (backend).
 
-**Backend (api/):** FastAPI (Python). Modular endpoints for train departures, tube line status, best route. Integrates with Real Time Trains and TFL APIs. Returns simplified, frontend-friendly JSON responses.
+- **Frontend (`app/`):** Next.js, React, Tailwind CSS. Responsive dashboard UI for train departures, tube line status, and best route suggestions. Supports standalone and Docker deployment.
+
+- **Backend (`api/`):** FastAPI (Python). Modular endpoints for train departures, tube line status, best route, and config. Integrates with Real Time Trains and TFL APIs. Uses dependency injection and abstract base classes for testability.## Overview
+
+- **Push Server (`push/`):** Python service for notifications and background jobs (e.g., scheduled updates, alerts). Includes job scheduling, notification handling, formatters, and fetchers.
 
 ## Setup
 
 See [SETUP.md](./SETUP.md) for detailed installation and configuration instructions.
 
-## Features
-
-- Live train departures and delays
-- Tube line status updates
-- Best route suggestions using TFL Journey Planner
-- Config endpoint for frontend settings
-- Responsive, retro-inspired UI
-- Multi-arch Docker builds and CI/CD via GitHub Actions
-
 ## Project Structure
 
+### Backend Structure Highlights- Responsive, retro-inspired UI
+
 ```
-train_dashboard/
-├── app/         # Next.js frontend
-├── api/         # FastAPI backend
-├── .github/     # CI/CD workflows
-├── docker-compose.yaml
-├── README.md    # Project documentation
-```
-
-### Docker Images
-
-Pre-built docker images for both the API and app are available at:
-
-- `henrypenton/train-dashboard-api`
-- `henrypenton/train-dashboard-app`
-
-### Configuration File (`api/config.json`)
-
-This file contains route and departure configuration for the train dashboard.
-
-**Example Structure:**
-
-```json
-{
-  "tfl_best_routes": [
-    {
-      "origin": "<Origin Station Name>",
-      "originNaPTANOrATCO": "<Origin NaPTAN or ATCO Code>",
-      "destination": "<Destination Station Name>",
-      "destinationNaPTANOrATCO": "<Destination NaPTAN or ATCO Code>"
-    }
-    // ... more routes
-  ],
-  "rail_departures": [
-    {
-      "origin": "<Origin Station Name>",
-      "originCode": "<Origin Station Code>",
-      "destination": "<Destination Station Name>",
-      "destinationCode": "<Destination Station Code>"
-    }
-    // ... more departures
-  ],
-  "show_tfl_lines": true
-}
+- `src/adapters/` - API adapters and routers
+- `src/application/` - Service layer (DI)
+- `src/domain/` - Business logic
+- `src/DAOs/` - Data access objects
+- `src/DTOs/` - Data transfer objects
+- `src/test/` - Unit and integration tests
 ```
 
-**Field Descriptions:**
+### Push Server Structure
 
-_tfl_best_routes_
+```
+- `src/main.py`: Entry point
+- `src/jobs/`: Job scheduling and execution
+- `src/ntfy/`: Notification handling
+- `src/formatters/`: Output formatting
+- `src/fetchers/`: External data fetchers
+- `src/test/`: Unit tests
+```
 
-- `origin`: Name of the origin station
-- `originNaPTANOrATCO`: NaPTAN or ATCO code for the origin station
-- `destination`: Name of the destination station
-- `destinationNaPTANOrATCO`: NaPTAN or ATCO code for the destination station
-
-_rail_departures_
-
-Codes for stations can be either **CRS** codes (e.g. PAD for London Paddington) or **TIPLOC** codes (PADTON). For Paddington, the **CRS** code includes Crossrail and GWR trains.
-
-- `origin`: Name of the origin station
-- `originCode`: Station code for the origin station
-- `destination`: Name of the destination station
-- `destinationCode`: Station code for the destination station
-
-### Real Time Trains API Credentials
-
-To use live train departures, obtain an API username and password from Real Time Trains (RTT): https://www.realtimetrains.co.uk/about/developer
-Add your credentials to `.env` as `RTT_API_USER` and `RTT_API_PASS`. See `.env.template` for an example.
+---
 
 ## Development - Getting Started
 
@@ -119,17 +72,22 @@ pip install -r requirements.txt
 fastapi dev src/main.py
 ```
 
+- Push Server:
+
+```sh
+cd push
+python3.14 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+python src/main.py
+```
+
 3. **Usage:**
 
 - Frontend: http://localhost:3000
 - Backend: http://localhost:8000
 
-## API Endpoints
-
-- `/rail/departures/{origin_station_code}/to/{destination_station_code}`: Get train departures between two stations
-- `/tfl/line-status`: Get tube line status
-- `/tfl/best-route/{from_station}/{to_station}`: Get best route
-- `/config`: Get config JSON
+- Push Server: runs background jobs and notifications (no default web port)
 
 ## Frontend Routes
 
@@ -140,6 +98,10 @@ fastapi dev src/main.py
 
 - Multi-arch Docker builds for both frontend and backend
 - Automated builds and pushes via GitHub Actions
+
+## Coverage Reports
+
+Coverage reports for backend (Python) are generated in `api/htmlcov/` and for frontend (Next.js) in `app/coverage/`. Open `index.html` in these folders to view detailed coverage.
 
 ## Running Unit Tests
 
@@ -159,6 +121,19 @@ You can run a specific test file:
 ```sh
 pytest src/test/domain/rail/departures/departure_parts/test_departure_times.py
 ```
+
+### Push Server (Python)
+
+Unit tests for the push server are written using `pytest`.
+
+To run all push server tests:
+
+```sh
+cd push
+pytest
+```
+
+Coverage reports are generated in `push/htmlcov/`.
 
 ### Frontend (Next.js/React)
 
