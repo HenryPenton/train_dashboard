@@ -104,7 +104,7 @@ export default function SchedulesPage() {
         setSchedules(data);
         setLoading(false);
       })
-      .catch((e) => {
+      .catch(() => {
         setError("Failed to load schedules");
         setLoading(false);
       });
@@ -238,7 +238,7 @@ export default function SchedulesPage() {
     }
     try {
       await saveSchedules(schedules);
-    } catch (e) {
+    } catch {
       setError("Failed to save schedules");
     } finally {
       setSaving(false);

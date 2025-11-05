@@ -1,9 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
 import SectionHeading from "../../components/text/SectionHeading";
-import RouteLegs from "../../components/TfL/RouteLegs";
 import JourneyInfo from "../../components/TfL/JourneyInfo";
-import { BestRouteSchema } from "@/app/validators/frontend-validators/BestRouteSchema";
+import RouteLegs from "../../components/TfL/RouteLegs";
+import { BestRouteSchema } from "../../validators/frontend-validators/BestRouteSchema";
 
 interface BestRouteData {
   route: string[];
@@ -33,8 +33,8 @@ export default function TflBestRoute({ from, to }: TflRouteProps) {
         if (!res.ok) throw new Error("Failed to fetch best route");
         const json = await res.json();
 
-        // const parsedData = BestRouteSchema.parse(json);
-        setData(json);
+        const parsedData = BestRouteSchema.parse(json);
+        setData(parsedData);
       } catch (e: unknown) {
         const message = e instanceof Error ? e.message : "Unknown error";
         setError(message);

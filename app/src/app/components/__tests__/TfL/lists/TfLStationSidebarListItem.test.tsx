@@ -25,10 +25,11 @@ describe("TfLStationSidebarListItem", () => {
       />,
     );
     const li = screen.getByText("Liverpool Street").closest("li");
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     li && li.click();
     expect(handleClick).toHaveBeenCalledWith("940GZZLULVT");
   });
-  
+
   it("applies blue highlight when selected", () => {
     const item = { CommonName: "Paddington", naptanID: "940GZZLUPAD" };
     render(

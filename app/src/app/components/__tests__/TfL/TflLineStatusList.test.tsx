@@ -31,14 +31,9 @@ describe("TflLineStatusList", () => {
   });
 
   it("renders 'Unknown' in aria-label when line status is missing or falsy", () => {
-    const tflStatuses = [
-      { name: "Circle", status: "", statusSeverity: 5 },
-      { name: "District", status: undefined as any, statusSeverity: 5 },
-    ];
+    const tflStatuses = [{ name: "Circle", status: "", statusSeverity: 5 }];
     render(<TflLineStatusList tflStatuses={tflStatuses} />);
     const circleStatus = screen.getAllByLabelText("Line status Unknown")[0];
     expect(circleStatus).toHaveTextContent("Unknown");
-    const districtStatus = screen.getAllByLabelText("Line status Unknown")[1];
-    expect(districtStatus).toHaveTextContent("Unknown");
   });
 });

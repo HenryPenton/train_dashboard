@@ -5,7 +5,7 @@ export async function GET() {
     const res = await fetch(`${process.env.SERVER_URL}/schedules`);
     const data = await res.json();
     return NextResponse.json(data, { status: res.status });
-  } catch (e) {
+  } catch {
     return NextResponse.json(
       { error: "Failed to fetch schedules" },
       { status: 500 },
@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
     });
     const data = await res.json();
     return NextResponse.json(data, { status: res.status });
-  } catch (e) {
+  } catch {
     return NextResponse.json(
       { error: "Failed to save schedules" },
       { status: 500 },

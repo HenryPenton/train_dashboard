@@ -12,7 +12,7 @@ export default function LastRefreshed({
       minute: "2-digit",
       second: "2-digit",
     });
-  }, []);
+  }, [dateTimeString]);
 
   return (
     <div className="mt-10 text-center text-[#b0b0b0] text-sm">
