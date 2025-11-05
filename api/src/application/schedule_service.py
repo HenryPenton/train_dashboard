@@ -23,4 +23,4 @@ class ScheduleService:
         if not self.schedules_path.exists():
             self.writer.write_json(SchedulesDAO().model_dump())
         schedules = SchedulesDTO(**self.reader.read_json())
-        return schedules.model_dump()
+        return schedules

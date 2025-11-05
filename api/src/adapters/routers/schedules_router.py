@@ -33,8 +33,8 @@ def get_schedules(
     schedules_service: ScheduleService = Depends(get_schedules_service),
 ):
     try:
-        config_data = schedules_service.get_schedules()
-        return config_data
+        schedules = schedules_service.get_schedules()
+        return schedules
     except FileNotFoundError:
         raise HTTPException(status_code=404, detail="Schedules file not found")
     except Exception as e:

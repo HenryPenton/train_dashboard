@@ -75,9 +75,18 @@ def test_get_schedules_happy():
 
     service = ScheduleService(reader=reader, writer=writer, schedules_path=dummy_path)
     # Get schedules
-    result = service.get_schedules()
-    assert result["schedules"][0]["from_station_code"] == "GLC"
-    assert result["schedules"][0]["to_station_code"] == "EUS"
+    result = service.get_schedules().model_dump()
+    assert result["schedules"] == [
+        {
+            "day_of_week": "mon",
+            "from_station_code": "GLC",
+            "from_station_name": "Glasgow Central",
+            "time": "17:38",
+            "to_station_code": "EUS",
+            "to_station_name": "Euston",
+            "type": "rail_departure",
+        },
+    ]
 
 
 def test_set_schedules_unhappy():
@@ -98,5 +107,5 @@ def test_get_schedules_creates_file():
     writer = MockFileWriter(dummy_path, store)
     service = ScheduleService(reader=reader, writer=writer, schedules_path=dummy_path)
     # Should create file and return default
-    result = service.get_schedules()
+    result = service.get_schedules().model_dump()
     assert "schedules" in result
