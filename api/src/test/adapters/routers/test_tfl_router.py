@@ -37,8 +37,8 @@ class DummyTFLService:
 
 
 def test_get_best_route(monkeypatch):
-    monkeypatch.setattr(tfl_handler, "tfl_service", DummyTFLService())
     app = FastAPI()
+    app.dependency_overrides[tfl_handler.get_tfl_service] = lambda: DummyTFLService()
     app.include_router(tfl_handler.router)
     client = TestClient(app)
 
@@ -61,8 +61,8 @@ def test_get_best_route(monkeypatch):
 
 
 def test_get_line_status(monkeypatch):
-    monkeypatch.setattr(tfl_handler, "tfl_service", DummyTFLService())
     app = FastAPI()
+    app.dependency_overrides[tfl_handler.get_tfl_service] = lambda: DummyTFLService()
     app.include_router(tfl_handler.router)
     client = TestClient(app)
 
@@ -81,8 +81,8 @@ def test_get_best_route_error(monkeypatch):
         async def get_line_statuses(self):
             return []
 
-    monkeypatch.setattr(tfl_handler, "tfl_service", FailingTFLService())
     app = FastAPI()
+    app.dependency_overrides[tfl_handler.get_tfl_service] = lambda: FailingTFLService()
     app.include_router(tfl_handler.router)
     client = TestClient(app)
     response = client.get("/tfl/best-route/A/B")
@@ -98,8 +98,8 @@ def test_get_line_status_error(monkeypatch):
         async def get_line_statuses(self):
             raise Exception("fail")
 
-    monkeypatch.setattr(tfl_handler, "tfl_service", FailingTFLService())
     app = FastAPI()
+    app.dependency_overrides[tfl_handler.get_tfl_service] = lambda: FailingTFLService()
     app.include_router(tfl_handler.router)
     client = TestClient(app)
     response = client.get("/tfl/line-status")

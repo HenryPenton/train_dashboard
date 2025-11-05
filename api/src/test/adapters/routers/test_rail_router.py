@@ -20,9 +20,9 @@ class DummyRailService:
         return [DummyRailAggregate()]
 
 
-def test_get_departures(monkeypatch):
-    monkeypatch.setattr(rail_handler, "rail_service", DummyRailService())
+def test_get_departures():
     app = FastAPI()
+    app.dependency_overrides[rail_handler.get_rail_service] = lambda: DummyRailService()
     app.include_router(rail_handler.router)
     client = TestClient(app)
 
@@ -41,13 +41,15 @@ def test_get_departures(monkeypatch):
     ]
 
 
-def test_get_departures_error(monkeypatch):
+def test_get_departures_error():
     class FailingRailService:
         async def get_departures(self, origin, destination):
             raise Exception("fail")
 
-    monkeypatch.setattr(rail_handler, "rail_service", FailingRailService())
     app = FastAPI()
+    app.dependency_overrides[rail_handler.get_rail_service] = (
+        lambda: FailingRailService()
+    )
     app.include_router(rail_handler.router)
     client = TestClient(app)
     response = client.get("/rail/departures/AAA/to/BBB")
