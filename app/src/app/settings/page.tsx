@@ -2,14 +2,15 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import Button from "../components/generic/Button";
+import Checkbox from "../components/generic/Checkbox";
 import AddItemForm from "../components/generic/forms/AddItemForm";
-import SectionHeading from "../components/text/SectionHeading";
 import ItemList from "../components/generic/lists/ItemList";
 import Sidebar from "../components/generic/lists/Sidebar";
+import SectionHeading from "../components/text/SectionHeading";
 import TfLStationSidebarListItem, {
   SidebarItem,
 } from "../components/TfL/lists/TfLStationSidebarListItem";
-import Button from "../components/generic/Button";
 import { ConfigSchema } from "../validators/frontend-validators/ConfigSchema";
 
 export default function Settings() {
@@ -221,14 +222,12 @@ export default function Settings() {
           </div>
         )}
 
-        <label className="flex items-center gap-2 text-lg mb-8">
-          <input
-            type="checkbox"
-            checked={showTflLine}
-            onChange={handleChange}
-          />
-          Show Tube Line Status
-        </label>
+        <Checkbox
+          checked={showTflLine}
+          onChange={handleChange}
+          label="Show Tube Line Status"
+          className="mb-8"
+        />
 
         <AddItemForm
           fields={[
