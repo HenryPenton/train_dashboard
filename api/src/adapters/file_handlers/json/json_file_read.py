@@ -29,4 +29,4 @@ class JSONFileReader(AbstractFileReader[T]):
             data = json.load(f)
         if self.postprocess_fn:
             return self.postprocess_fn(data)
-        return data  # type: ignore
+        return data
