@@ -27,7 +27,7 @@ services:
       - "8000:8000"
 
   # Optional push server
-  # Currently the timezone parameter is unused. Push notifications are sent based on UTC time.
+  # Timezones should be set in the style "Europe/London"
   push:
     container_name: train_dashboard_push
     image: henrypenton/train-dashboard-push:stable

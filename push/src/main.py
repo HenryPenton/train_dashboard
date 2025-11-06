@@ -9,7 +9,8 @@ from src.schedules import get_schedules_with_topic
 
 load_dotenv()
 
-API_BASE = os.environ.get("SERVER_URL", "http://localhost:8000")
+
+timezone = os.environ.get("TZ", "UTC")
 
 
 def schedule_jobs(schedules=[]):
@@ -23,7 +24,7 @@ def schedule_jobs(schedules=[]):
                 hour=hour,
                 minute=minute,
                 day_of_week=sched.day_of_week,
-                timezone="UTC",
+                timezone=timezone,
                 args=[sched],
                 id=f"rail_{sched.from_station_code}_{sched.to_station_code}_{sched.time}",
             )
@@ -35,7 +36,7 @@ def schedule_jobs(schedules=[]):
                 hour=hour,
                 minute=minute,
                 day_of_week=sched.day_of_week,
-                timezone="UTC",
+                timezone=timezone,
                 args=[sched],
                 id=f"best_route_{sched.from_code}_{sched.to_code}_{sched.time}",
             )
@@ -47,7 +48,7 @@ def schedule_jobs(schedules=[]):
                 hour=hour,
                 minute=minute,
                 day_of_week=sched.day_of_week,
-                timezone="UTC",
+                timezone=timezone,
                 args=[sched],
                 id=f"tube_line_status_{sched.time}_{sched.day_of_week}",
             )
@@ -61,6 +62,8 @@ def main():
     sleep_time = int(sleep_time)
     print("Push notification server started. Waiting for scheduled jobs...")
     print(f"Fetching updated schedules every {sleep_time} seconds...")
+    print(f"Scheduling jobs with timezone: {timezone}")
+
     try:
         while True:
             time.sleep(sleep_time)
