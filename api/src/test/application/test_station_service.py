@@ -3,6 +3,23 @@ from src.DAOs.station.station_dao import StationDAO
 from src.domain.station.stations import Station
 
 
+class DummyLogger:
+    def info(self, *args, **kwargs):
+        pass
+
+    def error(self, *args, **kwargs):
+        pass
+
+    def warning(self, *args, **kwargs):
+        pass
+
+    def debug(self, *args, **kwargs):
+        pass
+
+    def critical(self, *args, **kwargs):
+        pass
+
+
 class DummyJSONFileReader:
     def __class_getitem__(cls, item):
         return cls
@@ -30,7 +47,8 @@ class FailingJSONFileReader:
 
 def test_get_stations():
     reader = DummyJSONFileReader(None)
-    service = StationService(reader)
+    logger = DummyLogger()
+    service = StationService(reader, logger)
     stations = service.get_stations()
     assert stations == [
         Station(naptanID="123", commonName="Alpha"),
@@ -40,7 +58,8 @@ def test_get_stations():
 
 def test_get_stations_file_not_found():
     reader = FailingJSONFileReader(None)
-    service = StationService(reader)
+    logger = DummyLogger()
+    service = StationService(reader, logger)
     try:
         service.get_stations()
         assert False, "Expected FileNotFoundError"
