@@ -34,7 +34,7 @@ def get_config_service():
     CONFIG_PATH = Path(__file__).parents[3] / "config/config.json"
     logger = configure_logger()
 
-    logger.info("Creating ConfigService")
+    logger.debug("Creating ConfigService")
     return ConfigService(
         reader=JSONFileReader[ConfigDAO](CONFIG_PATH),
         writer=JSONFileWriter(CONFIG_PATH),
