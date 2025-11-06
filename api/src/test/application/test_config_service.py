@@ -60,6 +60,23 @@ valid_config = {
 invalid_config = {"rail_departures": [{"origin": "C"}]}  # missing required fields
 
 
+class DummyLogger:
+    def info(self, *args, **kwargs):
+        pass
+
+    def error(self, *args, **kwargs):
+        pass
+
+    def warning(self, *args, **kwargs):
+        pass
+
+    def debug(self, *args, **kwargs):
+        pass
+
+    def critical(self, *args, **kwargs):
+        pass
+
+
 def test_set_config_happy():
     store = {}
     mock_path = MockPath(exists=True)
@@ -69,6 +86,7 @@ def test_set_config_happy():
         reader=reader,
         writer=writer,
         config_path=mock_path,
+        logger=DummyLogger(),
     )
     # Set config
     assert service.set_config(ConfigDTO(**valid_config)) is True
@@ -84,6 +102,7 @@ def test_get_config_happy():
         reader=reader,
         writer=writer,
         config_path=mock_path,
+        logger=DummyLogger(),
     )
     reader._data = valid_config
     result = service.get_config().model_dump()
@@ -119,6 +138,7 @@ def test_set_config_unhappy():
         reader=reader,
         writer=writer,
         config_path=mock_path,
+        logger=DummyLogger(),
     )
     # Should raise error due to missing required fields
     with pytest.raises(Exception):
@@ -134,6 +154,7 @@ def test_get_config_creates_file():
         reader=reader,
         writer=writer,
         config_path=mock_path,
+        logger=DummyLogger(),
     )
     # Should create file and return default
     result = service.get_config().model_dump()
