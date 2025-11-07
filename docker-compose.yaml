@@ -36,9 +36,11 @@ services:
     environment:
       - TZ=Europe/London
       - SERVER_URL=http://train_dashboard_api:8000
+      # NTFY topic codes/names
       - RAIL_TOPIC=
       - BEST_ROUTE_TOPIC=
       - LINE_STATUS_TOPIC=
-      - SCHEDULE_REFRESH_INTERVAL=30
+      # How often (in seconds) the NTFY server checks for new schedules from the API
+      - SCHEDULE_REFRESH_INTERVAL=300
     depends_on:
       - api

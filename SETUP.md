@@ -26,7 +26,7 @@
 
 ## 2. Environment Variables
 
-- List required variables and their purpose in `.env`.
+- List required variables and their purpose in `.env` or in the docker compose file.
 - Example:
 
   ```env
@@ -34,6 +34,12 @@
   RTT_API_PASS=your_rtt_pass
   APP_URL=http://localhost:3000
   SERVER_URL=http://localhost:8000
+  # NTFY topic codes
+  RAIL_TOPIC=
+  BEST_ROUTE_TOPIC=
+  LINE_STATUS_TOPIC=
+  # How often (in seconds) the NTFY server checks for new schedules from the API
+  SCHEDULE_REFRESH_INTERVAL=300
   ```
 
   Real time trains api keys can be obtained at https://www.realtimetrains.co.uk/about/developer/
