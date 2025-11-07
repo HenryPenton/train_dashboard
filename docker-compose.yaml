@@ -44,6 +44,7 @@ services:
       - SCHEDULE_REFRESH_INTERVAL=300
 
       # Optional custom NTFY server URL
+      # Make sure it does not have a trailing slash
       - NTFY_SERVER=
     depends_on:
       - api
