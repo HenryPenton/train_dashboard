@@ -68,8 +68,13 @@ def main():
         while True:
             time.sleep(sleep_time)
 
-            scheduler.remove_all_jobs()
-            scheduler = schedule_jobs(get_schedules_with_topic())
+            # Make sure new schedules are picked up before shutting down old scheduler
+            # Avoids the possibility of no scheduled jobs between shutdown and restart
+            new_scheduler = schedule_jobs(get_schedules_with_topic())
+            old_scheduler = scheduler
+            scheduler = new_scheduler
+            old_scheduler.shutdown()
+
     except (KeyboardInterrupt, SystemExit):
         scheduler.shutdown()
         print("Shutting down push server.")
