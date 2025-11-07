@@ -21,7 +21,8 @@ class ConfigService:
 
     def set_config(self, new_config: ConfigDTO):
         config = ConfigDAO(**new_config.model_dump())
-        self.logger.info("Setting new config: %s", config)
+        self.logger.debug("Setting new config: %s", config)
+        self.logger.info("Writing new config to file.")
         self.writer.write_json(config.model_dump())
         return True
 
