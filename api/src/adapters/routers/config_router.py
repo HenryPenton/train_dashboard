@@ -23,6 +23,7 @@ def configure_logger():
         handler.setFormatter(formatter)
         logger.addHandler(handler)
     logger.setLevel(logging.INFO)
+    logger.propagate = True
     return logger
 
 
