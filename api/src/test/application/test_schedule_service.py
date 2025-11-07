@@ -2,6 +2,17 @@ import pytest
 from src.application.schedule_service import ScheduleService
 
 
+class DummyLogger:
+    def info(self, msg):
+        pass
+
+    def debug(self, msg):
+        pass
+
+    def error(self, msg):
+        pass
+
+
 # In-memory mock file writer/reader
 class MockFileWriter:
     def __init__(self, path, store):
@@ -62,7 +73,10 @@ def test_set_schedules_happy():
     dummy_path = DummyPath(exists=True)
     reader = MockFileReader(dummy_path, store)
     writer = MockFileWriter(dummy_path, store)
-    service = ScheduleService(reader=reader, writer=writer, schedules_path=dummy_path)
+    logger = DummyLogger()
+    service = ScheduleService(
+        reader=reader, writer=writer, schedules_path=dummy_path, logger=logger
+    )
     # Set schedules
     assert service.set_schedules(valid_schedules) is True
 
@@ -73,7 +87,10 @@ def test_get_schedules_happy():
     reader = MockFileReader(dummy_path, store)
     writer = MockFileWriter(dummy_path, store)
 
-    service = ScheduleService(reader=reader, writer=writer, schedules_path=dummy_path)
+    logger = DummyLogger()
+    service = ScheduleService(
+        reader=reader, writer=writer, schedules_path=dummy_path, logger=logger
+    )
     # Get schedules
     result = service.get_schedules().model_dump()
     assert result["schedules"] == [
@@ -94,7 +111,10 @@ def test_set_schedules_unhappy():
     dummy_path = DummyPath(exists=True)
     reader = MockFileReader(dummy_path, store)
     writer = MockFileWriter(dummy_path, store)
-    service = ScheduleService(reader=reader, writer=writer, schedules_path=dummy_path)
+    logger = DummyLogger()
+    service = ScheduleService(
+        reader=reader, writer=writer, schedules_path=dummy_path, logger=logger
+    )
     # Should raise error due to missing required fields
     with pytest.raises(Exception):
         service.set_schedules(invalid_schedules)
@@ -105,7 +125,10 @@ def test_get_schedules_creates_file():
     dummy_path = DummyPath(exists=False)
     reader = MockFileReader(dummy_path, store)
     writer = MockFileWriter(dummy_path, store)
-    service = ScheduleService(reader=reader, writer=writer, schedules_path=dummy_path)
+    logger = DummyLogger()
+    service = ScheduleService(
+        reader=reader, writer=writer, schedules_path=dummy_path, logger=logger
+    )
     # Should create file and return default
     result = service.get_schedules().model_dump()
     assert "schedules" in result
