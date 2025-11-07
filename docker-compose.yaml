@@ -42,5 +42,8 @@ services:
       - LINE_STATUS_TOPIC=
       # How often (in seconds) the NTFY server checks for new schedules from the API
       - SCHEDULE_REFRESH_INTERVAL=300
+
+      # Optional custom NTFY server URL
+      - NTFY_SERVER=
     depends_on:
       - api
