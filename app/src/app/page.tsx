@@ -137,12 +137,18 @@ export default function Home() {
       {config?.forceRefreshTimeStamp ? (
         <LastRefreshed dateTimeString={config.forceRefreshTimeStamp} />
       ) : null}
-      <div className="w-full text-center mt-10">
+      <div className="w-full text-center mt-10 flex flex-col items-center gap-2">
         <a
           href="/settings"
           className="text-cyan-300 hover:underline text-lg font-bold"
         >
           Settings
+        </a>
+        <a
+          href="/schedules"
+          className="text-yellow-300 hover:underline text-lg font-bold"
+        >
+          Schedules
         </a>
       </div>
     </main>
