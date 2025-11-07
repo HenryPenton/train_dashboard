@@ -99,7 +99,7 @@ it("renders with mocked API data", async () => {
 
     expect(
       screen.getByLabelText("Journey duration and arrival"),
-    ).toHaveTextContent("Duration: 22 min|Arrival: 12:00:00");
+    ).toHaveTextContent("Duration: 22 min|Arrival: 12:00");
 
     expect(screen.getByLabelText("Journey leg 1")).toHaveTextContent(
       "Tube: Bakerloo line to Oxford Circus",

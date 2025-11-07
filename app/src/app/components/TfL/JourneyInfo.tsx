@@ -28,7 +28,11 @@ export default function JourneyInfo({
         <span className="font-bold">Duration:</span> {duration} min
         <span className="mx-2">|</span>
         <span className="font-bold">Arrival:</span>{" "}
-        {new Date(arrival).toLocaleTimeString()}
+        {new Date(arrival).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        })}
         {fare && typeof fare === "number" && (
           <span>
             <span className="mx-2">|</span>
