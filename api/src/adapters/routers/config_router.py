@@ -1,4 +1,3 @@
-import logging
 from pathlib import Path
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -8,32 +7,15 @@ from src.adapters.file_handlers.json.json_file_write import JSONFileWriter
 from src.application.config_service import ConfigService
 from src.DAOs.config.config_dao import ConfigDAO
 from src.DTOs.config.config_dto import ConfigDTO
+from src.shared.logging.logger_utils import configure_logger, get_logger
 
+logger_name = "config_logger"
 router = APIRouter()
-
-
-def configure_logger():
-    logger = logging.getLogger("config_logger")
-
-    if not logger.hasHandlers():
-        handler = logging.StreamHandler()
-        formatter = logging.Formatter(
-            "[%(asctime)s] %(levelname)s %(name)s: %(message)s"
-        )
-        handler.setFormatter(formatter)
-        logger.addHandler(handler)
-    logger.setLevel(logging.INFO)
-    logger.propagate = True
-    return logger
-
-
-def get_logger():
-    return logging.getLogger("config_logger")
 
 
 def get_config_service():
     CONFIG_PATH = Path(__file__).parents[3] / "config/config.json"
-    logger = configure_logger()
+    logger = configure_logger(logger_name)
 
     logger.debug("Creating ConfigService")
     return ConfigService(
@@ -49,7 +31,7 @@ async def set_config(
     request: ConfigDTO,
     config_service: ConfigService = Depends(get_config_service),
 ):
-    logger = get_logger()
+    logger = get_logger(logger_name)
     try:
         config_service.set_config(request)
         logger.info("Setting config")
@@ -63,7 +45,7 @@ async def set_config(
 def get_config(
     config_service: ConfigService = Depends(get_config_service),
 ):
-    logger = get_logger()
+    logger = get_logger(logger_name)
     try:
         config_data = config_service.get_config()
         logger.info("Getting config")

@@ -1,14 +1,15 @@
 from typing import List
 
 import httpx
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from src.adapters.clients.tflclient import TFLClient
 from src.application.tfl_service import TFLService
 from src.DTOs.tfl.line_dto import LineDTO
 from src.DTOs.tfl.route_dto import RouteDTO
+from src.shared.logging.logger_utils import configure_logger, get_logger
 
-
-from fastapi import Depends
+logger_name = "tfl_logger"
+router = APIRouter()
 
 
 def get_tfl_client() -> TFLClient:
@@ -16,10 +17,9 @@ def get_tfl_client() -> TFLClient:
 
 
 def get_tfl_service(tfl_client: TFLClient = Depends(get_tfl_client)) -> TFLService:
+    logger = configure_logger(logger_name)
+    logger.debug("Creating TFLService")
     return TFLService(tfl_client)
-
-
-router = APIRouter()
 
 
 @router.get(
@@ -32,11 +32,14 @@ async def get_best_route(
     to_station: str,
     tfl_service: TFLService = Depends(get_tfl_service),
 ):
+    logger = get_logger(logger_name)
     try:
+        logger.info(f"Getting best route from {from_station} to {to_station}")
         route_model = await tfl_service.get_best_route(from_station, to_station)
         route_dto = RouteDTO(**(route_model.as_dict()))
         return route_dto
     except Exception as e:
+        logger.error(f"Error getting best route: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -44,11 +47,14 @@ async def get_best_route(
 async def get_tfl_line_status(
     tfl_service: TFLService = Depends(get_tfl_service),
 ):
+    logger = get_logger(logger_name)
     try:
+        logger.info("Getting TfL line statuses")
         line_status_models = await tfl_service.get_line_statuses()
         line_status_dtos = [
             LineDTO(**(status_model.as_dict())) for status_model in line_status_models
         ]
         return line_status_dtos
     except Exception as e:
+        logger.error(f"Error getting TfL line statuses: {e}")
         raise HTTPException(status_code=500, detail=str(e))
