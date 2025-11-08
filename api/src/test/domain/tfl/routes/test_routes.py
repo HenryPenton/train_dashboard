@@ -1,6 +1,7 @@
 import pytest
 from src.DAOs.tfl.route_dao import JourneyDAO
 from src.domain.tfl.routes.routes import Route, RoutesList
+from src.test.utils.dummy_logger import DummyLogger
 
 
 class TestRoutes:
@@ -21,7 +22,9 @@ class TestRoutes:
                 "fare": {"totalCost": 250},
             }
         )
-        route = Route(best)
+        logger = DummyLogger()
+
+        route = Route(best, logger=logger)
         result = route.as_dict()
         assert result == {
             "duration": 45,
@@ -62,7 +65,8 @@ class TestRoutes:
                 ],
             }
         )
-        route = Route(best)
+        logger = DummyLogger()
+        route = Route(best, logger=logger)
         result = route.as_dict()
         assert result == {
             "duration": 60,
@@ -110,7 +114,8 @@ class TestRoutes:
                 ],
             }
         )
-        route = Route(best)
+        logger = DummyLogger()
+        route = Route(best, logger=logger)
         result = route.as_dict()
         assert result == {
             "duration": 30,
@@ -152,7 +157,8 @@ class TestRoutes:
                 }
             )
         ]
-        all_routes = RoutesList(journeys)
+        logger = DummyLogger()
+        all_routes = RoutesList(journeys, logger=logger)
         result = all_routes.get_best_route().as_dict()
         assert result["duration"] == 25
         assert result["arrival"] == "2025-10-19T10:30:00Z"
@@ -164,7 +170,8 @@ class TestRoutes:
         assert result["legs"][0]["line"] == "Northern"
 
     def test_get_best_with_no_journeys(self):
-        all_routes = RoutesList([])
+        logger = DummyLogger()
+        all_routes = RoutesList([], logger=logger)
         with pytest.raises(ValueError, match="No routes available"):
             all_routes.get_best_route().as_dict()
 
@@ -201,7 +208,8 @@ class TestRoutes:
                 }
             ),
         ]
-        all_routes = RoutesList(journeys)
+        logger = DummyLogger()
+        all_routes = RoutesList(journeys, logger=logger)
         result = all_routes.get_best_route().as_dict()
         assert result["duration"] == 10
         assert result["arrival"] == "2025-10-19T09:00:00Z"

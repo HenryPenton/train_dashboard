@@ -1,6 +1,7 @@
-from src.DTOs.config.config_dto import ConfigDTO
 import pytest
 from src.application.config_service import ConfigService
+from src.DTOs.config.config_dto import ConfigDTO
+from src.test.utils.dummy_logger import DummyLogger
 
 
 class MockPath:
@@ -58,23 +59,6 @@ valid_config = {
 }
 
 invalid_config = {"rail_departures": [{"origin": "C"}]}  # missing required fields
-
-
-class DummyLogger:
-    def info(self, *args, **kwargs):
-        pass
-
-    def error(self, *args, **kwargs):
-        pass
-
-    def warning(self, *args, **kwargs):
-        pass
-
-    def debug(self, *args, **kwargs):
-        pass
-
-    def critical(self, *args, **kwargs):
-        pass
 
 
 def test_set_config_happy():

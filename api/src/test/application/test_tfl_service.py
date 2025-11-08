@@ -3,6 +3,7 @@ import asyncio
 from src.application.tfl_service import TFLService
 from src.DAOs.tfl.line_dao import LineDAO
 from src.DAOs.tfl.route_dao import JourneyDAO
+from src.test.utils.dummy_logger import DummyLogger
 
 
 class DummyTflClient:
@@ -59,7 +60,8 @@ class FailingTflClient:
 
 
 def test_get_line_status():
-    service = TFLService(DummyTflClient())
+    logger = DummyLogger()
+    service = TFLService(DummyTflClient(), logger=logger)
     # get_line_status is async, so we need to run it in an event loop
     result = asyncio.run(service.get_line_statuses())
     assert (result[0].as_dict()) == {
@@ -70,7 +72,8 @@ def test_get_line_status():
 
 
 def test_get_line_status_error():
-    service = TFLService(FailingTflClient())
+    logger = DummyLogger()
+    service = TFLService(FailingTflClient(), logger=logger)
     try:
         asyncio.run(service.get_line_statuses())
         assert False, "Expected Exception"
@@ -79,7 +82,8 @@ def test_get_line_status_error():
 
 
 def test_get_best_route():
-    service = TFLService(DummyTflClient())
+    logger = DummyLogger()
+    service = TFLService(DummyTflClient(), logger=logger)
     result = asyncio.run(service.get_best_route("Oxford Circus", "Liverpool Street"))
     assert result.as_dict() == {
         "duration": 15,
@@ -98,7 +102,8 @@ def test_get_best_route():
 
 
 def test_get_best_route_error():
-    service = TFLService(FailingTflClient())
+    logger = DummyLogger()
+    service = TFLService(FailingTflClient(), logger=logger)
     try:
         asyncio.run(service.get_best_route("Oxford Circus", "Liverpool Street"))
         assert False, "Expected Exception"

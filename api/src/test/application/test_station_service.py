@@ -1,23 +1,7 @@
 from src.application.station_service import StationService
 from src.DAOs.station.station_dao import StationDAO
 from src.domain.station.stations import Station
-
-
-class DummyLogger:
-    def info(self, *args, **kwargs):
-        pass
-
-    def error(self, *args, **kwargs):
-        pass
-
-    def warning(self, *args, **kwargs):
-        pass
-
-    def debug(self, *args, **kwargs):
-        pass
-
-    def critical(self, *args, **kwargs):
-        pass
+from src.test.utils.dummy_logger import DummyLogger
 
 
 class DummyJSONFileReader:

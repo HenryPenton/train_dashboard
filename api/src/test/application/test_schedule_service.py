@@ -1,16 +1,6 @@
 import pytest
 from src.application.schedule_service import ScheduleService
-
-
-class DummyLogger:
-    def info(self, msg):
-        pass
-
-    def debug(self, msg):
-        pass
-
-    def error(self, msg):
-        pass
+from src.test.utils.dummy_logger import DummyLogger
 
 
 # In-memory mock file writer/reader

@@ -4,10 +4,14 @@ from src.DAOs.tfl.line_dao import LineDAO
 
 
 class LineStatusModel:
-    def __init__(self, line: LineDAO) -> None:
+    def __init__(self, line: LineDAO, logger):
+        self.logger = logger
         self.status = self._get_status(line)
         self.name = self._get_name(line)
         self.statusSeverity = self._get_status_severity(line)
+        self.logger.debug(
+            f"LineStatusModel created for {self.name}: status={self.status}, severity={self.statusSeverity}"
+        )
 
     @staticmethod
     def _get_name(line) -> str:
@@ -16,7 +20,6 @@ class LineStatusModel:
     @staticmethod
     def _get_status_severity(line) -> int:
         line_statuses = line.line_statuses
-
         if line_statuses:
             return min(
                 (s.statusSeverity for s in line_statuses if s.statusSeverity),
@@ -38,6 +41,7 @@ class LineStatusModel:
             return status_str
 
     def as_dict(self) -> dict:
+        self.logger.debug(f"Converting LineStatusModel for {self.name} to dict")
         return {
             "name": self.name,
             "status": self.status,
@@ -46,16 +50,22 @@ class LineStatusModel:
 
 
 class LineStatusModelList:
-    def __init__(self, lines: list[LineDAO]):
+    def __init__(self, lines: list[LineDAO], logger):
+        self.logger = logger
         self.line_statuses = self._extract_statuses(lines)
+        self.logger.info(
+            f"Extracted {len(self.line_statuses)} line statuses from {len(lines)} lines"
+        )
 
-    @staticmethod
-    def _extract_statuses(lines: list[LineDAO]) -> list[LineStatusModel]:
+    def _extract_statuses(self, lines: list[LineDAO]) -> list[LineStatusModel]:
         lines_status_models: list[LineStatusModel] = []
         for line in lines:
-            lines_status_models.append(LineStatusModel(line))
-
+            lines_status_models.append(LineStatusModel(line, logger=self.logger))
+        self.logger.debug(
+            f"_extract_statuses created {len(lines_status_models)} LineStatusModels"
+        )
         return lines_status_models
 
     def get_line_statuses(self) -> list[LineStatusModel]:
+        self.logger.info(f"Returning {len(self.line_statuses)} line statuses")
         return self.line_statuses

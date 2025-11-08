@@ -2,6 +2,7 @@ import pytest
 from pydantic import ValidationError
 from src.DAOs.tfl.line_dao import LineDAO
 from src.domain.tfl.lines.lines import LineStatusModel, LineStatusModelList
+from src.test.utils.dummy_logger import DummyLogger
 
 
 class TestLineStatus:
@@ -14,7 +15,8 @@ class TestLineStatus:
                 ],
             }
         )
-        result = LineStatusModel(line)
+        logger = DummyLogger()
+        result = LineStatusModel(line, logger=logger)
         assert (result.as_dict()) == {
             "name": "Victoria",
             "status": "Good Service",
@@ -34,7 +36,8 @@ class TestLineStatus:
                 ],
             }
         )
-        result = LineStatusModel(line)
+        logger = DummyLogger()
+        result = LineStatusModel(line, logger=logger)
         assert (result.as_dict()) == {
             "name": "Northern",
             "status": "Minor Delays, Part Suspended",
@@ -52,7 +55,8 @@ class TestLineStatus:
                 ],
             }
         )
-        result = LineStatusModel(line)
+        logger = DummyLogger()
+        result = LineStatusModel(line, logger=logger)
         assert (result.as_dict()) == {
             "name": "Mildmay",
             "status": "Part Closure x2, Good Service",
@@ -66,7 +70,8 @@ class TestLineStatus:
 
 class TestLineStatuses:
     def test_empty(self):
-        assert LineStatusModelList([]).get_line_statuses() == []
+        logger = DummyLogger()
+        assert LineStatusModelList([], logger=logger).get_line_statuses() == []
 
     def test_one_line(self):
         lines = [
@@ -82,7 +87,8 @@ class TestLineStatuses:
                 }
             )
         ]
-        result = LineStatusModelList(lines).get_line_statuses()
+        logger = DummyLogger()
+        result = LineStatusModelList(lines, logger=logger).get_line_statuses()
         assert (result[0].as_dict()) == {
             "name": "Victoria",
             "status": "Good Service",
@@ -118,7 +124,8 @@ class TestLineStatuses:
                 }
             ),
         ]
-        result = LineStatusModelList(lines).get_line_statuses()
+        logger = DummyLogger()
+        result = LineStatusModelList(lines, logger=logger).get_line_statuses()
         assert (result[0].as_dict()) == {
             "name": "Northern",
             "status": "Minor Delays, Part Suspended",

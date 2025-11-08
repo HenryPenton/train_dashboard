@@ -19,7 +19,7 @@ def get_tfl_client() -> TFLClient:
 def get_tfl_service(tfl_client: TFLClient = Depends(get_tfl_client)) -> TFLService:
     logger = configure_logger(logger_name)
     logger.debug("Creating TFLService")
-    return TFLService(tfl_client)
+    return TFLService(tfl_client, logger=logger)
 
 
 @router.get(
