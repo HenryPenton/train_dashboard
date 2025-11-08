@@ -12,6 +12,7 @@ from src.shared.logging.logger_utils import configure_logger, get_logger
 router = APIRouter()
 logger_name = "naptan_logger"
 
+
 def get_station_service():
     STATIONS_PATH = Path(__file__).parents[2] / "data/naptan.json"
     logger = configure_logger(logger_name)

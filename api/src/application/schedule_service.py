@@ -20,7 +20,6 @@ class ScheduleService:
         self.schedules_path = schedules_path
         self.logger = logger
 
-
     def set_schedules(self, new_schedules: dict):
         schedules = SchedulesDAO(**new_schedules)
         self.writer.write_json(schedules.model_dump())
@@ -29,7 +28,9 @@ class ScheduleService:
 
     def get_schedules(self):
         if not self.schedules_path.exists():
-            self.logger.info(f"Schedules file {self.schedules_path} does not exist. Creating default schedules file.")
+            self.logger.info(
+                f"Schedules file {self.schedules_path} does not exist. Creating default schedules file."
+            )
             self.writer.write_json(SchedulesDAO().model_dump())
         else:
             self.logger.debug(f"Reading schedules from {self.schedules_path}")
