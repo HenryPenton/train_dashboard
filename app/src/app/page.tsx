@@ -1,68 +1,30 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import TrainDepartures from "./sections/rail/TrainDepartures";
+import { useEffect } from "react";
+import { useConfigStore } from "./providers/config";
 import LastRefreshed from "./sections/LastRefreshed";
-import TflLineStatus from "./sections/TfL/TflLineStatus";
+import TrainDepartures from "./sections/rail/TrainDepartures";
 import TflBestRoute from "./sections/TfL/TflBestRoute";
+import TflLineStatus from "./sections/TfL/TflLineStatus";
 
-type BestRoute = {
-  origin: string;
-  originNaPTANOrATCO: string;
-  destination: string;
-  destinationNaPTANOrATCO: string;
-};
-
-type DepartureConfig = {
-  origin: string;
-  originCode: string;
-  destination: string;
-  destinationCode: string;
-};
-
-type ConfigType = {
-  tfl_best_routes: BestRoute[];
-  rail_departures: DepartureConfig[];
-  show_tfl_lines: boolean;
-  refresh_timer: number;
-  forceRefreshTimeStamp: string;
-};
-
-const getConfig = async (): Promise<ConfigType> => {
-  const res = await fetch("/api/config");
-  if (!res.ok) throw new Error(`API error: ${res.status}`);
-  return res.json();
-};
 export default function Home() {
-  const [config, setConfig] = useState<ConfigType | null>(null);
+  const { config, fetchConfig, lastRefreshTimeStamp, forceRefresh } =
+    useConfigStore((state) => state);
 
   useEffect(() => {
-    // Fetch config on mount
-    getConfig().then((data) => {
-      setConfig({ ...data, forceRefreshTimeStamp: new Date().toISOString() });
-    });
-  }, []);
+    fetchConfig();
+  }, [fetchConfig]);
 
   useEffect(() => {
     if (!config?.refresh_timer) return;
     const interval = setInterval(() => {
-      getConfig().then((data) => {
-        setConfig({ ...data, forceRefreshTimeStamp: new Date().toISOString() });
-      });
+      forceRefresh();
     }, config.refresh_timer * 1000);
     return () => clearInterval(interval);
-  }, [config?.refresh_timer]);
+  }, [config?.refresh_timer, forceRefresh]);
 
-  const hasTrainDepartures =
-    config &&
-    Array.isArray(config.rail_departures) &&
-    config.rail_departures.length > 0;
-
-  const hasTflRoutes =
-    config &&
-    Array.isArray(config.tfl_best_routes) &&
-    config.tfl_best_routes.length > 0;
-
+  const hasTrainDepartures = config && config.rail_departures.length > 0;
+  const hasTflRoutes = config && config.tfl_best_routes.length > 0;
   const hasTflLines = config && config.show_tfl_lines;
 
   let columnCount = 0;
@@ -72,7 +34,7 @@ export default function Home() {
 
   return (
     <main
-      key={config?.forceRefreshTimeStamp || ""}
+      key={lastRefreshTimeStamp || ""}
       className="w-full min-h-screen p-8 bg-[#181818] font-mono text-[#f8f8f2] relative"
     >
       <h1
@@ -134,8 +96,8 @@ export default function Home() {
           </div>
         ) : null}
       </div>
-      {config?.forceRefreshTimeStamp ? (
-        <LastRefreshed dateTimeString={config.forceRefreshTimeStamp} />
+      {lastRefreshTimeStamp ? (
+        <LastRefreshed dateTimeString={lastRefreshTimeStamp} />
       ) : null}
       <div className="w-full text-center mt-10 flex flex-col items-center gap-2">
         <a

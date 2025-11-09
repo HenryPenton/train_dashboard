@@ -11,49 +11,42 @@ import SectionHeading from "../components/text/SectionHeading";
 import TfLStationSidebarListItem, {
   SidebarItem,
 } from "../components/TfL/lists/TfLStationSidebarListItem";
-import { ConfigSchema } from "../validators/frontend-validators/ConfigSchema";
+import { useConfigStore } from "../providers/config";
 
 export default function Settings() {
-  // Example data for sidebar
+  const {
+    config,
+    setShowTflLines,
+    addDeparture,
+    addRoute,
+    setRefreshTimer,
+    fetchConfig,
+    removeDeparture,
+    removeRoute,
+    saveConfig,
+  } = useConfigStore((state) => state);
+
   const [sidebarItems, setSidebarItems] = useState<Array<SidebarItem>>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSidebarItem, setSelectedSidebarItem] =
     useState<SidebarItem | null>(null);
   const router = useRouter();
-  const [showTflLine, setShowTflLine] = useState(false);
-  const [route, setRoute] = useState({
+
+  const [partialRoute, setPartialRoute] = useState({
     origin: "",
     originNaPTANOrATCO: "",
     destination: "",
     destinationNaPTANOrATCO: "",
   });
-  const [routes, setRoutes] = useState<Array<typeof route>>([]);
 
-  const [refreshTimer, setRefreshTimer] = useState(300);
-  const [departure, setDeparture] = useState({
+  const [partialDeparture, setPartialDeparture] = useState({
     origin: "",
     originCode: "",
     destination: "",
     destinationCode: "",
   });
-  const [departures, setDepartures] = useState<Array<typeof departure>>([]);
 
   useEffect(() => {
-    async function fetchConfig() {
-      try {
-        const res = await fetch("/api/config");
-        if (res.ok) {
-          const data = await res.json();
-          const config = ConfigSchema.parse(data);
-          setShowTflLine(config.show_tfl_lines);
-          setRoutes(config.tfl_best_routes);
-          setDepartures(config.rail_departures);
-          setRefreshTimer(config.refresh_timer);
-        }
-      } catch {
-        // ignore errors for now
-      }
-    }
     fetchConfig();
 
     async function fetchSidebarItems() {
@@ -64,11 +57,11 @@ export default function Settings() {
           setSidebarItems(data);
         }
       } catch {
-        // ignore errors for now
+        setSidebarItems([]);
       }
     }
     fetchSidebarItems();
-  }, []);
+  }, [fetchConfig]);
 
   const filtered = useMemo(
     () =>
@@ -78,24 +71,31 @@ export default function Settings() {
     [sidebarItems, searchTerm],
   );
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setShowTflLine(e.target.checked);
+  const handleRouteChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPartialRoute({ ...partialRoute, [e.target.name]: e.target.value });
   };
 
-  const handleRouteChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setRoute({ ...route, [e.target.name]: e.target.value });
+  const handleDepartureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPartialDeparture({
+      ...partialDeparture,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setShowTflLines(e.target.checked);
   };
 
   const handleAddRoute = (e: React.FormEvent) => {
     e.preventDefault();
     if (
-      route.origin &&
-      route.originNaPTANOrATCO &&
-      route.destination &&
-      route.destinationNaPTANOrATCO
+      partialRoute.origin &&
+      partialRoute.originNaPTANOrATCO &&
+      partialRoute.destination &&
+      partialRoute.destinationNaPTANOrATCO
     ) {
-      setRoutes([...routes, route]);
-      setRoute({
+      addRoute(partialRoute);
+      setPartialRoute({
         origin: "",
         originNaPTANOrATCO: "",
         destination: "",
@@ -104,49 +104,21 @@ export default function Settings() {
     }
   };
 
-  const handleDepartureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDeparture({ ...departure, [e.target.name]: e.target.value });
-  };
-
   const handleAddDeparture = (e: React.FormEvent) => {
     e.preventDefault();
     if (
-      departure.origin &&
-      departure.originCode &&
-      departure.destination &&
-      departure.destinationCode
+      partialDeparture.origin &&
+      partialDeparture.originCode &&
+      partialDeparture.destination &&
+      partialDeparture.destinationCode
     ) {
-      setDepartures([...departures, departure]);
-      setDeparture({
+      addDeparture(partialDeparture);
+      setPartialDeparture({
         origin: "",
         originCode: "",
         destination: "",
         destinationCode: "",
       });
-      // Here you would send the new departure to your backend API
-    }
-  };
-
-  const handleSave = async () => {
-    const payload = {
-      show_tfl_lines: showTflLine,
-      tfl_best_routes: routes,
-      rail_departures: departures,
-      refresh_timer: refreshTimer,
-    };
-    try {
-      const res = await fetch("/api/config", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      if (res.ok) {
-        router.push("/");
-      } else {
-        alert("Failed to save settings.");
-      }
-    } catch {
-      alert("Failed to save settings.");
     }
   };
 
@@ -196,7 +168,7 @@ export default function Settings() {
                 variant="primary"
                 className="px-4 py-2"
                 onClick={() =>
-                  setRoute((r) => ({
+                  setPartialRoute((r) => ({
                     ...r,
                     origin: selectedSidebarItem.CommonName,
                     originNaPTANOrATCO: selectedSidebarItem.naptanID,
@@ -209,7 +181,7 @@ export default function Settings() {
                 variant="success"
                 className="px-4 py-2"
                 onClick={() =>
-                  setRoute((r) => ({
+                  setPartialRoute((r) => ({
                     ...r,
                     destination: selectedSidebarItem.CommonName,
                     destinationNaPTANOrATCO: selectedSidebarItem.naptanID,
@@ -223,7 +195,7 @@ export default function Settings() {
         )}
 
         <Checkbox
-          checked={showTflLine}
+          checked={config.show_tfl_lines}
           onChange={handleChange}
           label="Show Tube Line Status"
           className="mb-8"
@@ -233,22 +205,22 @@ export default function Settings() {
           fields={[
             {
               name: "origin",
-              value: route.origin,
+              value: partialRoute.origin,
               placeholder: "Origin Station",
             },
             {
               name: "originNaPTANOrATCO",
-              value: route.originNaPTANOrATCO,
+              value: partialRoute.originNaPTANOrATCO,
               placeholder: "Origin NaPTAN or ATCO Code",
             },
             {
               name: "destination",
-              value: route.destination,
+              value: partialRoute.destination,
               placeholder: "Destination Station",
             },
             {
               name: "destinationNaPTANOrATCO",
-              value: route.destinationNaPTANOrATCO,
+              value: partialRoute.destinationNaPTANOrATCO,
               placeholder: "Destination NaPTAN or ATCO Code",
             },
           ]}
@@ -260,11 +232,11 @@ export default function Settings() {
         />
 
         <ItemList
-          items={routes}
+          items={config.tfl_best_routes}
           getLabel={(r) =>
             `${r.origin} (${r.originNaPTANOrATCO}) → ${r.destination} (${r.destinationNaPTANOrATCO})`
           }
-          onRemove={(idx) => setRoutes(routes.filter((_, i) => i !== idx))}
+          onRemove={(idx) => removeRoute(idx)}
           heading="Tube Routes"
         />
 
@@ -272,22 +244,22 @@ export default function Settings() {
           fields={[
             {
               name: "origin",
-              value: departure.origin,
+              value: partialDeparture.origin,
               placeholder: "Origin Station",
             },
             {
               name: "originCode",
-              value: departure.originCode,
+              value: partialDeparture.originCode,
               placeholder: "Origin CRS or TIPLOC",
             },
             {
               name: "destination",
-              value: departure.destination,
+              value: partialDeparture.destination,
               placeholder: "Destination Station",
             },
             {
               name: "destinationCode",
-              value: departure.destinationCode,
+              value: partialDeparture.destinationCode,
               placeholder: "Destination CRS or TIPLOC",
             },
           ]}
@@ -299,13 +271,11 @@ export default function Settings() {
         />
 
         <ItemList
-          items={departures}
+          items={config.rail_departures}
           getLabel={(d) =>
             `${d.origin} (${d.originCode}) → ${d.destination} (${d.destinationCode})`
           }
-          onRemove={(idx) =>
-            setDepartures(departures.filter((_, i) => i !== idx))
-          }
+          onRemove={(idx) => removeDeparture(idx)}
           heading="Train Departures"
         />
 
@@ -320,7 +290,7 @@ export default function Settings() {
             min={10000}
             step={1000}
             className="w-full p-2 border rounded"
-            value={refreshTimer}
+            value={config.refresh_timer}
             onChange={(e) => setRefreshTimer(Number(e.target.value))}
           />
           <div className="text-sm text-gray-600 mt-1">
@@ -332,7 +302,11 @@ export default function Settings() {
           type="submit"
           variant="info"
           className="mt-2 w-full justify-center"
-          onClick={handleSave}
+          onClick={() => {
+            saveConfig().then(() => {
+              router.push("/");
+            });
+          }}
           icon={<span className="mr-2">💾</span>}
         >
           Save Settings
