@@ -53,9 +53,6 @@ class LineStatusModelList:
     def __init__(self, lines: list[LineDAO], logger):
         self.logger = logger
         self.line_statuses = self._extract_statuses(lines)
-        self.logger.info(
-            f"Extracted {len(self.line_statuses)} line statuses from {len(lines)} lines"
-        )
 
     def _extract_statuses(self, lines: list[LineDAO]) -> list[LineStatusModel]:
         lines_status_models: list[LineStatusModel] = []

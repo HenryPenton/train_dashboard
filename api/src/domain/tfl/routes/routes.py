@@ -56,5 +56,4 @@ class RoutesList:
             raise ValueError("No routes available")
         best = self.routes[0]
 
-        self.logger.info("Best route selected")
         return best
