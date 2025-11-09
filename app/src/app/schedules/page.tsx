@@ -72,6 +72,14 @@ function saveSchedules(schedules: Schedules) {
 }
 
 export default function SchedulesPage() {
+  function handleDuplicate(idx: number) {
+    setSchedules((prev) => {
+      const updated = [...prev.schedules];
+      const clone = { ...updated[idx] };
+      updated.splice(idx + 1, 0, clone);
+      return { schedules: updated };
+    });
+  }
   const [schedules, setSchedules] = useState<Schedules>({ schedules: [] });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -216,6 +224,7 @@ export default function SchedulesPage() {
           handleDayCheckbox={handleDayCheckbox}
           handleDelete={handleDelete}
           handleSave={handleSave}
+          handleDuplicate={handleDuplicate}
         />
       </section>
     </main>

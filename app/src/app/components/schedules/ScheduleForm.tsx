@@ -45,6 +45,7 @@ function parseDays(days: string): string[] {
 }
 
 interface ScheduleFormProps {
+  handleDuplicate: (idx: number) => void;
   schedules: Schedules;
   saving: boolean;
   validationError: string | null;
@@ -66,6 +67,7 @@ const ScheduleForm: React.FC<ScheduleFormProps> = ({
   handleDayCheckbox,
   handleDelete,
   handleSave,
+  handleDuplicate,
 }) => (
   <>
     <div className="mb-4 flex gap-3">
@@ -113,14 +115,24 @@ const ScheduleForm: React.FC<ScheduleFormProps> = ({
             <span className="font-semibold capitalize">
               {sched.type.replaceAll("_", " ")}
             </span>
-            <Button
-              type="button"
-              variant="danger"
-              className="text-red-500 px-2 py-1"
-              onClick={() => handleDelete(idx)}
-            >
-              Delete
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                type="button"
+                variant="secondary"
+                className="px-2 py-1"
+                onClick={() => handleDuplicate?.(idx)}
+              >
+                Duplicate
+              </Button>
+              <Button
+                type="button"
+                variant="danger"
+                className="text-red-500 px-2 py-1"
+                onClick={() => handleDelete(idx)}
+              >
+                Delete
+              </Button>
+            </div>
           </div>
           {sched.type === "rail_departure" && (
             <div className="flex flex-col gap-2 mb-2">
