@@ -159,31 +159,8 @@ export default function SchedulesPage() {
       return { schedules: updated };
     });
   }
-
-  function isScheduleComplete(s: Schedule): boolean {
-    if (s.type === "rail_departure") {
-      return (
-        !!s.from_station_code &&
-        !!s.to_station_code &&
-        !!s.from_station_name &&
-        !!s.to_station_name &&
-        !!s.day_of_week &&
-        !!s.time
-      );
-    } else if (s.type === "tube_line_status") {
-      return !!s.day_of_week && !!s.time;
-    } else if (s.type === "best_route") {
-      return (
-        !!s.from_code &&
-        !!s.to_code &&
-        !!s.from_name &&
-        !!s.to_name &&
-        !!s.day_of_week &&
-        !!s.time
-      );
-    }
-    return false;
-  }
+  const isScheduleComplete = (s: Schedule): boolean =>
+    Object.values(s).every(Boolean);
 
   async function handleSave() {
     setValidationError(null);
