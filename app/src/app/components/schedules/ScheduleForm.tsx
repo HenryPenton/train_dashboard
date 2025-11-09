@@ -24,7 +24,10 @@ type BestRouteSchedule = {
   day_of_week: string;
   time: string;
 };
-type Schedule = RailDepartureSchedule | TubeLineStatusSchedule | BestRouteSchedule;
+type Schedule =
+  | RailDepartureSchedule
+  | TubeLineStatusSchedule
+  | BestRouteSchedule;
 type Schedules = { schedules: Schedule[] };
 
 const weekdays: { label: string; value: string }[] = [
@@ -45,7 +48,9 @@ interface ScheduleFormProps {
   schedules: Schedules;
   saving: boolean;
   validationError: string | null;
-  handleAdd: (type: "rail_departure" | "tube_line_status" | "best_route") => void;
+  handleAdd: (
+    type: "rail_departure" | "tube_line_status" | "best_route",
+  ) => void;
   handleChange: (idx: number, field: string, value: string) => void;
   handleDayCheckbox: (idx: number, checked: boolean, day: string) => void;
   handleDelete: (idx: number) => void;
@@ -93,7 +98,7 @@ const ScheduleForm: React.FC<ScheduleFormProps> = ({
       </Button>
     </div>
     <form
-      onSubmit={e => {
+      onSubmit={(e) => {
         e.preventDefault();
         handleSave();
       }}
@@ -125,14 +130,18 @@ const ScheduleForm: React.FC<ScheduleFormProps> = ({
                   placeholder="From Station CRS"
                   value={sched.from_station_code}
                   required
-                  onChange={e => handleChange(idx, "from_station_code", e.target.value)}
+                  onChange={(e) =>
+                    handleChange(idx, "from_station_code", e.target.value)
+                  }
                 />
                 <input
                   className="input"
                   placeholder="To Station CRS"
                   value={sched.to_station_code}
                   required
-                  onChange={e => handleChange(idx, "to_station_code", e.target.value)}
+                  onChange={(e) =>
+                    handleChange(idx, "to_station_code", e.target.value)
+                  }
                 />
               </div>
               <div className="flex gap-2">
@@ -141,23 +150,29 @@ const ScheduleForm: React.FC<ScheduleFormProps> = ({
                   placeholder="From Station Name"
                   value={sched.from_station_name}
                   required
-                  onChange={e => handleChange(idx, "from_station_name", e.target.value)}
+                  onChange={(e) =>
+                    handleChange(idx, "from_station_name", e.target.value)
+                  }
                 />
                 <input
                   className="input"
                   placeholder="To Station Name"
                   value={sched.to_station_name}
                   required
-                  onChange={e => handleChange(idx, "to_station_name", e.target.value)}
+                  onChange={(e) =>
+                    handleChange(idx, "to_station_name", e.target.value)
+                  }
                 />
               </div>
               <div className="flex gap-2 items-center flex-wrap">
-                {weekdays.map(d => (
+                {weekdays.map((d) => (
                   <label key={d.value} className="flex items-center gap-1">
                     <input
                       type="checkbox"
                       checked={parseDays(sched.day_of_week).includes(d.value)}
-                      onChange={e => handleDayCheckbox(idx, e.target.checked, d.value)}
+                      onChange={(e) =>
+                        handleDayCheckbox(idx, e.target.checked, d.value)
+                      }
                     />
                     <span>{d.label.slice(0, 3)}</span>
                   </label>
@@ -170,19 +185,21 @@ const ScheduleForm: React.FC<ScheduleFormProps> = ({
                   type="time"
                   value={sched.time}
                   required
-                  onChange={e => handleChange(idx, "time", e.target.value)}
+                  onChange={(e) => handleChange(idx, "time", e.target.value)}
                 />
               </div>
             </div>
           )}
           {sched.type === "tube_line_status" && (
             <div className="flex gap-2 items-center flex-wrap mb-2">
-              {weekdays.map(d => (
+              {weekdays.map((d) => (
                 <label key={d.value} className="flex items-center gap-1">
                   <input
                     type="checkbox"
                     checked={parseDays(sched.day_of_week).includes(d.value)}
-                    onChange={e => handleDayCheckbox(idx, e.target.checked, d.value)}
+                    onChange={(e) =>
+                      handleDayCheckbox(idx, e.target.checked, d.value)
+                    }
                   />
                   <span>{d.label.slice(0, 3)}</span>
                 </label>
@@ -195,7 +212,7 @@ const ScheduleForm: React.FC<ScheduleFormProps> = ({
                 type="time"
                 value={sched.time}
                 required
-                onChange={e => handleChange(idx, "time", e.target.value)}
+                onChange={(e) => handleChange(idx, "time", e.target.value)}
               />
             </div>
           )}
@@ -207,14 +224,16 @@ const ScheduleForm: React.FC<ScheduleFormProps> = ({
                   placeholder="From NaPTAN ID"
                   value={sched.from_code}
                   required
-                  onChange={e => handleChange(idx, "from_code", e.target.value)}
+                  onChange={(e) =>
+                    handleChange(idx, "from_code", e.target.value)
+                  }
                 />
                 <input
                   className="input"
                   placeholder="To NaPTAN ID"
                   value={sched.to_code}
                   required
-                  onChange={e => handleChange(idx, "to_code", e.target.value)}
+                  onChange={(e) => handleChange(idx, "to_code", e.target.value)}
                 />
               </div>
               <div className="flex gap-2">
@@ -223,23 +242,27 @@ const ScheduleForm: React.FC<ScheduleFormProps> = ({
                   placeholder="From Name"
                   value={sched.from_name}
                   required
-                  onChange={e => handleChange(idx, "from_name", e.target.value)}
+                  onChange={(e) =>
+                    handleChange(idx, "from_name", e.target.value)
+                  }
                 />
                 <input
                   className="input"
                   placeholder="To Name"
                   value={sched.to_name}
                   required
-                  onChange={e => handleChange(idx, "to_name", e.target.value)}
+                  onChange={(e) => handleChange(idx, "to_name", e.target.value)}
                 />
               </div>
               <div className="flex gap-2 items-center flex-wrap">
-                {weekdays.map(d => (
+                {weekdays.map((d) => (
                   <label key={d.value} className="flex items-center gap-1">
                     <input
                       type="checkbox"
                       checked={parseDays(sched.day_of_week).includes(d.value)}
-                      onChange={e => handleDayCheckbox(idx, e.target.checked, d.value)}
+                      onChange={(e) =>
+                        handleDayCheckbox(idx, e.target.checked, d.value)
+                      }
                     />
                     <span>{d.label.slice(0, 3)}</span>
                   </label>
@@ -252,7 +275,7 @@ const ScheduleForm: React.FC<ScheduleFormProps> = ({
                   type="time"
                   value={sched.time}
                   required
-                  onChange={e => handleChange(idx, "time", e.target.value)}
+                  onChange={(e) => handleChange(idx, "time", e.target.value)}
                 />
               </div>
             </div>

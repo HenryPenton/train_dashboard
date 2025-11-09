@@ -8,9 +8,18 @@ interface CheckboxProps {
   id?: string;
 }
 
-export default function Checkbox({ checked, onChange, label, className = "", id }: CheckboxProps) {
+export default function Checkbox({
+  checked,
+  onChange,
+  label,
+  className = "",
+  id,
+}: CheckboxProps) {
   return (
-    <label className={`flex items-center gap-2 text-lg ${className}`} htmlFor={id}>
+    <label
+      className={`flex items-center gap-2 text-lg ${className}`}
+      htmlFor={id}
+    >
       <input
         id={id}
         type="checkbox"

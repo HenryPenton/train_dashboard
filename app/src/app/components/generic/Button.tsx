@@ -1,6 +1,7 @@
 import React from "react";
 
-export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "secondary" | "danger" | "success" | "info";
   loading?: boolean;
   icon?: React.ReactNode;
@@ -11,16 +12,11 @@ const baseStyles =
   "inline-flex items-center px-4 py-2 rounded-md font-semibold shadow focus:outline-none focus:ring-2 focus:ring-offset-2 transition disabled:opacity-60 disabled:cursor-not-allowed";
 
 const variantStyles: Record<string, string> = {
-  primary:
-    "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-400",
-  secondary:
-    "bg-gray-600 text-white hover:bg-gray-700 focus:ring-gray-400",
-  danger:
-    "bg-red-600 text-white hover:bg-red-700 focus:ring-red-400",
-  success:
-    "bg-green-600 text-white hover:bg-green-700 focus:ring-green-400",
-  info:
-    "bg-purple-600 text-white hover:bg-purple-700 focus:ring-purple-400",
+  primary: "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-400",
+  secondary: "bg-gray-600 text-white hover:bg-gray-700 focus:ring-gray-400",
+  danger: "bg-red-600 text-white hover:bg-red-700 focus:ring-red-400",
+  success: "bg-green-600 text-white hover:bg-green-700 focus:ring-green-400",
+  info: "bg-purple-600 text-white hover:bg-purple-700 focus:ring-purple-400",
 };
 
 export default function Button({
