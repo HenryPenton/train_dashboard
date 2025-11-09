@@ -52,8 +52,9 @@ class RoutesList:
 
     def get_best_route(self) -> Route:
         if len(self.routes) == 0:
-            self.logger.error("No routes available")
-            raise ValueError("No routes available")
+            error = "No routes available"
+            self.logger.error(error)
+            raise ValueError(error)
         best = self.routes[0]
 
         return best
