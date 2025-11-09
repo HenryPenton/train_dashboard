@@ -1,19 +1,16 @@
 import logging
-import os
 
 
 def configure_logger(name: str) -> logging.Logger:
     logger = logging.getLogger(name)
-    logger.setLevel(os.environ.get("LOG_LEVEL", "INFO"))
-    formatter = logging.Formatter("%(asctime)s %(levelname)s %(message)s")
-    # # File handler
-    # file_handler = logging.FileHandler(log_file)
-    # file_handler.setFormatter(formatter)
-    # logger.addHandler(file_handler)
-    # Stream handler (stdout)
-    stream_handler = logging.StreamHandler()
-    stream_handler.setFormatter(formatter)
-    logger.addHandler(stream_handler)
+    if not logger.hasHandlers():
+        formatter = logging.Formatter(
+            "%(asctime)s %(levelname)s [%(name)s] %(message)s"
+        )
+        stream_handler = logging.StreamHandler()
+        stream_handler.setFormatter(formatter)
+        logger.addHandler(stream_handler)
+    logger.setLevel(logging.INFO)
     logger.propagate = True
     return logger
 
