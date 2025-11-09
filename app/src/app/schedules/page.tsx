@@ -1,14 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import Sidebar from "../components/generic/lists/Sidebar";
-import TfLStationSidebarListItem from "../components/TfL/lists/TfLStationSidebarListItem";
-import { SchedulesSchema } from "../validators/frontend-validators/ScheduleSchema";
+import { useEffect, useState } from "react";
 import ScheduleForm from "../components/schedules/ScheduleForm";
-type SidebarItem = {
-  CommonName: string;
-  naptanID: string;
-};
+import TflStopSidebar, { SidebarItem } from "../components/TfL/TflStopSidebar";
+import { SchedulesSchema } from "../validators/frontend-validators/ScheduleSchema";
 
 async function fetchSchedules() {
   try {
@@ -82,8 +77,6 @@ export default function SchedulesPage() {
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
-  // Sidebar state
-  const [sidebarItems, setSidebarItems] = useState<Array<SidebarItem>>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSidebarItem, setSelectedSidebarItem] =
     useState<SidebarItem | null>(null);
@@ -98,28 +91,7 @@ export default function SchedulesPage() {
         setError("Failed to load schedules");
         setLoading(false);
       });
-
-    async function fetchSidebarItems() {
-      try {
-        const res = await fetch("/api/naptan");
-        if (res.ok) {
-          const data = await res.json();
-          setSidebarItems(data);
-        }
-      } catch {
-        // ignore errors for now
-      }
-    }
-    fetchSidebarItems();
   }, []);
-
-  const filteredSidebarItems = useMemo(
-    () =>
-      sidebarItems.filter((item) =>
-        item.CommonName.toLowerCase().includes(searchTerm.toLowerCase()),
-      ),
-    [sidebarItems, searchTerm],
-  );
 
   function handleAdd(
     type: "rail_departure" | "tube_line_status" | "best_route",
@@ -241,25 +213,11 @@ export default function SchedulesPage() {
   return (
     <main className="p-8 max-w-4xl mx-auto flex flex-col md:flex-row">
       <div className="w-full md:w-64 md:mr-8 md:mb-0 mb-8 p-0 border-0 md:border-r md:pr-4">
-        <Sidebar<SidebarItem>
-          items={filteredSidebarItems}
+        <TflStopSidebar
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
-          selectedId={selectedSidebarItem?.naptanID ?? null}
-          setSelectedId={(id) => {
-            const found =
-              sidebarItems.find((item) => item.naptanID === id) || null;
-            setSelectedSidebarItem(found);
-          }}
-          renderItem={(item, selectedId, onClick) => (
-            <TfLStationSidebarListItem
-              key={item.naptanID}
-              item={item}
-              matchingId={selectedId}
-              onClick={onClick}
-            />
-          )}
-          title="Stations"
+          selectedSidebarItem={selectedSidebarItem}
+          setSelectedSidebarItem={setSelectedSidebarItem}
         />
       </div>
       {/* Main content */}

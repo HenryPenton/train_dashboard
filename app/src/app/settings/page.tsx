@@ -1,16 +1,14 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../components/generic/Button";
 import Checkbox from "../components/generic/Checkbox";
 import AddItemForm from "../components/generic/forms/AddItemForm";
 import ItemList from "../components/generic/lists/ItemList";
-import Sidebar from "../components/generic/lists/Sidebar";
 import SectionHeading from "../components/text/SectionHeading";
-import TfLStationSidebarListItem, {
-  SidebarItem,
-} from "../components/TfL/lists/TfLStationSidebarListItem";
+import { SidebarItem } from "../components/TfL/lists/TfLStationSidebarListItem";
+import TflStopSidebar from "../components/TfL/TflStopSidebar";
 import { useConfigStore } from "../providers/config";
 
 export default function Settings() {
@@ -26,7 +24,6 @@ export default function Settings() {
     saveConfig,
   } = useConfigStore((state) => state);
 
-  const [sidebarItems, setSidebarItems] = useState<Array<SidebarItem>>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSidebarItem, setSelectedSidebarItem] =
     useState<SidebarItem | null>(null);
@@ -48,28 +45,7 @@ export default function Settings() {
 
   useEffect(() => {
     fetchConfig();
-
-    async function fetchSidebarItems() {
-      try {
-        const res = await fetch("/api/naptan");
-        if (res.ok) {
-          const data = await res.json();
-          setSidebarItems(data);
-        }
-      } catch {
-        setSidebarItems([]);
-      }
-    }
-    fetchSidebarItems();
   }, [fetchConfig]);
-
-  const filtered = useMemo(
-    () =>
-      sidebarItems.filter((item) =>
-        item.CommonName.toLowerCase().includes(searchTerm.toLowerCase()),
-      ),
-    [sidebarItems, searchTerm],
-  );
 
   const handleRouteChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPartialRoute({ ...partialRoute, [e.target.name]: e.target.value });
@@ -125,25 +101,11 @@ export default function Settings() {
   return (
     <main className="p-8 max-w-4xl mx-auto flex flex-col md:flex-row">
       <div className="w-full md:w-64 md:mr-8 md:mb-0 mb-8 p-0 border-0 md:border-r md:pr-4">
-        <Sidebar<SidebarItem>
-          items={filtered}
+        <TflStopSidebar
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
-          selectedId={selectedSidebarItem?.naptanID ?? null}
-          setSelectedId={(id) => {
-            const found =
-              sidebarItems.find((item) => item.naptanID === id) || null;
-            setSelectedSidebarItem(found);
-          }}
-          renderItem={(item, selectedId, onClick) => (
-            <TfLStationSidebarListItem
-              key={item.naptanID}
-              item={item}
-              matchingId={selectedId}
-              onClick={onClick}
-            />
-          )}
-          title="Stations"
+          selectedSidebarItem={selectedSidebarItem}
+          setSelectedSidebarItem={setSelectedSidebarItem}
         />
       </div>
       {/* Main content */}
