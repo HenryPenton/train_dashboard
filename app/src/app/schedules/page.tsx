@@ -18,30 +18,29 @@ async function fetchSchedules() {
   }
 }
 
-type RailDepartureSchedule = {
+type ScheduleBase = {
+  day_of_week: string;
+  time: string;
+};
+
+type RailDepartureSchedule = ScheduleBase & {
   type: "rail_departure";
   from_station_code: string;
   to_station_code: string;
   from_station_name: string;
   to_station_name: string;
-  day_of_week: string;
-  time: string;
 };
 
-type TubeLineStatusSchedule = {
+type TubeLineStatusSchedule = ScheduleBase & {
   type: "tube_line_status";
-  day_of_week: string;
-  time: string;
 };
 
-type BestRouteSchedule = {
+type BestRouteSchedule = ScheduleBase & {
   type: "best_route";
   from_code: string;
   to_code: string;
   from_name: string;
   to_name: string;
-  day_of_week: string;
-  time: string;
 };
 
 type Schedule =
