@@ -73,9 +73,7 @@ export const createConfigStore = (
       const config = await res.json();
 
       set(() => ({
-        config: {
-          ...config,
-        },
+        config,
         lastRefreshTimeStamp: new Date().toISOString(),
       }));
     },
@@ -88,7 +86,7 @@ export const createConfigStore = (
       set((state) => {
         return {
           config: {
-            ...state.config,
+            ...structuredClone(state.config),
             rail_departures: [...state.config.rail_departures, departure],
           },
         };
@@ -98,7 +96,7 @@ export const createConfigStore = (
       set((state) => {
         return {
           config: {
-            ...state.config,
+            ...structuredClone(state.config),
             tfl_best_routes: [...state.config.tfl_best_routes, route],
           },
         };
@@ -108,7 +106,7 @@ export const createConfigStore = (
       set((state) => {
         return {
           config: {
-            ...state.config,
+            ...structuredClone(state.config),
             refresh_timer: timer,
           },
         };
@@ -118,7 +116,7 @@ export const createConfigStore = (
       set((state) => {
         return {
           config: {
-            ...state.config,
+            ...structuredClone(state.config),
             show_tfl_lines: show,
           },
         };
@@ -147,7 +145,7 @@ export const createConfigStore = (
       set((state) => {
         return {
           config: {
-            ...state.config,
+            ...structuredClone(state.config),
             tfl_best_routes: state.config.tfl_best_routes.filter(
               (_, i) => i !== index,
             ),
@@ -159,7 +157,7 @@ export const createConfigStore = (
       set((state) => {
         return {
           config: {
-            ...state.config,
+            ...structuredClone(state.config),
             rail_departures: state.config.rail_departures.filter(
               (_, i) => i !== index,
             ),
