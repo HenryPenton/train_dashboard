@@ -8,6 +8,7 @@ import AddItemForm from "../components/generic/forms/AddItemForm";
 import ItemList from "../components/generic/lists/ItemList";
 import SectionHeading from "../components/text/SectionHeading";
 import { SidebarItem } from "../components/TfL/lists/TfLStationSidebarListItem";
+import PlaceDetails from "../components/TfL/PlaceDetails";
 import TflStopSidebar from "../components/TfL/TflStopSidebar";
 import { useConfigStore } from "../providers/config";
 
@@ -115,45 +116,10 @@ export default function Settings() {
         </SectionHeading>
 
         {selectedSidebarItem !== null && (
-          <div className="mb-8 p-4 border rounded bg-gray-50">
-            <h4 className="font-semibold mb-2">Place Details</h4>
-            <div className="text-lg">
-              <span className="font-medium">Name:</span>{" "}
-              {selectedSidebarItem.CommonName}
-            </div>
-            <div className="text-lg">
-              <span className="font-medium">NaPTAN ID:</span>{" "}
-              {selectedSidebarItem.naptanID}
-            </div>
-            <div className="flex gap-4 mt-4">
-              <Button
-                variant="primary"
-                className="px-4 py-2"
-                onClick={() =>
-                  setPartialRoute((r) => ({
-                    ...r,
-                    origin: selectedSidebarItem.CommonName,
-                    originNaPTANOrATCO: selectedSidebarItem.naptanID,
-                  }))
-                }
-              >
-                Set as Origin
-              </Button>
-              <Button
-                variant="success"
-                className="px-4 py-2"
-                onClick={() =>
-                  setPartialRoute((r) => ({
-                    ...r,
-                    destination: selectedSidebarItem.CommonName,
-                    destinationNaPTANOrATCO: selectedSidebarItem.naptanID,
-                  }))
-                }
-              >
-                Set as Destination
-              </Button>
-            </div>
-          </div>
+          <PlaceDetails
+            selectedSidebarItem={selectedSidebarItem}
+            setPartialRoute={setPartialRoute}
+          />
         )}
 
         <Checkbox

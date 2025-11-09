@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import ScheduleForm from "../components/schedules/ScheduleForm";
+import PlaceDetails from "../components/TfL/PlaceDetails";
 import TflStopSidebar, { SidebarItem } from "../components/TfL/TflStopSidebar";
 import { SchedulesSchema } from "../validators/frontend-validators/ScheduleSchema";
 
@@ -223,17 +224,10 @@ export default function SchedulesPage() {
       {/* Main content */}
       <section className="flex-1">
         {selectedSidebarItem !== null && (
-          <div className="mb-8 p-4 border rounded bg-gray-50">
-            <h4 className="font-semibold mb-2">Place Details</h4>
-            <div className="text-lg">
-              <span className="font-medium">Name:</span>{" "}
-              {selectedSidebarItem.CommonName}
-            </div>
-            <div className="text-lg">
-              <span className="font-medium">NaPTAN ID:</span>{" "}
-              {selectedSidebarItem.naptanID}
-            </div>
-          </div>
+          <PlaceDetails
+            selectedSidebarItem={selectedSidebarItem}
+            showButtons={false}
+          />
         )}
         <h1 className="text-2xl font-bold mb-4">Schedules</h1>
 
