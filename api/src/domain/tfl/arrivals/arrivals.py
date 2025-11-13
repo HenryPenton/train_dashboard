@@ -11,10 +11,6 @@ class ArrivalModel:
         self.destination_name = arrival_dao.destinationName
         self.direction = arrival_dao.direction
 
-    @property
-    def time_to_station_minutes(self) -> int:
-        return round(self.time_to_station_seconds / 60)
-
     def as_dict(self):
         return {
             "id": self.id,
