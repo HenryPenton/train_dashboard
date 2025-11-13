@@ -5,6 +5,7 @@ from src.adapters.clients.tflclient import (
 )
 from src.DAOs.tfl.line_dao import LineDAO
 from src.DAOs.tfl.route_dao import JourneyDAO
+from src.DAOs.tfl.arrival_dao import ArrivalDAO
 
 
 class MockAsyncClient:
@@ -92,4 +93,40 @@ async def test_get_all_lines_status_error():
     client = TFLClient(MockAsyncClient(mock_response))
     with pytest.raises(TFLClientError) as e:
         await client.get_all_lines_status()
+    assert "TFLClient failed" in str(e.value)
+
+
+@pytest.mark.asyncio
+async def test_get_arrivals_at_station_success():
+    mock_json = [
+        {
+            "id": "123",
+            "lineId": "circle",
+            "lineName": "Circle",
+            "platformName": "Platform 1",
+            "timeToStation": 120,
+            "expectedArrival": "2025-11-13T18:12:32Z",
+            "towards": "Edgware Road",
+        }
+    ]
+    mock_response = MockResponse(json_data=mock_json)
+    client = TFLClient(MockAsyncClient(mock_response))
+    result = await client.get_arrivals_at_station("940GZZLUPAC")
+    assert isinstance(result, list)
+    assert all(isinstance(r, ArrivalDAO) for r in result)
+    assert result[0].id == "123"
+    assert result[0].lineId == "circle"
+    assert result[0].timeToStation == 120
+
+
+@pytest.mark.asyncio
+async def test_get_arrivals_at_station_error():
+    class ErrorResponse(MockResponse):
+        def raise_for_status(self):
+            raise Exception("Something went wrong")
+
+    mock_response = ErrorResponse()
+    client = TFLClient(MockAsyncClient(mock_response))
+    with pytest.raises(TFLClientError) as e:
+        await client.get_arrivals_at_station("940GZZLUPAC")
     assert "TFLClient failed" in str(e.value)

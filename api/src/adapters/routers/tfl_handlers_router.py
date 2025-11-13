@@ -6,6 +6,7 @@ from src.adapters.clients.tflclient import TFLClient
 from src.application.tfl_service import TFLService
 from src.DTOs.tfl.line_dto import LineDTO
 from src.DTOs.tfl.route_dto import RouteDTO
+from src.DTOs.tfl.arrival_dto import StationArrivalsDTO
 from src.shared.logging.logger_utils import configure_logger, get_logger
 
 logger_name = "tfl_logger"
@@ -57,4 +58,19 @@ async def get_tfl_line_status(
         return line_status_dtos
     except Exception as e:
         logger.error(f"Error getting TfL line statuses: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/tfl/arrivals/{station_id}", response_model=StationArrivalsDTO, response_model_exclude_none=True)
+async def get_station_arrivals(
+    station_id: str,
+    tfl_service: TFLService = Depends(get_tfl_service),
+):
+    logger = get_logger(logger_name)
+    try:
+        logger.info(f"Getting tube arrivals for station {station_id}")
+        arrivals_data = await tfl_service.get_arrivals_by_line(station_id)
+        return StationArrivalsDTO(**arrivals_data)
+    except Exception as e:
+        logger.error(f"Error getting arrivals for station {station_id}: {e}")
         raise HTTPException(status_code=500, detail=str(e))

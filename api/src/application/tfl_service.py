@@ -1,6 +1,7 @@
 from src.adapters.clients.tflclient import TFLClient
 from src.domain.tfl.lines.lines import LineStatusModel, LineStatusModelList
 from src.domain.tfl.routes.routes import Route, RoutesList
+from src.domain.tfl.arrivals.arrivals import ArrivalsList
 
 
 class TFLService:
@@ -26,3 +27,10 @@ class TFLService:
         model_list = LineStatusModelList(status_DAOs, logger=self.logger).get_line_statuses()
         self.logger.info("Returning line statuses")
         return model_list
+
+    async def get_arrivals_by_line(self, station_id: str):
+        self.logger.info(f"Requesting arrivals by line at station {station_id}")
+        arrival_DAOs = await self.client.get_arrivals_at_station(station_id)
+        self.logger.debug(f"Received {len(arrival_DAOs)} arrivals")
+        arrivals_list = ArrivalsList(arrival_DAOs, logger=self.logger)
+        return arrivals_list.get_arrivals_by_line()

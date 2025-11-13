@@ -35,6 +35,28 @@ class DummyTFLService:
 
         return [DummyLineStatus()]
 
+    async def get_arrivals_by_line(self, station_id):
+        return {
+            "lines": {
+                "circle": {
+                    "lineName": "Circle",
+                    "arrivals": {
+                        "Platform 1": [
+                            {
+                                "id": "123",
+                                "lineId": "circle",
+                                "lineName": "Circle",
+                                "platformName": "Platform 1",
+                                "timeToStation": 120,
+                                "expectedArrival": "2025-11-13T18:12:32Z",
+                                "towards": "Edgware Road"
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+
 
 def test_get_best_route():
     app = FastAPI()
@@ -98,6 +120,9 @@ def test_get_line_status_error():
         async def get_line_statuses(self):
             raise Exception("fail")
 
+        async def get_arrivals_by_line(self, station_id):
+            return {}
+
     app = FastAPI()
     app.dependency_overrides[tfl_handler.get_tfl_service] = lambda: FailingTFLService()
     app.include_router(tfl_handler.router)
@@ -105,3 +130,53 @@ def test_get_line_status_error():
     response = client.get("/tfl/line-status")
     assert response.status_code == 500
     assert "fail" in response.json()["detail"]
+
+
+def test_get_station_arrivals():
+    app = FastAPI()
+    app.dependency_overrides[tfl_handler.get_tfl_service] = lambda: DummyTFLService()
+    app.include_router(tfl_handler.router)
+    client = TestClient(app)
+
+    response = client.get("/tfl/arrivals/940GZZLUPAC")
+    assert response.status_code == 200
+    assert response.json() == {
+        "lines": {
+            "circle": {
+                "lineName": "Circle",
+                "arrivals": {
+                    "Platform 1": [
+                        {
+                            "id": "123",
+                            "lineId": "circle",
+                            "lineName": "Circle",
+                            "platformName": "Platform 1",
+                            "timeToStation": 120,
+                            "expectedArrival": "2025-11-13T18:12:32Z",
+                            "towards": "Edgware Road"
+                        }
+                    ]
+                }
+            }
+        }
+    }
+
+
+def test_get_station_arrivals_error():
+    class FailingTFLService:
+        async def get_best_route(self, from_station, to_station):
+            return {}
+
+        async def get_line_statuses(self):
+            return []
+
+        async def get_arrivals_by_line(self, station_id):
+            raise Exception("arrivals fail")
+
+    app = FastAPI()
+    app.dependency_overrides[tfl_handler.get_tfl_service] = lambda: FailingTFLService()
+    app.include_router(tfl_handler.router)
+    client = TestClient(app)
+    response = client.get("/tfl/arrivals/940GZZLUPAC")
+    assert response.status_code == 500
+    assert "arrivals fail" in response.json()["detail"]

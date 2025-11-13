@@ -1,6 +1,6 @@
-
 from src.DAOs.tfl.line_dao import LineDAO
 from src.DAOs.tfl.route_dao import JourneyDAO
+from src.DAOs.tfl.arrival_dao import ArrivalDAO
 import httpx
 
 
@@ -38,5 +38,16 @@ class TFLClient:
             response.raise_for_status()
             data = response.json()
             return [LineDAO(**line) for line in data]
+        except Exception as e:
+            raise TFLClientError(f"TFLClient failed: {str(e)}")
+
+    async def get_arrivals_at_station(self, station_id: str) -> list[ArrivalDAO]:
+        url = f"{self.api_root}/StopPoint/{station_id}/Arrivals"
+        try:
+            response = await self.client.get(url)
+            response.raise_for_status()
+            data = response.json()
+
+            return [ArrivalDAO(**arrival) for arrival in data]
         except Exception as e:
             raise TFLClientError(f"TFLClient failed: {str(e)}")

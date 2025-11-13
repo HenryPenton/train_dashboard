@@ -3,6 +3,7 @@ import asyncio
 from src.application.tfl_service import TFLService
 from src.DAOs.tfl.line_dao import LineDAO
 from src.DAOs.tfl.route_dao import JourneyDAO
+from src.DAOs.tfl.arrival_dao import ArrivalDAO
 from src.test.utils.dummy_logger import DummyLogger
 
 
@@ -47,6 +48,21 @@ class DummyTflClient:
             )
         ]
 
+    async def get_arrivals_at_station(self, station_id):
+        return [
+            ArrivalDAO(
+                **{
+                    "id": "123",
+                    "lineId": "circle",
+                    "lineName": "Circle",
+                    "platformName": "Platform 1",
+                    "timeToStation": 120,
+                    "expectedArrival": "2025-11-13T18:12:32Z",
+                    "towards": "Edgware Road"
+                }
+            )
+        ]
+
 
 class FailingTflClient:
     def __init__(self):
@@ -57,6 +73,9 @@ class FailingTflClient:
 
     async def get_possible_route_journeys(self, from_station, to_station):
         raise Exception("TFL route error")
+
+    async def get_arrivals_at_station(self, station_id):
+        raise Exception("TFL arrivals error")
 
 
 def test_get_line_status():
@@ -109,3 +128,42 @@ def test_get_best_route_error():
         assert False, "Expected Exception"
     except Exception as e:
         assert str(e) == "TFL route error"
+
+
+def test_get_arrivals_by_line():
+    logger = DummyLogger()
+    service = TFLService(DummyTflClient(), logger=logger)
+    result = asyncio.run(service.get_arrivals_by_line("940GZZLUPAC"))
+    assert result == {
+        "lines": {
+            "circle": {
+                "lineName": "Circle",
+                "arrivals": {
+                    "Platform 1": [
+                        {
+                            "id": "123",
+                            "lineId": "circle",
+                            "lineName": "Circle",
+                            "platformName": "Platform 1",
+                            "timeToStation": 120,
+                            "expectedArrival": "2025-11-13T18:12:32Z",
+                            "towards": "Edgware Road",
+                            "currentLocation": None,
+                            "destinationName": None,
+                            "direction": None
+                        }
+                    ]
+                }
+            }
+        }
+    }
+
+
+def test_get_arrivals_by_line_error():
+    logger = DummyLogger()
+    service = TFLService(FailingTflClient(), logger=logger)
+    try:
+        asyncio.run(service.get_arrivals_by_line("940GZZLUPAC"))
+        assert False, "Expected Exception"
+    except Exception as e:
+        assert str(e) == "TFL arrivals error"
