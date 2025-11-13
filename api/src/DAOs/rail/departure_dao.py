@@ -15,6 +15,7 @@ class DepartureDAO(BaseModel):
     runDate: str
     realtimeDeparture: Optional[str] = None
     platform: Optional[str] = None
+    cancelReasonCode: Optional[str] = None
 
     @property
     def origins(self) -> List[str]:
