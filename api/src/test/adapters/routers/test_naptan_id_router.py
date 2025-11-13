@@ -48,3 +48,11 @@ def test_get_naptan_ids_error():
     assert response.status_code == 500
     assert "detail" in response.json()
     assert "fail" in response.json()["detail"]
+
+
+def test_get_station_service():
+    service = naptan_id_handler.get_station_service()
+    assert isinstance(service, naptan_id_handler.StationService)
+    # Verify the service was created with the correct components
+    assert service.reader is not None
+    assert service.logger is not None

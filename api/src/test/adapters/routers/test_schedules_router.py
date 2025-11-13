@@ -103,7 +103,7 @@ def test_get_schedules_not_found():
 def test_set_schedules_error():
     class FailingSchedulesService:
         def set_schedules(self, new_schedules):
-            raise Exception("fail")
+            raise Exception("set schedules fail")
 
         def get_schedules(self):
             return {
@@ -116,10 +116,22 @@ def test_set_schedules_error():
         lambda: FailingSchedulesService()
     )
     client = TestClient(app)
-    response = client.post(
-        "/schedules", json={"schedules": [{"from_station_code": "GLC"}]}
-    )
-    assert response.status_code == 422
+    payload = {
+        "schedules": [
+            {
+                "type": "rail_departure",
+                "from_station_code": "GLC",
+                "to_station_code": "EUS",
+                "from_station_name": "Glasgow Central",
+                "to_station_name": "Euston",
+                "day_of_week": "mon",
+                "time": "17:38",
+            }
+        ]
+    }
+    response = client.post("/schedules", json=payload)
+    assert response.status_code == 500
+    assert "set schedules fail" in response.json()["detail"]
 
 
 def test_get_schedules_raises_exception():

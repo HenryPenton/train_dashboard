@@ -180,3 +180,17 @@ def test_get_station_arrivals_error():
     response = client.get("/tfl/arrivals/940GZZLUPAC")
     assert response.status_code == 500
     assert "arrivals fail" in response.json()["detail"]
+
+
+def test_get_tfl_client():
+    client = tfl_handler.get_tfl_client()
+    assert isinstance(client, tfl_handler.TFLClient)
+    assert client.client is not None
+
+
+def test_get_tfl_service():
+    tfl_client = tfl_handler.get_tfl_client()
+    service = tfl_handler.get_tfl_service(tfl_client)
+    assert isinstance(service, tfl_handler.TFLService)
+    assert service.client == tfl_client
+    assert service.logger is not None

@@ -55,3 +55,16 @@ def test_get_departures_error():
     response = client.get("/rail/departures/AAA/to/BBB")
     assert response.status_code == 500
     assert "fail" in response.json()["detail"]
+
+
+def test_get_rtt_client():
+    client = rail_handler.get_rtt_client()
+    assert isinstance(client, rail_handler.RTTClient)
+    assert client.client is not None
+
+
+def test_get_rail_service():
+    rtt_client = rail_handler.get_rtt_client()
+    service = rail_handler.get_rail_service(rtt_client)
+    assert isinstance(service, rail_handler.RailService)
+    assert service.client == rtt_client
