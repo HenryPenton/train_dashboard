@@ -11,7 +11,7 @@ class AbstractFileReader(ABC, Generic[T]):
         self.file_path = file_path
 
     @abstractmethod
-    def read_json(self) -> T:
+    def read_json(self) -> T:  # pragma: no cover
         pass
 
 

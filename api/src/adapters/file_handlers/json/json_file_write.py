@@ -8,7 +8,7 @@ class AbstractFileWriter(ABC):
         self.path = path
 
     @abstractmethod
-    def write_json(self, data: dict):
+    def write_json(self, data: dict):  # pragma: no cover
         pass
 
 
