@@ -7,6 +7,7 @@ from src.shared.utils.check_group_of_properties_exist import (
 
 class RailDepartureTimes:
     def __init__(self, service: DepartureDAO) -> None:
+        self.departure = service
         self.scheduled_departure = self._get_scheduled_departure(service)
         self.real_departure = self._get_real_departure(service)
         self.actual = self.real_departure or self.scheduled_departure
@@ -14,7 +15,7 @@ class RailDepartureTimes:
         self.delay = self._adjust_delay_for_overnight(
             self.delay, self.scheduled_departure, self.real_departure
         )
-        self.status = self._get_status(self.delay)
+        self.status = self._get_status(self.delay, service.cancelReasonCode)
 
     @staticmethod
     def _get_scheduled_departure(service: DepartureDAO) -> str:
@@ -48,7 +49,9 @@ class RailDepartureTimes:
         return 0
 
     @staticmethod
-    def _get_status(delay: int) -> str:
+    def _get_status(delay: int, cancel_reason_code: str = None) -> str:
+        if cancel_reason_code:
+            return "Cancelled"
         if delay > 0:
             return "Late"
         if delay < 0:

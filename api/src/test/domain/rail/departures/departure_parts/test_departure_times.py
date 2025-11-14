@@ -166,3 +166,43 @@ class TestRailDepartureTimes:
             "actual": "2340",
         }
         assert dep.get_rail_departure_times() == expected
+
+    def test_cancelled_train_is_valid_with_cancelled_status(self):
+        model = DepartureDAO(
+            **{
+                "gbttBookedDeparture": "0930",
+                "platform": "5",
+                "realtimeDeparture": "0930",
+                "serviceUid": "EDG132",
+                "runDate": "2025-10-29",
+                "cancelReasonCode": "ZW",
+            }
+        )
+        dep = RailDepartureTimes(model)
+        assert dep.is_valid()
+        expected = {
+            "delay": 0,
+            "status": "Cancelled",
+            "actual": "0930",
+        }
+        assert dep.get_rail_departure_times() == expected
+
+    def test_non_cancelled_train_is_valid(self):
+        model = DepartureDAO(
+            **{
+                "gbttBookedDeparture": "0930",
+                "platform": "5",
+                "realtimeDeparture": "0930",
+                "serviceUid": "EDG133",
+                "runDate": "2025-10-29",
+                "cancelReasonCode": None,
+            }
+        )
+        dep = RailDepartureTimes(model)
+        assert dep.is_valid()
+        expected = {
+            "delay": 0,
+            "status": "On time",
+            "actual": "0930",
+        }
+        assert dep.get_rail_departure_times() == expected

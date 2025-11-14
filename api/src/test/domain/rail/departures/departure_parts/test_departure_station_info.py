@@ -181,35 +181,3 @@ class TestDepartureStationInfo:
         )
         info = RailDepartureStationInfo(dao)
         assert info.platform == "?"
-
-    def test_cancelled_train_is_invalid(self):
-        dao = DepartureDAO(
-            **{
-                "origin": [{"description": "Aberdeen"}],
-                "destination": [{"description": "Pitlochry"}],
-                "gbttBookedDeparture": "0930",
-                "platform": "5",
-                "realtimeDeparture": "0930",
-                "serviceUid": "ABD010",
-                "runDate": "2024-06-01",
-                "cancelReasonCode": "ZW",
-            }
-        )
-        info = RailDepartureStationInfo(dao)
-        assert not info.is_valid()
-
-    def test_non_cancelled_train_is_valid(self):
-        dao = DepartureDAO(
-            **{
-                "origin": [{"description": "Aberdeen"}],
-                "destination": [{"description": "Pitlochry"}],
-                "gbttBookedDeparture": "0930",
-                "platform": "5",
-                "realtimeDeparture": "0930",
-                "serviceUid": "ABD011",
-                "runDate": "2024-06-01",
-                "cancelReasonCode": None,
-            }
-        )
-        info = RailDepartureStationInfo(dao)
-        assert info.is_valid()

@@ -6,7 +6,6 @@ from src.shared.utils.check_group_of_properties_exist import (
 
 class RailDepartureStationInfo:
     def __init__(self, departure: DepartureDAO) -> None:
-        self.cancellation_reason = departure.cancelReasonCode
         self.origin = self._get_origin(departure)
         self.destination = self._get_destination(departure)
         self.platform = self._get_platform(departure)
@@ -38,13 +37,10 @@ class RailDepartureStationInfo:
         return f"https://www.realtimetrains.co.uk/service/gb-nr:{departure.serviceUid}/{departure.runDate}"
 
     def is_valid(self) -> bool:
-        return (
-            check_group_of_properties_exist(
-                self.origin,
-                self.destination,
-                self.platform,
-            )
-            and not self.cancellation_reason
+        return check_group_of_properties_exist(
+            self.origin,
+            self.destination,
+            self.platform,
         )
 
     def get_rail_departure_station_info(self) -> dict:

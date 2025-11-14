@@ -2,7 +2,7 @@ import * as z from "zod";
 
 export const RailDepartureSchema = z.object({
   delay: z.number(),
-  status: z.enum(["Early", "On time", "Late"]),
+  status: z.enum(["Early", "On time", "Late", "Cancelled"]),
   actual: z.string(),
   platform: z.string(),
   origin: z.string(),

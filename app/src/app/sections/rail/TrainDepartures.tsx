@@ -12,7 +12,7 @@ export type Departure = {
   actual: string;
   platform: string;
   delay: number;
-  status: "Early" | "On time" | "Late";
+  status: "Early" | "On time" | "Late" | "Cancelled";
 };
 
 type TrainDepartureProps = {

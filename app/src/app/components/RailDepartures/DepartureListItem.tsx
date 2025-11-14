@@ -2,12 +2,18 @@ import Link from "next/link";
 import { Departure } from "../../sections/rail/TrainDepartures";
 
 function renderDepartureStatus(dep: Departure) {
+  const getStatusColor = () => {
+    if (dep.status === "Cancelled") return "text-[#ff6b6b] line-through";
+    if (dep.status === "Late") return "text-[#ff4d4f]";
+    return "text-[#4ade80]";
+  };
+
   return (
     <span
       aria-label={`${dep.status} departure`}
-      className={`font-semibold ${dep.status === "Late" ? "text-[#ff4d4f]" : "text-[#4ade80]"}`}
+      className={`font-semibold ${getStatusColor()}`}
     >
-      {dep.actual}
+      {dep.status === "Cancelled" ? "CANCELLED" : dep.actual}
     </span>
   );
 }
@@ -24,21 +30,26 @@ export default function DepartureListItem({ dep }: { dep: Departure }) {
       </Link>
       <br />
       <span aria-label="Departure details">
-        Departs: {renderDepartureStatus(dep)} {" | Platform: "}
-        {dep.platform}
-        {typeof dep.delay === "number" && (
+        Departs: {renderDepartureStatus(dep)}
+        {dep.status !== "Cancelled" && (
           <>
-            {" | Delay: "}
-            <span
-              className={
-                dep.delay > 0
-                  ? "text-[#ff4d4f] font-semibold"
-                  : "text-[#4ade80] font-semibold"
-              }
-              aria-label={`Delay: ${dep.delay === 0 ? "On time" : `${dep.delay} min`}`}
-            >
-              {dep.delay === 0 ? "On time" : `${dep.delay} min`}
-            </span>
+            {" | Platform: "}
+            {dep.platform}
+            {typeof dep.delay === "number" && (
+              <>
+                {" | Delay: "}
+                <span
+                  className={
+                    dep.delay > 0
+                      ? "text-[#ff4d4f] font-semibold"
+                      : "text-[#4ade80] font-semibold"
+                  }
+                  aria-label={`Delay: ${dep.delay === 0 ? "On time" : `${dep.delay} min`}`}
+                >
+                  {dep.delay === 0 ? "On time" : `${dep.delay} min`}
+                </span>
+              </>
+            )}
           </>
         )}
       </span>
