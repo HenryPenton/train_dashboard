@@ -30,6 +30,7 @@ export default function Settings() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSidebarItem, setSelectedSidebarItem] =
     useState<SidebarItem | null>(null);
+  const [tubeStationIds, setTubeStationIds] = useState<Set<string>>(new Set());
   const router = useRouter();
 
   const [partialRoute, setPartialRoute] = useState({
@@ -116,6 +117,7 @@ export default function Settings() {
           setSearchTerm={setSearchTerm}
           selectedSidebarItem={selectedSidebarItem}
           setSelectedSidebarItem={setSelectedSidebarItem}
+          onTubeStationsChange={setTubeStationIds}
         />
       </div>
       {/* Main content */}
@@ -129,6 +131,7 @@ export default function Settings() {
             selectedSidebarItem={selectedSidebarItem}
             setPartialRoute={setPartialRoute}
             onAddTubeDeparture={handleAddTubeDepartureFromSidebar}
+            isInTubeStations={tubeStationIds.size > 0 && tubeStationIds.has(selectedSidebarItem.naptanID)}
           />
         )}
 

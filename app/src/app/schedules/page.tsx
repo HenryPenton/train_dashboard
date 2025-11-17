@@ -211,6 +211,7 @@ export default function SchedulesPage() {
           <PlaceDetails
             selectedSidebarItem={selectedSidebarItem}
             showButtons={false}
+            isInTubeStations={false}
           />
         )}
         <h1 className="text-2xl font-bold mb-4">Schedules</h1>
