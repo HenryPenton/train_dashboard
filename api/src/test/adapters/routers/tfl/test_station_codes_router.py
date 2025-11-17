@@ -26,7 +26,11 @@ class DummyStationService:
 def test_get_station_codes():
     app = FastAPI()
     app.include_router(station_codes_handler.router)
-    app.dependency_overrides[station_codes_handler.get_station_service] = lambda reader: DummyStationService(reader, None)
+    
+    def mock_service():
+        return DummyStationService(None, None)
+    
+    app.dependency_overrides[station_codes_handler.get_station_service] = mock_service
     client = TestClient(app)
 
     response = client.get("/tfl/station-codes")
@@ -40,10 +44,14 @@ def test_get_station_codes():
 def test_get_station_codes_tube():
     app = FastAPI()
     app.include_router(station_codes_handler.router)
-    app.dependency_overrides[station_codes_handler.get_station_service] = lambda reader: DummyStationService(reader, None)
+    
+    def mock_service():
+        return DummyStationService(None, None)
+    
+    app.dependency_overrides[station_codes_handler.get_station_service] = mock_service
     client = TestClient(app)
 
-    response = client.get("/tfl/station-codes?type=tube")
+    response = client.get("/tfl/station-codes?station_type=tube")
     assert response.status_code == 200
     assert response.json() == [
         {"naptanID": "id1", "CommonName": "Alpha"},
@@ -56,7 +64,7 @@ def test_get_station_codes_invalid_type():
     app.include_router(station_codes_handler.router)
     client = TestClient(app)
 
-    response = client.get("/tfl/station-codes?type=invalid")
+    response = client.get("/tfl/station-codes?station_type=invalid")
     assert response.status_code == 422
 
 
@@ -70,7 +78,11 @@ def test_get_station_codes_error():
 
     app = FastAPI()
     app.include_router(station_codes_handler.router)
-    app.dependency_overrides[station_codes_handler.get_station_service] = lambda reader: FailingStationService(reader, None)
+    
+    def mock_failing_service():
+        return FailingStationService(None, None)
+    
+    app.dependency_overrides[station_codes_handler.get_station_service] = mock_failing_service
     client = TestClient(app)
     
     response = client.get("/tfl/station-codes")
