@@ -14,6 +14,7 @@ interface PlaceDetailsProps {
   setPartialRoute?: React.Dispatch<React.SetStateAction<Route>>;
   onAddTubeDeparture?: (stationName: string, stationId: string) => void;
   showButtons?: boolean;
+  isInTubeStations?: boolean;
 }
 
 const PlaceDetails: React.FC<PlaceDetailsProps> = ({
@@ -21,6 +22,7 @@ const PlaceDetails: React.FC<PlaceDetailsProps> = ({
   setPartialRoute,
   onAddTubeDeparture,
   showButtons = true,
+  isInTubeStations = false,
 }) => {
   return (
     <div className="mb-8 p-4 border rounded bg-gray-50">
@@ -65,7 +67,7 @@ const PlaceDetails: React.FC<PlaceDetailsProps> = ({
               </Button>
             </>
           )}
-          {onAddTubeDeparture && (
+          {onAddTubeDeparture && isInTubeStations && (
             <Button
               variant="info"
               className="px-4 py-2"

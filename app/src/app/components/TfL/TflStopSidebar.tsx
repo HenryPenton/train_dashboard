@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
+import { useFetch } from "../../hooks/useFetch";
 import Sidebar from "../generic/lists/Sidebar";
 import TfLStationSidebarListItem from "./lists/TfLStationSidebarListItem";
 
@@ -12,6 +13,7 @@ interface TflStopSidebarProps {
   setSearchTerm: (term: string) => void;
   selectedSidebarItem: SidebarItem | null;
   setSelectedSidebarItem: (item: SidebarItem | null) => void;
+  onTubeStationsChange?: (tubeStationIds: Set<string>) => void;
 }
 
 export default function TflStopSidebar({
@@ -19,29 +21,23 @@ export default function TflStopSidebar({
   setSearchTerm,
   selectedSidebarItem,
   setSelectedSidebarItem,
+  onTubeStationsChange,
 }: TflStopSidebarProps) {
-  const [sidebarItems, setSidebarItems] = useState<SidebarItem[]>([]);
+  const { data: sidebarItems } = useFetch<SidebarItem[]>("/api/tfl/station-codes");
+  const { data: tubeStations } = useFetch<SidebarItem[]>("/api/tfl/station-codes?station_type=tube");
 
   useEffect(() => {
-    async function fetchSidebarItems() {
-      try {
-        const res = await fetch("/api/naptan");
-        if (res.ok) {
-          const data = await res.json();
-          setSidebarItems(data);
-        }
-      } catch {
-        // ignore errors for now
-      }
+    if (tubeStations && onTubeStationsChange) {
+      const tubeStationIds = new Set(tubeStations.map((station) => station.naptanID));
+      onTubeStationsChange(tubeStationIds);
     }
-    fetchSidebarItems();
-  }, []);
+  }, [tubeStations, onTubeStationsChange]);
 
   const filteredSidebarItems = useMemo(
     () =>
-      sidebarItems.filter((item) =>
+      sidebarItems?.filter((item) =>
         item.CommonName.toLowerCase().includes(searchTerm.toLowerCase()),
-      ),
+      ) || [],
     [sidebarItems, searchTerm],
   );
 
@@ -52,7 +48,7 @@ export default function TflStopSidebar({
       setSearchTerm={setSearchTerm}
       selectedId={selectedSidebarItem?.naptanID ?? null}
       setSelectedId={(id) => {
-        const found = sidebarItems.find((item) => item.naptanID === id) || null;
+        const found = sidebarItems?.find((item) => item.naptanID === id) || null;
         setSelectedSidebarItem(found);
       }}
       renderItem={(item, selectedId, onClick) => (
