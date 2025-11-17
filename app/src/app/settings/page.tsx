@@ -18,10 +18,12 @@ export default function Settings() {
     setShowTflLines,
     addDeparture,
     addRoute,
+    addTubeDeparture,
     setRefreshTimer,
     fetchConfig,
     removeDeparture,
     removeRoute,
+    removeTubeDeparture,
     saveConfig,
   } = useConfigStore((state) => state);
 
@@ -99,6 +101,13 @@ export default function Settings() {
     }
   };
 
+  const handleAddTubeDepartureFromSidebar = (
+    stationName: string,
+    stationId: string,
+  ) => {
+    addTubeDeparture({ stationName, stationId });
+  };
+
   return (
     <main className="p-8 max-w-4xl mx-auto flex flex-col md:flex-row">
       <div className="w-full md:w-64 md:mr-8 md:mb-0 mb-8 p-0 border-0 md:border-r md:pr-4">
@@ -119,6 +128,7 @@ export default function Settings() {
           <PlaceDetails
             selectedSidebarItem={selectedSidebarItem}
             setPartialRoute={setPartialRoute}
+            onAddTubeDeparture={handleAddTubeDepartureFromSidebar}
           />
         )}
 
@@ -205,6 +215,13 @@ export default function Settings() {
           }
           onRemove={(idx) => removeDeparture(idx)}
           heading="Train Departures"
+        />
+
+        <ItemList
+          items={config.tube_departures}
+          getLabel={(t) => `${t.stationName} (${t.stationId})`}
+          onRemove={(idx) => removeTubeDeparture(idx)}
+          heading="Tube Departures"
         />
 
         {/* Refresh Timer Section */}

@@ -29,10 +29,17 @@ type TrainDepartureProps = {
   toStation: Station;
 };
 
-export default function TrainDepartures({ fromStation, toStation }: TrainDepartureProps) {
-  const url = useMemo(() => 
-    APP_CONSTANTS.API_ENDPOINTS.DEPARTURES(fromStation.stationCode, toStation.stationCode),
-    [fromStation.stationCode, toStation.stationCode]
+export default function TrainDepartures({
+  fromStation,
+  toStation,
+}: TrainDepartureProps) {
+  const url = useMemo(
+    () =>
+      APP_CONSTANTS.API_ENDPOINTS.DEPARTURES(
+        fromStation.stationCode,
+        toStation.stationCode,
+      ),
+    [fromStation.stationCode, toStation.stationCode],
   );
 
   const { data: rawDepartures, loading, error } = useFetch<Departure[]>(url);
@@ -58,7 +65,7 @@ export default function TrainDepartures({ fromStation, toStation }: TrainDepartu
         {loading && <Loading />}
       </div>
       {error && (
-        <DepartureError message="Could not find any services for the configured route." />
+        <DepartureError message={APP_CONSTANTS.ERROR_MESSAGES.NO_SERVICES} />
       )}
       {departures && <DepartureList departures={departures} />}
     </section>

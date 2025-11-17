@@ -53,6 +53,12 @@ valid_config = {
             "destinationCode": "codeD",
         }
     ],
+    "tube_departures": [
+        {
+            "stationName": "Paddington",
+            "stationId": "940GZZLUPAD",
+        }
+    ],
     "show_tfl_lines": True,
     "refresh_timer": 65,
     "extra_key": "should be removed",
@@ -107,6 +113,12 @@ def test_get_config_happy():
                 "destinationCode": "codeD",
             }
         ],
+        "tube_departures": [
+            {
+                "stationName": "Paddington",
+                "stationId": "940GZZLUPAD",
+            }
+        ],
         "refresh_timer": 65,
         "show_tfl_lines": True,
     }
@@ -144,3 +156,4 @@ def test_get_config_creates_file():
     result = service.get_config().model_dump()
     assert "rail_departures" in result
     assert "tfl_best_routes" in result
+    assert "tube_departures" in result

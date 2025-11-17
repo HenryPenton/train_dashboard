@@ -6,6 +6,7 @@ import LastRefreshed from "./sections/LastRefreshed";
 import TrainDepartures from "./sections/rail/TrainDepartures";
 import TflBestRoute from "./sections/TfL/TflBestRoute";
 import TflLineStatus from "./sections/TfL/TflLineStatus";
+import TflArrivals from "./sections/TfL/TflArrivals";
 
 export default function Home() {
   const { config, fetchConfig, lastRefreshTimeStamp, forceRefresh } =
@@ -26,11 +27,13 @@ export default function Home() {
   const hasTrainDepartures = config && config.rail_departures.length > 0;
   const hasTflRoutes = config && config.tfl_best_routes.length > 0;
   const hasTflLines = config && config.show_tfl_lines;
+  const hasTubeDepartures = config && config.tube_departures.length > 0;
 
   let columnCount = 0;
   if (hasTrainDepartures) columnCount++;
   if (hasTflRoutes) columnCount++;
   if (hasTflLines) columnCount++;
+  if (hasTubeDepartures) columnCount++;
 
   return (
     <main
@@ -95,6 +98,19 @@ export default function Home() {
             <TflLineStatus />
           </div>
         ) : null}
+
+        {config && config.tube_departures.length > 0 && (
+          <div>
+            {config.tube_departures.map((station, i) => (
+              <div key={i} className="mb-8 last:mb-0">
+                <TflArrivals
+                  stationId={station.stationId}
+                  stationName={station.stationName}
+                />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
       {lastRefreshTimeStamp ? (
         <LastRefreshed dateTimeString={lastRefreshTimeStamp} />

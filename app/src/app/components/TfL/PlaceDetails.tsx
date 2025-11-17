@@ -12,12 +12,14 @@ export type Route = {
 interface PlaceDetailsProps {
   selectedSidebarItem: SidebarItem;
   setPartialRoute?: React.Dispatch<React.SetStateAction<Route>>;
+  onAddTubeDeparture?: (stationName: string, stationId: string) => void;
   showButtons?: boolean;
 }
 
 const PlaceDetails: React.FC<PlaceDetailsProps> = ({
   selectedSidebarItem,
   setPartialRoute,
+  onAddTubeDeparture,
   showButtons = true,
 }) => {
   return (
@@ -31,34 +33,52 @@ const PlaceDetails: React.FC<PlaceDetailsProps> = ({
         <span className="font-medium">NaPTAN ID:</span>{" "}
         {selectedSidebarItem.naptanID}
       </div>
-      {showButtons && setPartialRoute && (
+      {showButtons && (
         <div className="flex gap-4 mt-4">
-          <Button
-            variant="primary"
-            className="px-4 py-2"
-            onClick={() =>
-              setPartialRoute((r: Route) => ({
-                ...r,
-                origin: selectedSidebarItem.CommonName,
-                originNaPTANOrATCO: selectedSidebarItem.naptanID,
-              }))
-            }
-          >
-            Set as Origin
-          </Button>
-          <Button
-            variant="success"
-            className="px-4 py-2"
-            onClick={() =>
-              setPartialRoute((r: Route) => ({
-                ...r,
-                destination: selectedSidebarItem.CommonName,
-                destinationNaPTANOrATCO: selectedSidebarItem.naptanID,
-              }))
-            }
-          >
-            Set as Destination
-          </Button>
+          {setPartialRoute && (
+            <>
+              <Button
+                variant="primary"
+                className="px-4 py-2"
+                onClick={() =>
+                  setPartialRoute((r: Route) => ({
+                    ...r,
+                    origin: selectedSidebarItem.CommonName,
+                    originNaPTANOrATCO: selectedSidebarItem.naptanID,
+                  }))
+                }
+              >
+                Set as Origin
+              </Button>
+              <Button
+                variant="success"
+                className="px-4 py-2"
+                onClick={() =>
+                  setPartialRoute((r: Route) => ({
+                    ...r,
+                    destination: selectedSidebarItem.CommonName,
+                    destinationNaPTANOrATCO: selectedSidebarItem.naptanID,
+                  }))
+                }
+              >
+                Set as Destination
+              </Button>
+            </>
+          )}
+          {onAddTubeDeparture && (
+            <Button
+              variant="info"
+              className="px-4 py-2"
+              onClick={() =>
+                onAddTubeDeparture(
+                  selectedSidebarItem.CommonName,
+                  selectedSidebarItem.naptanID,
+                )
+              }
+            >
+              Add to Tube Departures
+            </Button>
+          )}
         </div>
       )}
     </div>

@@ -25,9 +25,13 @@ type TflRouteProps = {
 };
 
 export default function TflBestRoute({ from, to }: TflRouteProps) {
-  const url = useMemo(() => 
-    APP_CONSTANTS.API_ENDPOINTS.BEST_ROUTE(from.naptanOrAtco, to.naptanOrAtco),
-    [from.naptanOrAtco, to.naptanOrAtco]
+  const url = useMemo(
+    () =>
+      APP_CONSTANTS.API_ENDPOINTS.BEST_ROUTE(
+        from.naptanOrAtco,
+        to.naptanOrAtco,
+      ),
+    [from.naptanOrAtco, to.naptanOrAtco],
   );
 
   const { data: rawData, loading, error } = useFetch<BestRouteData>(url);

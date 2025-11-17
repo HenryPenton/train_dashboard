@@ -16,8 +16,14 @@ class RailDeparture(BaseModel):
     destinationCode: str
 
 
+class TubeDeparture(BaseModel):
+    stationName: str
+    stationId: str
+
+
 class ConfigDAO(BaseModel):
     tfl_best_routes: List[TubeRoute] = []
     rail_departures: List[RailDeparture] = []
+    tube_departures: List[TubeDeparture] = []
     show_tfl_lines: bool = False
     refresh_timer: int = 300

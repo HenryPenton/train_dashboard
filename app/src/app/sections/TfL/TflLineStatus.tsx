@@ -12,9 +12,11 @@ type TflLineStatusType = {
 };
 
 export default function TflLineStatus() {
-  const { data: rawStatuses, loading: tflLoading, error: tflError } = useFetch<TflLineStatusType[]>(
-    APP_CONSTANTS.API_ENDPOINTS.LINE_STATUS
-  );
+  const {
+    data: rawStatuses,
+    loading: tflLoading,
+    error: tflError,
+  } = useFetch<TflLineStatusType[]>(APP_CONSTANTS.API_ENDPOINTS.LINE_STATUS);
 
   const tflStatuses = useMemo(() => {
     if (!rawStatuses) return null;

@@ -15,9 +15,15 @@ export type DepartureConfig = {
   destinationCode: string;
 };
 
+export type TubeDeparture = {
+  stationName: string;
+  stationId: string;
+};
+
 export type ConfigType = {
   tfl_best_routes: BestRoute[];
   rail_departures: DepartureConfig[];
+  tube_departures: TubeDeparture[];
   show_tfl_lines: boolean;
   refresh_timer: number;
 };
@@ -32,11 +38,13 @@ export type ConfigActions = {
   forceRefresh: () => Promise<void>;
   addDeparture: (departure: DepartureConfig) => void;
   addRoute: (route: BestRoute) => void;
+  addTubeDeparture: (tubeDeparture: TubeDeparture) => void;
   setRefreshTimer: (timer: number) => void;
   setShowTflLines: (show: boolean) => void;
   saveConfig: () => Promise<boolean>;
   removeRoute: (index: number) => void;
   removeDeparture: (index: number) => void;
+  removeTubeDeparture: (index: number) => void;
 };
 
 export type ConfigStore = ConfigState & ConfigActions;
@@ -46,6 +54,7 @@ export const initConfigStore = (): ConfigState => {
     config: {
       tfl_best_routes: [],
       rail_departures: [],
+      tube_departures: [],
       show_tfl_lines: false,
       refresh_timer: APP_CONSTANTS.DEFAULT_REFRESH_TIMER,
     },
@@ -57,6 +66,7 @@ export const defaultInitState: ConfigState = {
   config: {
     tfl_best_routes: [],
     rail_departures: [],
+    tube_departures: [],
     show_tfl_lines: false,
     refresh_timer: APP_CONSTANTS.DEFAULT_REFRESH_TIMER,
   },
@@ -99,6 +109,16 @@ export const createConfigStore = (
           config: {
             ...structuredClone(state.config),
             tfl_best_routes: [...state.config.tfl_best_routes, route],
+          },
+        };
+      });
+    },
+    addTubeDeparture: (tubeDeparture: TubeDeparture) => {
+      set((state) => {
+        return {
+          config: {
+            ...structuredClone(state.config),
+            tube_departures: [...state.config.tube_departures, tubeDeparture],
           },
         };
       });
@@ -160,6 +180,18 @@ export const createConfigStore = (
           config: {
             ...structuredClone(state.config),
             rail_departures: state.config.rail_departures.filter(
+              (_, i) => i !== index,
+            ),
+          },
+        };
+      });
+    },
+    removeTubeDeparture: (index: number) => {
+      set((state) => {
+        return {
+          config: {
+            ...structuredClone(state.config),
+            tube_departures: state.config.tube_departures.filter(
               (_, i) => i !== index,
             ),
           },
