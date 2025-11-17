@@ -1,8 +1,12 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import TflLineStatus from "../TfL/TflLineStatus";
+import { useFetch } from "../../hooks/useFetch";
+
+jest.mock("../../hooks/useFetch");
+const mockUseFetch = useFetch as jest.MockedFunction<typeof useFetch>;
 
 afterEach(() => {
-  jest.restoreAllMocks();
+  jest.clearAllMocks();
 });
 
 describe("TflLineStatus", () => {
@@ -13,11 +17,10 @@ describe("TflLineStatus", () => {
       { name: "Central", status: "Part Suspended", statusSeverity: 3 },
     ];
 
-    jest.spyOn(global, "fetch").mockImplementation(async () => {
-      return {
-        ok: true,
-        json: async () => dummyData,
-      } as Response;
+    mockUseFetch.mockReturnValue({
+      data: dummyData,
+      loading: false,
+      error: null,
     });
 
     render(<TflLineStatus />);
@@ -52,8 +55,10 @@ describe("TflLineStatus", () => {
     });
   });
   it("renders error message from thrown Error", async () => {
-    jest.spyOn(global, "fetch").mockImplementation(async () => {
-      throw new Error("Something went wrong");
+    mockUseFetch.mockReturnValue({
+      data: null,
+      loading: false,
+      error: "Something went wrong",
     });
     render(<TflLineStatus />);
     await waitFor(() => {
@@ -64,8 +69,10 @@ describe("TflLineStatus", () => {
   });
 
   it("renders 'Unknown error' for non-Error thrown values", async () => {
-    jest.spyOn(global, "fetch").mockImplementation(async () => {
-      throw "not an error object";
+    mockUseFetch.mockReturnValue({
+      data: null,
+      loading: false,
+      error: "Unknown error",
     });
     render(<TflLineStatus />);
     await waitFor(() => {
@@ -73,17 +80,16 @@ describe("TflLineStatus", () => {
     });
   });
   it("renders error message from not ok response", async () => {
-    jest.spyOn(global, "fetch").mockImplementation(async () => {
-      return {
-        ok: false,
-        statusText: "Not Found",
-      } as Response;
+    mockUseFetch.mockReturnValue({
+      data: null,
+      loading: false,
+      error: "Failed to fetch TFL line statuses: 404",
     });
     render(<TflLineStatus />);
 
     await waitFor(() => {
       expect(screen.getByRole("alert")).toHaveTextContent(
-        "Failed to fetch TFL line statuses",
+        "Failed to fetch TFL line statuses: 404",
       );
     });
   });

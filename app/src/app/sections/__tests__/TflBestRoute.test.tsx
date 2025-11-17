@@ -1,15 +1,21 @@
 import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import TflBestRoute from "../TfL/TflBestRoute";
+import { useFetch } from "../../hooks/useFetch";
+
+jest.mock("../../hooks/useFetch");
+const mockUseFetch = useFetch as jest.MockedFunction<typeof useFetch>;
 
 afterEach(() => {
-  jest.restoreAllMocks();
+  jest.clearAllMocks();
 });
 
 describe("TflBestRoute", () => {
   it("renders error message from thrown Error", async () => {
-    jest.spyOn(global, "fetch").mockImplementation(async () => {
-      throw new Error("Something went wrong");
+    mockUseFetch.mockReturnValue({
+      data: null,
+      loading: false,
+      error: "Something went wrong",
     });
     render(
       <TflBestRoute
@@ -25,11 +31,10 @@ describe("TflBestRoute", () => {
   });
 
   it("renders error message from not ok response", async () => {
-    jest.spyOn(global, "fetch").mockImplementation(async () => {
-      return {
-        ok: false,
-        statusText: "Not Found",
-      } as Response;
+    mockUseFetch.mockReturnValue({
+      data: null,
+      loading: false,
+      error: "Failed to fetch best route",
     });
     render(
       <TflBestRoute
@@ -45,8 +50,10 @@ describe("TflBestRoute", () => {
   });
 
   it("renders 'Unknown error' for non-Error thrown values", async () => {
-    jest.spyOn(global, "fetch").mockImplementation(async () => {
-      throw "not an error object";
+    mockUseFetch.mockReturnValue({
+      data: null,
+      loading: false,
+      error: "Unknown error",
     });
     render(
       <TflBestRoute
@@ -71,11 +78,10 @@ it("renders with mocked API data", async () => {
     arrival: "2022-02-01T12:00:00.000Z",
   };
 
-  jest.spyOn(global, "fetch").mockImplementation(async () => {
-    return {
-      ok: true,
-      json: async () => dummyData,
-    } as Response;
+  mockUseFetch.mockReturnValue({
+    data: dummyData,
+    loading: false,
+    error: null,
   });
 
   render(

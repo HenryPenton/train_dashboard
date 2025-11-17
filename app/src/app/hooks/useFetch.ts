@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { fetchApi, ApiError } from '../utils/api';
+import { useState, useEffect } from "react";
+import { fetchApi, ApiError } from "../utils/api";
 
 interface UseFetchState<T> {
   data: T | null;
@@ -18,12 +18,12 @@ export function useFetch<T>(url: string | null): UseFetchState<T> {
     const fetchData = async () => {
       setLoading(true);
       setError(null);
-      
+
       try {
         const result = await fetchApi<T>(url);
         setData(result);
       } catch (err) {
-        const message = err instanceof ApiError ? err.message : 'Unknown error';
+        const message = err instanceof ApiError ? err.message : "Unknown error";
         setError(message);
         setData(null);
       } finally {
@@ -33,6 +33,9 @@ export function useFetch<T>(url: string | null): UseFetchState<T> {
 
     fetchData();
   }, [url]);
+
+  console.log("data", data);
+  console.log("error", error);
 
   return { data, loading, error };
 }

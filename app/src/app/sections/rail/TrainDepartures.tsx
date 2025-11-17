@@ -58,7 +58,7 @@ export default function TrainDepartures({ fromStation, toStation }: TrainDepartu
         {loading && <Loading />}
       </div>
       {error && (
-        <DepartureError message={error} />
+        <DepartureError message="Could not find any services for the configured route." />
       )}
       {departures && <DepartureList departures={departures} />}
     </section>

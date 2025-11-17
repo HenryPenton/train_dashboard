@@ -1,5 +1,13 @@
 import { render, screen } from "@testing-library/react";
 import TrainDepartures from "../rail/TrainDepartures";
+import { useFetch } from "../../hooks/useFetch";
+
+jest.mock("../../hooks/useFetch");
+const mockUseFetch = useFetch as jest.MockedFunction<typeof useFetch>;
+
+afterEach(() => {
+  jest.clearAllMocks();
+});
 
 const mockProps = {
   fromStation: { stationName: "Paddington", stationCode: "PAD" },
@@ -29,9 +37,10 @@ const mockDepartures = [
 
 describe("TrainDepartures accessibility happy path", () => {
   beforeEach(() => {
-    global.fetch = jest.fn().mockResolvedValue({
-      ok: true,
-      json: async () => mockDepartures,
+    mockUseFetch.mockReturnValue({
+      data: mockDepartures,
+      loading: false,
+      error: null,
     });
   });
 
@@ -60,7 +69,11 @@ describe("TrainDepartures accessibility happy path", () => {
 
 describe("TrainDepartures error state", () => {
   beforeEach(() => {
-    global.fetch = jest.fn().mockRejectedValue(new Error("API error"));
+    mockUseFetch.mockReturnValue({
+      data: null,
+      loading: false,
+      error: "API error",
+    });
   });
 
   it("shows an error message when fetch fails", async () => {
