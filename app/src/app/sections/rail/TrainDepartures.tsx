@@ -1,53 +1,47 @@
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 import { FrontEndRailDeparturesSchema } from "../../validators/frontend-validators/RailDepartureSchema";
+import { APP_CONSTANTS } from "../../constants/app";
+import { useFetch } from "../../hooks/useFetch";
 import Loading from "../../components/text/Loading";
 import SectionHeading from "../../components/text/SectionHeading";
 import DepartureError from "../../components/RailDepartures/DepartureError";
 import DepartureList from "../../components/RailDepartures/DepartureList";
 
-export type Departure = {
+export type DepartureStatus = "Early" | "On time" | "Late" | "Cancelled";
+
+export interface Departure {
   url: string;
   origin: string;
   destination: string;
   actual: string;
   platform: string;
   delay: number;
-  status: "Early" | "On time" | "Late" | "Cancelled";
-};
+  status: DepartureStatus;
+}
+
+export interface Station {
+  stationName: string;
+  stationCode: string;
+}
 
 type TrainDepartureProps = {
-  fromStation: { stationName: string; stationCode: string };
-  toStation: { stationName: string; stationCode: string };
+  fromStation: Station;
+  toStation: Station;
 };
 
-export default function TrainDepartures(props: TrainDepartureProps) {
-  const [departures, setDepartures] = useState<Departure[] | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
+export default function TrainDepartures({ fromStation, toStation }: TrainDepartureProps) {
+  const url = useMemo(() => 
+    APP_CONSTANTS.API_ENDPOINTS.DEPARTURES(fromStation.stationCode, toStation.stationCode),
+    [fromStation.stationCode, toStation.stationCode]
+  );
 
-  useEffect(() => {
-    const fetchDepartures = async () => {
-      setLoading(true);
-      setError(false);
-      setDepartures(null);
-      try {
-        const result = await fetch(
-          `/api/departures/${props.fromStation.stationCode}/to/${props.toStation.stationCode}`,
-        );
-        const data = await result.json();
+  const { data: rawDepartures, loading, error } = useFetch<Departure[]>(url);
 
-        const departures = FrontEndRailDeparturesSchema.parse(data);
-
-        const tenTrains = departures.slice(0, 10);
-        setDepartures(tenTrains);
-      } catch {
-        setError(true);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchDepartures();
-  }, [props.fromStation.stationCode, props.toStation.stationCode]);
+  const departures = useMemo(() => {
+    if (!rawDepartures) return null;
+    const validated = FrontEndRailDeparturesSchema.parse(rawDepartures);
+    return validated.slice(0, APP_CONSTANTS.MAX_DEPARTURES);
+  }, [rawDepartures]);
 
   return (
     <section
@@ -58,13 +52,13 @@ export default function TrainDepartures(props: TrainDepartureProps) {
       <div style={{ marginBottom: 16 }}>
         <span aria-label="Departure route">
           <strong>
-            {`Departures from ${props.fromStation.stationName} to ${props.toStation.stationName}`}
+            Departures from {fromStation.stationName} to {toStation.stationName}
           </strong>
         </span>
         {loading && <Loading />}
       </div>
       {error && (
-        <DepartureError message="Could not find any services for the configured route." />
+        <DepartureError message={error} />
       )}
       {departures && <DepartureList departures={departures} />}
     </section>

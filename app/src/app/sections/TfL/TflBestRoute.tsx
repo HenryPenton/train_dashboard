@@ -1,9 +1,11 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
+import { BestRouteSchema } from "../../validators/frontend-validators/BestRouteSchema";
+import { APP_CONSTANTS } from "../../constants/app";
+import { useFetch } from "../../hooks/useFetch";
 import SectionHeading from "../../components/text/SectionHeading";
 import JourneyInfo from "../../components/TfL/JourneyInfo";
 import RouteLegs from "../../components/TfL/RouteLegs";
-import { BestRouteSchema } from "../../validators/frontend-validators/BestRouteSchema";
 
 interface BestRouteData {
   route: string[];
@@ -12,38 +14,28 @@ interface BestRouteData {
   fare?: number;
 }
 
+interface Place {
+  placeName: string;
+  naptanOrAtco: string;
+}
+
 type TflRouteProps = {
-  from: { placeName: string; naptanOrAtco: string };
-  to: { placeName: string; naptanOrAtco: string };
+  from: Place;
+  to: Place;
 };
 
 export default function TflBestRoute({ from, to }: TflRouteProps) {
-  const [data, setData] = useState<BestRouteData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const url = useMemo(() => 
+    APP_CONSTANTS.API_ENDPOINTS.BEST_ROUTE(from.naptanOrAtco, to.naptanOrAtco),
+    [from.naptanOrAtco, to.naptanOrAtco]
+  );
 
-  useEffect(() => {
-    async function fetchBestRoute() {
-      setLoading(true);
-      setError(null);
-      try {
-        const res = await fetch(
-          `/api/best-route/${from.naptanOrAtco}/${to.naptanOrAtco}`,
-        );
-        if (!res.ok) throw new Error("Failed to fetch best route");
-        const json = await res.json();
+  const { data: rawData, loading, error } = useFetch<BestRouteData>(url);
 
-        const parsedData = BestRouteSchema.parse(json);
-        setData(parsedData);
-      } catch (e: unknown) {
-        const message = e instanceof Error ? e.message : "Unknown error";
-        setError(message);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchBestRoute();
-  }, [from.naptanOrAtco, to.naptanOrAtco]);
+  const data = useMemo(() => {
+    if (!rawData) return null;
+    return BestRouteSchema.parse(rawData);
+  }, [rawData]);
 
   if (loading) return <div className="text-white">Loading best route...</div>;
   if (error) return <div className="text-red-400">Error: {error}</div>;

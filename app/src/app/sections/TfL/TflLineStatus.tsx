@@ -1,5 +1,7 @@
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 import { FrontEndLineStatusesSchema } from "../../validators/frontend-validators/LineStatusSchema";
+import { APP_CONSTANTS } from "../../constants/app";
+import { useFetch } from "../../hooks/useFetch";
 import TflLineStatusList from "../../components/TfL/TflLineStatusList";
 import SectionHeading from "../../components/text/SectionHeading";
 
@@ -10,32 +12,14 @@ type TflLineStatusType = {
 };
 
 export default function TflLineStatus() {
-  const [tflStatuses, setTflStatuses] = useState<TflLineStatusType[] | null>(
-    null,
+  const { data: rawStatuses, loading: tflLoading, error: tflError } = useFetch<TflLineStatusType[]>(
+    APP_CONSTANTS.API_ENDPOINTS.LINE_STATUS
   );
-  const [tflLoading, setTflLoading] = useState(false);
-  const [tflError, setTflError] = useState("");
 
-  useEffect(() => {
-    const fetchTflStatuses = async () => {
-      setTflLoading(true);
-      setTflError("");
-      try {
-        const res = await fetch("/api/line-status");
-        if (!res.ok) throw new Error(`Failed to fetch TFL line statuses`);
-
-        const data = await res.json();
-        const validated = FrontEndLineStatusesSchema.parse(data);
-        setTflStatuses(validated);
-      } catch (e: unknown) {
-        const message = e instanceof Error ? e.message : "Unknown error";
-        setTflError(message);
-      } finally {
-        setTflLoading(false);
-      }
-    };
-    fetchTflStatuses();
-  }, []);
+  const tflStatuses = useMemo(() => {
+    if (!rawStatuses) return null;
+    return FrontEndLineStatusesSchema.parse(rawStatuses);
+  }, [rawStatuses]);
 
   return (
     <section

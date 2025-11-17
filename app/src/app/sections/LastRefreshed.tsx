@@ -6,8 +6,8 @@ export default function LastRefreshed({
   dateTimeString: string;
 }) {
   const lastRefreshed = useMemo(() => {
-    const now = new Date(dateTimeString);
-    return now.toLocaleTimeString([], {
+    const date = new Date(dateTimeString);
+    return date.toLocaleTimeString("en-GB", {
       hour: "2-digit",
       minute: "2-digit",
       second: "2-digit",

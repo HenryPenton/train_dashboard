@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Departure } from "../../sections/rail/TrainDepartures";
+import type { Departure } from "../../sections/rail/TrainDepartures";
 
 function renderDepartureStatus(dep: Departure) {
   const getStatusColor = () => {

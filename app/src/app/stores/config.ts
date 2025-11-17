@@ -1,4 +1,5 @@
 import { createStore } from "zustand/vanilla";
+import { APP_CONSTANTS } from "../constants/app";
 
 export type BestRoute = {
   origin: string;
@@ -46,7 +47,7 @@ export const initConfigStore = (): ConfigState => {
       tfl_best_routes: [],
       rail_departures: [],
       show_tfl_lines: false,
-      refresh_timer: 60,
+      refresh_timer: APP_CONSTANTS.DEFAULT_REFRESH_TIMER,
     },
     lastRefreshTimeStamp: "",
   };
@@ -57,7 +58,7 @@ export const defaultInitState: ConfigState = {
     tfl_best_routes: [],
     rail_departures: [],
     show_tfl_lines: false,
-    refresh_timer: 60,
+    refresh_timer: APP_CONSTANTS.DEFAULT_REFRESH_TIMER,
   },
   lastRefreshTimeStamp: "",
 };
@@ -68,7 +69,7 @@ export const createConfigStore = (
   return createStore<ConfigStore>()((set, get) => ({
     ...initState,
     fetchConfig: async () => {
-      const res = await fetch("/api/config");
+      const res = await fetch(APP_CONSTANTS.API_ENDPOINTS.CONFIG);
       if (!res.ok) throw new Error(`API error: ${res.status}`);
       const config = await res.json();
 
@@ -126,7 +127,7 @@ export const createConfigStore = (
       const currentConfig = get().config;
 
       try {
-        const res = await fetch("/api/config", {
+        const res = await fetch(APP_CONSTANTS.API_ENDPOINTS.CONFIG, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(currentConfig),
