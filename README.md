@@ -1,8 +1,6 @@
 # Travel Dashboard
 
-THIS PROJECT IS UNDER VERY HEAVY DEVELOPMENT!
-
-A full-stack application for live train and tube status, route planning, and departures, built with Next.js (frontend), FastAPI (backend), and a Python push server for notifications and background jobs.
+A comprehensive full-stack application for live train and tube status, route planning, and arrivals, built with Next.js (frontend), FastAPI (backend), and a Python push server for notifications and background jobs.
 
 ---
 
@@ -12,13 +10,13 @@ A full-stack application for live train and tube status, route planning, and dep
 
 ## Overview
 
-A full-stack application for live train and tube status, route planning, and departures, built with Next.js (frontend) and FastAPI (backend).
+A modern, type-safe travel dashboard providing real-time transport information across London's rail and tube networks.
 
-- **Frontend (`app/`):** Next.js, React, Tailwind CSS. Responsive dashboard UI for train departures, tube line status, and best route suggestions. Supports standalone and Docker deployment.
+- **Frontend (`app/`):** Next.js 16, React 19, TypeScript, Tailwind CSS 4. Component-based architecture with generic reusable components, comprehensive test coverage, and responsive design. Features live arrivals, route planning, and configuration management.
 
-- **Backend (`api/`):** FastAPI (Python). Modular endpoints for train departures, tube line status, best route, and config. Integrates with Real Time Trains and TFL APIs. Uses dependency injection and abstract base classes for testability.## Overview
+- **Backend (`api/`):** FastAPI with Python 3.14+. Clean architecture with domain-driven design, comprehensive type annotations, and extensive test coverage. Handles live TfL arrivals with platform name transformations, rail departures, route planning with fare integration, and dynamic configuration.
 
-- **Push Server (`push/`):** Python service for notifications and background jobs (e.g., scheduled updates, alerts). Includes job scheduling, notification handling, formatters, and fetchers.
+- **Push Server (`push/`):** Background service for notifications, scheduled updates, and automated alerts. Includes job scheduling, notification handling via ntfy, data formatters, and external API fetchers.
 
 ## Setup
 
@@ -26,15 +24,34 @@ See [SETUP.md](./SETUP.md) for detailed installation and configuration instructi
 
 ## Project Structure
 
-### Backend Structure Highlights- Responsive, retro-inspired UI
+### Backend Structure Highlights
+
+Clean architecture with comprehensive type safety and domain-driven design:
 
 ```
-- `src/adapters/` - API adapters and routers
-- `src/application/` - Service layer (DI)
-- `src/domain/` - Business logic
-- `src/DAOs/` - Data access objects
-- `src/DTOs/` - Data transfer objects
-- `src/test/` - Unit and integration tests
+- `src/adapters/` - External API clients and HTTP routers
+- `src/application/` - Service layer with dependency injection
+- `src/domain/` - Business logic and models with type annotations
+  - `rail/` - Train departure processing and aggregation
+  - `tfl/` - TfL arrivals with platform name transformations
+  - `station/` - Station information and management
+- `src/DAOs/` - Pydantic data access objects with validation
+- `src/DTOs/` - Data transfer objects for API responses
+- `src/shared/` - Common utilities and helpers
+- `src/test/` - Comprehensive unit and integration tests
+```
+
+### Frontend Structure Highlights
+
+Modern React architecture with reusable components and type safety:
+
+```
+- `src/app/` - Next.js App Router with API routes
+  - `components/generic/` - Reusable UI components (Sidebar, ItemList, AddItemForm)
+  - `components/TfL/` - Transport-specific components
+  - `validators/` - Zod schemas for runtime validation
+  - `hooks/` - Custom React hooks
+- `coverage/` - Jest test coverage reports
 ```
 
 ### Push Server Structure
@@ -61,9 +78,14 @@ cd train_dashboard
 
 2. **Manual Development:**
 
-- Frontend: `cd app && pnpm install && pnpm dev`
-- Backend:
+- **Frontend:**
+```sh
+cd app
+pnpm install
+pnpm dev
+```
 
+- **Backend:**
 ```sh
 cd api
 python3.14 -m venv venv
@@ -72,8 +94,7 @@ pip install -r requirements.txt
 fastapi dev src/main.py
 ```
 
-- Push Server:
-
+- **Push Server:**
 ```sh
 cd push
 python3.14 -m venv venv
@@ -84,75 +105,96 @@ python src/main.py
 
 3. **Usage:**
 
-- Frontend: http://localhost:3000
-- Backend: http://localhost:8000
+- **Frontend:** http://localhost:3000
+- **Backend API:** http://localhost:8000 (with interactive docs at `/docs`)
+- **Push Server:** Background service (no web interface)
 
-- Push Server: runs background jobs and notifications (no default web port)
+## Key Features
 
-## Frontend Routes
+### Recent Enhancements
 
-- `/`: Main dashboard
+- **TfL Arrivals System**: Live tube arrivals with intelligent platform name transformations ("inner rail" → "Anti-Clockwise", "outer rail" → "Clockwise")
+- **Fare Integration**: Journey planning now includes fare information from TfL API
+- **Generic Components**: Reusable UI components (Sidebar, ItemList, AddItemForm) with type-safe accessor functions
+- **Comprehensive Type Safety**: Full TypeScript/Python type annotations throughout the codebase
+- **Enhanced Configuration**: Dynamic config management with partial updates and component ordering
+
+### Frontend Routes
+
+- `/`: Main dashboard with live departures and arrivals
+- `/schedules`: Scheduled journey management
 - `/api/*`: Next.js API routes (proxy to backend)
+
+### API Endpoints
+
+- **Rail Departures:** `/api/departures/{from}/to/{to}` - Live train departures between stations
+- **TfL Arrivals:** `/api/arrivals/{stationId}` - Tube arrivals with platform transformations  
+- **Route Planning:** `/api/best-route/{from}/{to}` - Journey planning with fare information
+- **Line Status:** `/api/line-status` - TfL line disruption information
+- **Configuration:** `/api/config` - Dynamic application configuration
+- **Schedules:** `/api/schedules` - Scheduled journey management
 
 ## CI/CD
 
-- Multi-arch Docker builds for both frontend and backend
-- Automated builds and pushes via GitHub Actions
+- Multi-arch Docker builds for all services
+- Automated testing and deployment via GitHub Actions
+- Test coverage reporting for all components
 
 ## Coverage Reports
 
 Coverage reports for backend (Python) are generated in `api/htmlcov/` and for frontend (Next.js) in `app/coverage/`. Open `index.html` in these folders to view detailed coverage.
 
-## Running Unit Tests
+## Running Tests
 
 ### Backend (FastAPI/Python)
 
-Unit tests for the backend are written using `pytest`.
-
-To run all backend tests:
+Comprehensive test suite using `pytest` with coverage reporting:
 
 ```sh
 cd api
+# Run all tests
 pytest
-```
 
-You can run a specific test file:
+# Run with coverage
+pytest --cov=src --cov-report=html
 
-```sh
-pytest src/test/domain/rail/departures/departure_parts/test_departure_times.py
+# Run specific test modules
+pytest src/test/domain/tfl/arrivals/
+pytest src/test/application/test_tfl_service.py
 ```
 
 ### Push Server (Python)
 
-Unit tests for the push server are written using `pytest`.
-
-To run all push server tests:
+Background service tests with `pytest`:
 
 ```sh
 cd push
-pytest
-```
+# Run all tests with coverage
+pytest --cov=src --cov-report=html
 
-Coverage reports are generated in `push/htmlcov/`.
+# Test specific components
+pytest src/test/formatters/
+pytest src/test/jobs/
+```
 
 ### Frontend (Next.js/React)
 
-Unit tests for the frontend are written using Jest and React Testing Library.
-
-To run all frontend tests:
+Jest and React Testing Library for component and integration tests:
 
 ```sh
 cd app
+# Run all tests
 pnpm test
+
+# Run with coverage
+pnpm test -- --coverage
+
+# Run specific test suites
+pnpm test components/__tests__/TfL/
+pnpm test components/__tests__/generic/
 ```
 
-You can run a specific test file:
-
-```sh
-pnpm test app/components/__tests__/TflBestRoute.test.tsx
-```
-
-Test coverage reports and watch mode are also available via Jest CLI options.
+All test coverage reports are available in respective `htmlcov/` and `coverage/` directories.
 
 ## License
 
