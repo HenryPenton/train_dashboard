@@ -1,5 +1,11 @@
 # Train Dashboard Setup Guide
 
+## Prerequisites
+
+- **Docker** and **Docker Compose** installed on your system
+- **Real Time Trains API credentials** (free at [https://www.realtimetrains.co.uk/about/developer/](https://www.realtimetrains.co.uk/about/developer/))
+- Ports **3000** (frontend) and **8000** (API) available on your system
+
 ## 1. Choose Between Docker Volume and Bind Mount
 
 - **Bind Mount:**
@@ -24,55 +30,135 @@
       train_dashboard_data:
     ```
 
-## 2. Environment Variables
+## 2. Environment Configuration
 
-- List required variables and their purpose in `.env` or in the docker compose file.
-- Example:
+### Required Environment Variables
 
-  ```env
-  RTT_API_USER=your_rtt_user
-  RTT_API_PASS=your_rtt_pass
-  APP_URL=http://localhost:3000
-  SERVER_URL=http://localhost:8000
-  # NTFY topic codes
-  RAIL_TOPIC=
-  BEST_ROUTE_TOPIC=
-  LINE_STATUS_TOPIC=
-  # How often (in seconds) the NTFY server checks for new schedules from the API
-  SCHEDULE_REFRESH_INTERVAL=300
-  ```
+Copy `.env.template` to `.env` and configure the following required variables:
 
-  Real time trains api keys can be obtained at https://www.realtimetrains.co.uk/about/developer/
+```env
+# Required: Real Time Trains API credentials
+RTT_API_USER=your_rtt_username
+RTT_API_PASS=your_rtt_password
 
-## 3. Start the Example Docker Compose
+# Configured for Docker
+SERVER_URL=http://train_dashboard_api:8000
+APP_URL=http://train_dashboard_app:3000
+```
 
-- Copy `.env.example` to `.env` and fill in the required values.
-- Run:
-  ```sh
-  docker compose up -d
-  ```
-- Check logs:
-  ```sh
-  docker compose logs -f
-  ```
+### Optional Push Notification Variables
 
-## 4. (Optional) Set Up Push Notification Server
+For push notifications via [ntfy.sh](https://ntfy.sh) (optional but recommended):
 
-If you want to receive push notifications via [ntfy](https://ntfy.sh), you can set up the notification server. This is optional but recommended for real-time alerts.
+```env
+# NTFY topic names (use random strings for security)
+RAIL_TOPIC=some-random-string
+BEST_ROUTE_TOPIC=some-random-string
+LINE_STATUS_TOPIC=some-random-string
 
-1. **Run push notification server:**
-   Add the push notification server listed under the docker compose. You can set how often new schedules are looked for, but if you don't this will be polled at a rate of once per minute by default.
-2. **Configure the notification topics:**
-   Add one or more topics to the environment for the new push server.
-3. **Test notifications:**
-   Visit the /schedules endpoint on the main dashboard to set up cron based push notification timings.
+# Schedule refresh interval in seconds (default: 300)
+SCHEDULE_REFRESH_INTERVAL=300
+
+# Optional: Custom NTFY server (leave empty for default ntfy.sh)
+NTFY_SERVER=
+```
+
+> **Security Note:** Use random, unguessable topic names when using the public ntfy.sh service to prevent unauthorized access to your notifications.
+
+> **Get API Keys:** Real Time Trains API keys are free at [https://www.realtimetrains.co.uk/about/developer/](https://www.realtimetrains.co.uk/about/developer/)
+
+## 3. Quick Start with Docker
+
+1. **Download the Docker Compose file:**
+
+   ```sh
+   # Create a directory for your train dashboard
+   mkdir train-dashboard && cd train-dashboard
+
+   # Download docker-compose.yaml
+   curl -O https://raw.githubusercontent.com/HenryPenton/train_dashboard/main/docker-compose.yaml
+   ```
+
+2. **Create environment file:**
+
+   ```sh
+   # Download the environment template
+   curl -O https://raw.githubusercontent.com/HenryPenton/train_dashboard/main/.env.template
+
+   # Copy and edit with your API credentials
+   cp .env.template .env
+   # Edit .env with your Real Time Trains API credentials
+   ```
+
+3. **Create config directory:**
+
+   ```sh
+   mkdir config
+   ```
+
+4. **Start all services:**
+
+   ```sh
+   docker compose up -d
+   ```
+
+5. **Verify startup:**
+
+   ```sh
+   # Check all containers are running
+   docker compose ps
+
+   # View logs (optional)
+   docker compose logs -f
+   ```
+
+6. **Access the application:**
+   - **Dashboard:** [http://localhost:3000](http://localhost:3000)
+   - **API Documentation:** [http://localhost:8000/docs](http://localhost:8000/docs)
+
+## 4. Push Notifications Setup (Optional)
+
+The push notification server provides real-time alerts for scheduled journeys via [ntfy.sh](https://ntfy.sh).
+
+### Enable Push Notifications
+
+1. **Configure notification topics** in your `.env` file:
+
+   ```env
+   # Generate random topic names for security
+   RAIL_TOPIC=some-random-string
+   BEST_ROUTE_TOPIC=some-random-string
+   LINE_STATUS_TOPIC=some-random-string
+   ```
+
+2. **Subscribe to notifications:**
+
+   - Visit [ntfy.sh](https://ntfy.sh) or install the mobile app
+   - Subscribe to your random topic names from your `.env` file
+
+3. **Set up scheduled alerts:**
+   - Go to [http://localhost:3000/schedules](http://localhost:3000/schedules)
+   - Create scheduled journey alerts with custom timing
+
+### Timezone Configuration
+
+Set your timezone in `docker-compose.yaml`:
+
+```yaml
+environment:
+  - TZ=Europe/London # Change to your timezone
+```
 
 ---
 
-## 5. Configure Application Settings
+## 5. Application Configuration
 
-- Access the app at [http://localhost:3000](http://localhost:3000).
-- Go to the settings page.
+### Initial Setup
+
+1. **Access the dashboard:** [http://localhost:3000](http://localhost:3000)
+2. **Configure your preferences:**
+   - Add frequently used stations
+   - Set up scheduled journeys
 
 ---
 
@@ -80,13 +166,25 @@ If you want to receive push notifications via [ntfy](https://ntfy.sh), you can s
 
 ### Troubleshooting
 
-- **Port conflicts:** Make sure ports 3000 and 8000 are free.
-- **Missing dependencies:** Ensure Docker and Docker Compose are installed.
+**API Connection Issues:**
 
-### Updating Images
+- Verify Real Time Trains API credentials in `.env`
+- Check API status at [https://www.realtimetrains.co.uk/about/developer/](https://www.realtimetrains.co.uk/about/developer/)
+- View API logs: `docker compose logs api`
 
-- To pull the latest stable images:
-  ```sh
-  docker compose pull
-  docker compose up -d
-  ```
+**Container Issues:**
+
+```sh
+# Restart all services
+docker compose down && docker compose up -d
+
+```
+
+### Updating to Latest Version
+
+```sh
+# Pull latest images and restart
+docker compose pull
+docker compose down
+docker compose up -d
+```
