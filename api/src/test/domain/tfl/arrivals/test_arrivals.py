@@ -95,3 +95,42 @@ def test_arrivals_list_empty():
     result = arrivals_list.get_arrivals_by_line()
 
     assert result == {"lines": {}}
+
+
+def test_platform_name_transformations():
+    """Test that platform names are correctly transformed from TfL terminology to user-friendly format."""
+    test_cases = [
+        # Inner rail transformations (case insensitive)
+        ("inner rail", "Anti-Clockwise"),
+        ("Inner Rail", "Anti-Clockwise"),
+        ("INNER RAIL", "Anti-Clockwise"),
+        ("platform inner rail", "Platform Anti-Clockwise"),
+        ("Inner Rail Platform", "Anti-Clockwise Platform"),
+        # Outer rail transformations (case insensitive)
+        ("outer rail", "Clockwise"),
+        ("Outer Rail", "Clockwise"),
+        ("OUTER RAIL", "Clockwise"),
+        ("platform outer rail", "Platform Clockwise"),
+        ("Outer Rail Platform", "Clockwise Platform"),
+        # No transformation needed
+        ("Platform 1", "Platform 1"),
+        ("Eastbound", "Eastbound"),
+        ("platform", "Platform"),
+        ("Platform", "Platform"),
+    ]
+
+    for input_platform, expected_output in test_cases:
+        arrival_dao = ArrivalDAO(
+            id="test",
+            lineId="central",
+            lineName="Central",
+            platformName=input_platform,
+            timeToStation=120,
+            expectedArrival="2025-11-13T18:12:32Z",
+            towards="Test Station",
+        )
+
+        arrival_model = ArrivalModel(arrival_dao)
+        assert arrival_model.platform_name == expected_output, (
+            f"Expected '{input_platform}' to transform to '{expected_output}', got '{arrival_model.platform_name}'"
+        )
