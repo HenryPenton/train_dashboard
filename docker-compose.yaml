@@ -6,8 +6,6 @@ services:
       - api
     env_file:
       - .env
-    environment:
-      - SERVER_URL=http://train_dashboard_api:8000
     ports:
       - "3000:3000"
 
@@ -18,11 +16,6 @@ services:
       - ./config:/app/config:rw
     env_file:
       - .env
-    environment:
-      - RTT_API_USER=
-      - RTT_API_PASS=
-      - APP_URL=http://train_dashboard_app:3000
-
     ports:
       - "8000:8000"
 
@@ -33,18 +26,5 @@ services:
     image: henrypenton/train-dashboard-push:stable
     env_file:
       - .env
-    environment:
-      - TZ=Europe/London
-      - SERVER_URL=http://train_dashboard_api:8000
-      # NTFY topic codes/names
-      - RAIL_TOPIC=
-      - BEST_ROUTE_TOPIC=
-      - LINE_STATUS_TOPIC=
-      # How often (in seconds) the NTFY server checks for new schedules from the API
-      - SCHEDULE_REFRESH_INTERVAL=300
-
-      # Optional custom NTFY server URL
-      # Make sure it does not have a trailing slash
-      - NTFY_SERVER=
     depends_on:
       - api
