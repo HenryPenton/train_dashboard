@@ -2,11 +2,18 @@
 
 import { useEffect } from "react";
 import { useConfigStore } from "./providers/config";
+import { BestRoute, DepartureConfig, TubeDeparture } from "./stores/config";
 import LastRefreshed from "./sections/LastRefreshed";
 import TrainDepartures from "./sections/rail/TrainDepartures";
 import TflBestRoute from "./sections/TfL/TflBestRoute";
 import TflLineStatus from "./sections/TfL/TflLineStatus";
 import TflArrivals from "./sections/TfL/TflArrivals";
+
+type ConfigItem = 
+  | { type: 'rail_departure'; item: DepartureConfig; importance?: number }
+  | { type: 'tfl_best_route'; item: BestRoute; importance?: number }
+  | { type: 'tube_departure'; item: TubeDeparture; importance?: number }
+  | { type: 'tfl_line_status'; item: null; importance?: undefined };
 
 export default function Home() {
   const { config, fetchConfig, lastRefreshTimeStamp, forceRefresh } =
@@ -24,16 +31,30 @@ export default function Home() {
     return () => clearInterval(interval);
   }, [config?.refresh_timer, forceRefresh]);
 
-  const hasTrainDepartures = config && config.rail_departures.length > 0;
-  const hasTflRoutes = config && config.tfl_best_routes.length > 0;
-  const hasTflLines = config && config.show_tfl_lines;
-  const hasTubeDepartures = config && config.tube_departures.length > 0;
+  // Create a unified array of all config items with their types and importance
+  const allConfigItems: ConfigItem[] = config ? [
+    ...config.rail_departures.map(item => ({ type: 'rail_departure' as const, item, importance: item.importance })),
+    ...config.tfl_best_routes.map(item => ({ type: 'tfl_best_route' as const, item, importance: item.importance })),
+    ...config.tube_departures.map(item => ({ type: 'tube_departure' as const, item, importance: item.importance })),
+  ] : [];
 
-  let columnCount = 0;
-  if (hasTrainDepartures) columnCount++;
-  if (hasTflRoutes) columnCount++;
-  if (hasTflLines) columnCount++;
-  if (hasTubeDepartures) columnCount++;
+  // Add TfL line status as a special case (no importance, but should respect its setting)
+  const hasTflLines = config && config.show_tfl_lines;
+  if (hasTflLines) {
+    allConfigItems.push({ type: 'tfl_line_status', item: null, importance: undefined });
+  }
+
+  // Sort all items globally by importance
+  const sortedConfigItems = allConfigItems.sort((a, b) => {
+    // Items with importance come first, sorted by importance (1 = highest priority)
+    // Items without importance come last
+    if (a.importance && b.importance) return a.importance - b.importance;
+    if (a.importance && !b.importance) return -1;
+    if (!a.importance && b.importance) return 1;
+    return 0; // Both have no importance, maintain original order
+  });
+
+  const columnCount = sortedConfigItems.length;
 
   return (
     <main
@@ -55,62 +76,62 @@ export default function Home() {
           justify-items-center
           `}
       >
-        {config && config.rail_departures.length > 0 && (
-          <div>
-            {config.rail_departures.map((route, i) => (
-              <div key={i} className="mb-8 last:mb-0">
+        {sortedConfigItems.map((configItem, i) => {
+          if (configItem.type === 'rail_departure') {
+            return (
+              <div key={`rail-${i}`} className="mb-8 last:mb-0">
                 <TrainDepartures
                   toStation={{
-                    stationCode: route.destinationCode,
-                    stationName: route.destination,
+                    stationCode: configItem.item.destinationCode,
+                    stationName: configItem.item.destination,
                   }}
                   fromStation={{
-                    stationCode: route.originCode,
-                    stationName: route.origin,
+                    stationCode: configItem.item.originCode,
+                    stationName: configItem.item.origin,
                   }}
                 />
               </div>
-            ))}
-          </div>
-        )}
-
-        {config && config.tfl_best_routes.length > 0 && (
-          <div>
-            {config.tfl_best_routes.map((route, i) => (
-              <div key={i} className="mb-8 last:mb-0">
+            );
+          }
+          
+          if (configItem.type === 'tfl_best_route') {
+            return (
+              <div key={`tfl-route-${i}`} className="mb-8 last:mb-0">
                 <TflBestRoute
                   to={{
-                    placeName: route.destination,
-                    naptanOrAtco: route.destinationNaPTANOrATCO,
+                    placeName: configItem.item.destination,
+                    naptanOrAtco: configItem.item.destinationNaPTANOrATCO,
                   }}
                   from={{
-                    placeName: route.origin,
-                    naptanOrAtco: route.originNaPTANOrATCO,
+                    placeName: configItem.item.origin,
+                    naptanOrAtco: configItem.item.originNaPTANOrATCO,
                   }}
                 />
               </div>
-            ))}
-          </div>
-        )}
-
-        {config?.show_tfl_lines ? (
-          <div className="">
-            <TflLineStatus />
-          </div>
-        ) : null}
-
-        {config && config.tube_departures.length > 0 && (
-          <div>
-            {config.tube_departures.map((station, i) => (
-              <div key={i} className="mb-8 last:mb-0">
+            );
+          }
+          
+          if (configItem.type === 'tube_departure') {
+            return (
+              <div key={`tube-${i}`} className="mb-8 last:mb-0">
                 <TflArrivals
-                  stationId={station.stationId}
-                  stationName={station.stationName}
+                  stationId={configItem.item.stationId}
+                  stationName={configItem.item.stationName}
                 />
               </div>
-            ))}
-          </div>
-        )}
+            );
+          }
+          
+          if (configItem.type === 'tfl_line_status') {
+            return (
+              <div key={`tfl-lines-${i}`} className="mb-8 last:mb-0">
+                <TflLineStatus />
+              </div>
+            );
+          }
+          
+          return null;
+        })}
       </div>
       {lastRefreshTimeStamp ? (
         <LastRefreshed dateTimeString={lastRefreshTimeStamp} />
