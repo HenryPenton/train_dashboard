@@ -27,9 +27,15 @@ class RTTClient:
             data = response.json()
             departures = []
             for service in data.get("services", []):
+                serviceType = service.get("serviceType", "")
+
+                # Skip non-train services
+                if serviceType != "train":
+                    continue
+
                 locationDetail = service.get("locationDetail", {})
-                serviceUid = service.get("serviceUid", {})
-                runDate = service.get("runDate", {})
+                serviceUid = service.get("serviceUid", "")
+                runDate = service.get("runDate", "")
                 try:
                     departure_dao = DepartureDAO(
                         **locationDetail, serviceUid=serviceUid, runDate=runDate

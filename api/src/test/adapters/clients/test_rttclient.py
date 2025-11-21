@@ -36,17 +36,19 @@ async def test_get_departures_success():
             {
                 "serviceUid": "gb-nr:12345",
                 "runDate": "2024-06-01",
+                "serviceType": "train",
                 "locationDetail": {
                     "origin": [{"description": "Edinburgh"}],
                     "destination": [{"description": "Glasgow"}],
                     "gbttBookedDeparture": "0930",
                     "platform": "5",
                     "realtimeDeparture": "0935",
-                }
+                },
             },
             {
                 "serviceUid": "gb-nr:67890",
                 "runDate": "2024-06-01",
+                "serviceType": "train",
                 "locationDetail": {
                     "origin": [{"description": "Oxford"}, {"description": "London"}],
                     "destination": [
@@ -56,7 +58,7 @@ async def test_get_departures_success():
                     "gbttBookedDeparture": "1015",
                     "platform": "2",
                     "realtimeDeparture": "1015",
-                }
+                },
             },
         ]
     }
@@ -103,15 +105,17 @@ async def test_get_departures_invalid_model():
             {
                 "serviceUid": "gb-nr:12345",
                 "runDate": "2024-06-01",
+                "serviceType": "train",
                 "locationDetail": {
                     "origin": [{"description": "Edinburgh"}],
                     "destination": [{"description": "Glasgow"}],
                     "gbttBookedDeparture": "0930",
                     "platform": "5",
                     "realtimeDeparture": "0935",
-                }
+                },
             },
             {
+                "serviceType": "train",
                 "locationDetail": {
                     # Invalid: missing 'origin', 'destination', and 'gbttBookedDeparture'
                     "platform": "?",
@@ -131,3 +135,77 @@ async def test_get_departures_invalid_model():
     assert result[0].scheduled_departure == "0930"
     assert result[0].real_departure == "0935"
     assert result[0].platform == "5"
+
+
+@pytest.mark.asyncio
+async def test_get_departures_filters_non_train_services():
+    mock_json = {
+        "services": [
+            {
+                "serviceUid": "gb-nr:12345",
+                "runDate": "2024-06-01",
+                "serviceType": "train",
+                "locationDetail": {
+                    "origin": [{"description": "Edinburgh"}],
+                    "destination": [{"description": "Glasgow"}],
+                    "gbttBookedDeparture": "0930",
+                    "platform": "5",
+                    "realtimeDeparture": "0935",
+                },
+            },
+            {
+                "serviceUid": "gb-nr:67890",
+                "runDate": "2024-06-01",
+                "serviceType": "bus",  # This should be filtered out
+                "locationDetail": {
+                    "origin": [{"description": "Station A"}],
+                    "destination": [{"description": "Station B"}],
+                    "gbttBookedDeparture": "1000",
+                    "platform": "Bus Stop",
+                    "realtimeDeparture": "1000",
+                },
+            },
+            {
+                "serviceUid": "gb-nr:11111",
+                "runDate": "2024-06-01",
+                "serviceType": "ship",  # This should be filtered out
+                "locationDetail": {
+                    "origin": [{"description": "Port A"}],
+                    "destination": [{"description": "Port B"}],
+                    "gbttBookedDeparture": "1100",
+                    "platform": "Pier 1",
+                    "realtimeDeparture": "1100",
+                },
+            },
+            {
+                "serviceUid": "gb-nr:22222",
+                "runDate": "2024-06-01",
+                "serviceType": "train",
+                "locationDetail": {
+                    "origin": [{"description": "London"}],
+                    "destination": [{"description": "Manchester"}],
+                    "gbttBookedDeparture": "1200",
+                    "platform": "3",
+                    "realtimeDeparture": "1205",
+                },
+            },
+        ]
+    }
+    mock_response = MockResponse(json_data=mock_json)
+    client = RTTClient(MockAsyncClient(mock_response))
+    result = await client.get_departures("ABC", "XYZ")
+
+    # Should only return the 2 train services, not the bus or ship
+    assert isinstance(result, list)
+    assert len(result) == 2
+    assert all(isinstance(r, DepartureDAO) for r in result)
+
+    # Check first train service
+    assert result[0].origins == ["Edinburgh"]
+    assert result[0].destinations == ["Glasgow"]
+    assert result[0].scheduled_departure == "0930"
+
+    # Check second train service
+    assert result[1].origins == ["London"]
+    assert result[1].destinations == ["Manchester"]
+    assert result[1].scheduled_departure == "1200"
