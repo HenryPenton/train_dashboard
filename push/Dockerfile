@@ -4,10 +4,10 @@ RUN apt-get update && \
     python3 -m venv /venv && \
     /venv/bin/pip install --upgrade pip setuptools wheel
 
-# Build the virtualenv as a separate step: Only re-execute this step when requirements.txt changes
+# Build the virtualenv as a separate step: Only re-execute this step when requirements-lock.txt changes
 FROM build AS build-venv
-COPY requirements.txt /requirements.txt
-RUN /venv/bin/pip install --disable-pip-version-check -r /requirements.txt
+COPY requirements-lock.txt /requirements-lock.txt
+RUN /venv/bin/pip install --disable-pip-version-check -r /requirements-lock.txt
 
 # Copy the virtualenv into a distroless image
 FROM gcr.io/distroless/python3-debian12
