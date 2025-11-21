@@ -26,13 +26,16 @@ export default function ImportanceSelector({
       >
         {Array.from({ length: maxImportance }, (_, index) => (
           <option key={index + 1} value={index + 1}>
-            {index + 1} {index === 0 ? "(Highest)" : index === maxImportance - 1 ? "(Lowest)" : ""}
+            {index + 1}{" "}
+            {index === 0
+              ? "(Highest)"
+              : index === maxImportance - 1
+                ? "(Lowest)"
+                : ""}
           </option>
         ))}
       </select>
-      <span className="text-xs text-gray-500">
-        (1 = highest priority)
-      </span>
+      <span className="text-xs text-gray-500">(1 = highest priority)</span>
     </div>
   );
 }

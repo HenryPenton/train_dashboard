@@ -5,11 +5,11 @@ interface ItemListProps<T> {
   getLabel: (item: T) => string;
   onRemove: (idx: number) => void;
   heading: string;
-  onImportanceChange?: (idx: number, importance: number) => void;
-  maxImportance?: number;
+  onImportanceChange: (idx: number, importance: number) => void;
+  maxImportance: number;
 }
 
-export default function ItemList<T extends { importance?: number }>({
+export default function ItemList<T extends { importance: number }>({
   items,
   getLabel,
   onRemove,
@@ -34,14 +34,14 @@ export default function ItemList<T extends { importance?: number }>({
                 ×
               </button>
             </div>
-            {onImportanceChange && (
+            {
               <ImportanceSelector
                 id={`importance-${heading}-${i}`}
-                value={item.importance ?? 1}
+                value={item.importance}
                 onChange={(importance) => onImportanceChange(i, importance)}
                 maxImportance={maxImportance}
               />
-            )}
+            }
           </li>
         ))}
       </ul>

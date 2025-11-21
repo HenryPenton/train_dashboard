@@ -15,13 +15,13 @@ import {
 } from "./stores/config";
 
 type ConfigItem =
-  | { type: "rail_departure"; item: DepartureConfig; importance?: number }
-  | { type: "tfl_best_route"; item: BestRoute; importance?: number }
-  | { type: "tube_departure"; item: TubeDeparture; importance?: number }
+  | { type: "rail_departure"; item: DepartureConfig; importance: number }
+  | { type: "tfl_best_route"; item: BestRoute; importance: number }
+  | { type: "tube_departure"; item: TubeDeparture; importance: number }
   | {
       type: "tfl_line_status";
       item: TflLineStatusConfig;
-      importance?: number;
+      importance: number;
     };
 
 export default function Home() {

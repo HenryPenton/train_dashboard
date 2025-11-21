@@ -6,7 +6,7 @@ export type BestRoute = {
   originNaPTANOrATCO: string;
   destination: string;
   destinationNaPTANOrATCO: string;
-  importance?: number;
+  importance: number;
 };
 
 export type DepartureConfig = {
@@ -14,13 +14,13 @@ export type DepartureConfig = {
   originCode: string;
   destination: string;
   destinationCode: string;
-  importance?: number;
+  importance: number;
 };
 
 export type TubeDeparture = {
   stationName: string;
   stationId: string;
-  importance?: number;
+  importance: number;
 };
 
 export type TflLineStatusConfig = {
