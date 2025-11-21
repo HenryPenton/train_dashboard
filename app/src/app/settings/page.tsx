@@ -75,7 +75,7 @@ export default function Settings() {
       partialRoute.destination &&
       partialRoute.destinationNaPTANOrATCO
     ) {
-      addRoute(partialRoute);
+      addRoute({ ...partialRoute, importance: 1 });
       setPartialRoute({
         origin: "",
         originNaPTANOrATCO: "",
@@ -93,7 +93,7 @@ export default function Settings() {
       partialDeparture.destination &&
       partialDeparture.destinationCode
     ) {
-      addDeparture(partialDeparture);
+      addDeparture({ ...partialDeparture, importance: 1 });
       setPartialDeparture({
         origin: "",
         originCode: "",
@@ -107,7 +107,7 @@ export default function Settings() {
     stationName: string,
     stationId: string,
   ) => {
-    addTubeDeparture({ stationName, stationId });
+    addTubeDeparture({ stationName, stationId, importance: 1 });
   };
 
   return (
