@@ -1,3 +1,5 @@
+import ImportanceSelector from "../ImportanceSelector";
+
 interface ItemListProps<T> {
   items: T[];
   getLabel: (item: T) => string;
@@ -33,26 +35,12 @@ export default function ItemList<T extends { importance?: number }>({
               </button>
             </div>
             {onImportanceChange && (
-              <div className="flex items-center gap-2 text-sm">
-                <label htmlFor={`importance-${heading}-${i}`} className="text-gray-600">
-                  Priority:
-                </label>
-                <select
-                  id={`importance-${heading}-${i}`}
-                  value={item.importance ?? 1}
-                  onChange={(e) => onImportanceChange(i, parseInt(e.target.value))}
-                  className="border rounded px-2 py-1 text-sm"
-                >
-                  {Array.from({ length: maxImportance }, (_, index) => (
-                    <option key={index + 1} value={index + 1}>
-                      {index + 1} {index === 0 ? "(Highest)" : index === maxImportance - 1 ? "(Lowest)" : ""}
-                    </option>
-                  ))}
-                </select>
-                <span className="text-xs text-gray-500">
-                  (1 = highest priority)
-                </span>
-              </div>
+              <ImportanceSelector
+                id={`importance-${heading}-${i}`}
+                value={item.importance ?? 1}
+                onChange={(importance) => onImportanceChange(i, importance)}
+                maxImportance={maxImportance}
+              />
             )}
           </li>
         ))}

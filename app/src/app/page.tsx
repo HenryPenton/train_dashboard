@@ -2,18 +2,27 @@
 
 import { useEffect } from "react";
 import { useConfigStore } from "./providers/config";
-import { BestRoute, DepartureConfig, TubeDeparture } from "./stores/config";
 import LastRefreshed from "./sections/LastRefreshed";
 import TrainDepartures from "./sections/rail/TrainDepartures";
+import TflArrivals from "./sections/TfL/TflArrivals";
 import TflBestRoute from "./sections/TfL/TflBestRoute";
 import TflLineStatus from "./sections/TfL/TflLineStatus";
-import TflArrivals from "./sections/TfL/TflArrivals";
+import {
+  BestRoute,
+  DepartureConfig,
+  TflLineStatusConfig,
+  TubeDeparture,
+} from "./stores/config";
 
-type ConfigItem = 
-  | { type: 'rail_departure'; item: DepartureConfig; importance?: number }
-  | { type: 'tfl_best_route'; item: BestRoute; importance?: number }
-  | { type: 'tube_departure'; item: TubeDeparture; importance?: number }
-  | { type: 'tfl_line_status'; item: null; importance?: undefined };
+type ConfigItem =
+  | { type: "rail_departure"; item: DepartureConfig; importance?: number }
+  | { type: "tfl_best_route"; item: BestRoute; importance?: number }
+  | { type: "tube_departure"; item: TubeDeparture; importance?: number }
+  | {
+      type: "tfl_line_status";
+      item: TflLineStatusConfig;
+      importance?: number;
+    };
 
 export default function Home() {
   const { config, fetchConfig, lastRefreshTimeStamp, forceRefresh } =
@@ -32,16 +41,33 @@ export default function Home() {
   }, [config?.refresh_timer, forceRefresh]);
 
   // Create a unified array of all config items with their types and importance
-  const allConfigItems: ConfigItem[] = config ? [
-    ...config.rail_departures.map(item => ({ type: 'rail_departure' as const, item, importance: item.importance })),
-    ...config.tfl_best_routes.map(item => ({ type: 'tfl_best_route' as const, item, importance: item.importance })),
-    ...config.tube_departures.map(item => ({ type: 'tube_departure' as const, item, importance: item.importance })),
-  ] : [];
+  const allConfigItems: ConfigItem[] = config
+    ? [
+        ...config.rail_departures.map((item) => ({
+          type: "rail_departure" as const,
+          item,
+          importance: item.importance,
+        })),
+        ...config.tfl_best_routes.map((item) => ({
+          type: "tfl_best_route" as const,
+          item,
+          importance: item.importance,
+        })),
+        ...config.tube_departures.map((item) => ({
+          type: "tube_departure" as const,
+          item,
+          importance: item.importance,
+        })),
+      ]
+    : [];
 
-  // Add TfL line status as a special case (no importance, but should respect its setting)
-  const hasTflLines = config && config.show_tfl_lines;
-  if (hasTflLines) {
-    allConfigItems.push({ type: 'tfl_line_status', item: null, importance: undefined });
+  // Add TfL line status if enabled
+  if (config?.tfl_line_status?.enabled) {
+    allConfigItems.push({
+      type: "tfl_line_status",
+      item: config.tfl_line_status,
+      importance: config.tfl_line_status.importance,
+    });
   }
 
   // Sort all items globally by importance
@@ -77,7 +103,7 @@ export default function Home() {
           `}
       >
         {sortedConfigItems.map((configItem, i) => {
-          if (configItem.type === 'rail_departure') {
+          if (configItem.type === "rail_departure") {
             return (
               <div key={`rail-${i}`} className="mb-8 last:mb-0">
                 <TrainDepartures
@@ -93,8 +119,8 @@ export default function Home() {
               </div>
             );
           }
-          
-          if (configItem.type === 'tfl_best_route') {
+
+          if (configItem.type === "tfl_best_route") {
             return (
               <div key={`tfl-route-${i}`} className="mb-8 last:mb-0">
                 <TflBestRoute
@@ -110,8 +136,8 @@ export default function Home() {
               </div>
             );
           }
-          
-          if (configItem.type === 'tube_departure') {
+
+          if (configItem.type === "tube_departure") {
             return (
               <div key={`tube-${i}`} className="mb-8 last:mb-0">
                 <TflArrivals
@@ -121,15 +147,15 @@ export default function Home() {
               </div>
             );
           }
-          
-          if (configItem.type === 'tfl_line_status') {
+
+          if (configItem.type === "tfl_line_status") {
             return (
               <div key={`tfl-lines-${i}`} className="mb-8 last:mb-0">
                 <TflLineStatus />
               </div>
             );
           }
-          
+
           return null;
         })}
       </div>
