@@ -1,24 +1,25 @@
 from src.formatters.departures import format_departures_markdown
+from src.models.models import RailDeparture
 
 
 def test_format_departures_markdown_basic():
     departures = [
-        {
-            "origin": "A",
-            "destination": "B",
-            "status": "On time",
-            "platform": "1",
-            "actual": "12:00",
-            "delay": 0,
-        },
-        {
-            "origin": "A",
-            "destination": "C",
-            "status": "Late",
-            "platform": "2",
-            "actual": "12:10",
-            "delay": 5,
-        },
+        RailDeparture(
+            origin="A",
+            destination="B",
+            status="On time",
+            platform="1",
+            actual="12:00",
+            delay=0,
+        ),
+        RailDeparture(
+            origin="A",
+            destination="C",
+            status="Late",
+            platform="2",
+            actual="12:10",
+            delay=5,
+        ),
     ]
     result = format_departures_markdown(departures, "A", "B/C")
     expected = (
@@ -36,22 +37,22 @@ def test_format_departures_markdown_empty():
 
 def test_format_departures_markdown_cancelled():
     departures = [
-        {
-            "origin": "A",
-            "destination": "B",
-            "status": "Cancelled",
-            "platform": "1",
-            "actual": "12:00",
-            "delay": 0,
-        },
-        {
-            "origin": "A",
-            "destination": "C",
-            "status": "On time",
-            "platform": "2",
-            "actual": "12:10",
-            "delay": 0,
-        },
+        RailDeparture(
+            origin="A",
+            destination="B",
+            status="Cancelled",
+            platform="1",
+            actual="12:00",
+            delay=0,
+        ),
+        RailDeparture(
+            origin="A",
+            destination="C",
+            status="On time",
+            platform="2",
+            actual="12:10",
+            delay=0,
+        ),
     ]
     result = format_departures_markdown(departures, "A", "B/C")
     expected = (

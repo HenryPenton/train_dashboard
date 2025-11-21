@@ -2,10 +2,12 @@ import logging
 import os
 
 import requests
+from pydantic import ValidationError
 
-from src.models.best_route import (
+from src.models.models import (
     BestRouteSchedule,
     RailSchedule,
+    SchedulesResponse,
     TubeLineStatusSchedule,
 )
 
@@ -23,10 +25,15 @@ def get_schedules():
         resp.raise_for_status()
 
         data = resp.json()
-        schedules = data.get("schedules", [])
-        logger.info(f"Successfully fetched {len(schedules)} schedules from API")
-        return schedules
+        schedules_response = SchedulesResponse(**data)
+        logger.info(
+            f"Successfully fetched {len(schedules_response.schedules)} schedules from API"
+        )
+        return schedules_response.schedules
 
+    except ValidationError as e:
+        logger.error(f"Invalid data format from {url}: {str(e)}")
+        return []
     except Exception as e:
         logger.error(f"Error fetching from {url}: {str(e)}")
         return []

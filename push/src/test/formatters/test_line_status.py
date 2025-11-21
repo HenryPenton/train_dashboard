@@ -1,10 +1,11 @@
 from src.formatters.line_status import format_line_status_markdown
+from src.models.models import TubeLineStatus
 
 
 def test_format_line_status_markdown_basic():
     statuses = [
-        {"name": "Central", "status": "Good Service"},
-        {"name": "Piccadilly", "status": "Severe Delays"},
+        TubeLineStatus(name="Central", status="Good Service"),
+        TubeLineStatus(name="Piccadilly", status="Severe Delays"),
     ]
     result = format_line_status_markdown(statuses)
     expected = (

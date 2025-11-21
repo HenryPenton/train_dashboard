@@ -13,7 +13,16 @@ def test_fetch_rail_departures():
         patch("src.fetchers.fetchers.logging.getLogger"),
     ):
         mock_resp = MagicMock()
-        mock_resp.json.return_value = {"departures": [1, 2, 3]}
+        mock_resp.json.return_value = [
+            {
+                "origin": "A",
+                "destination": "B",
+                "status": "On time",
+                "platform": "1",
+                "actual": "12:00",
+                "delay": 0,
+            }
+        ]
         mock_resp.raise_for_status.return_value = None
         mock_get.return_value = mock_resp
         result = fetch_rail_departures("AAA", "BBB")
@@ -21,7 +30,9 @@ def test_fetch_rail_departures():
             "http://localhost:8000/rail/departures/AAA/to/BBB", timeout=30
         )
         mock_resp.raise_for_status.assert_called_once()
-        assert result == {"departures": [1, 2, 3]}
+        assert len(result) == 1
+        assert result[0].origin == "A"
+        assert result[0].destination == "B"
 
 
 def test_fetch_best_route():
@@ -30,7 +41,11 @@ def test_fetch_best_route():
         patch("src.fetchers.fetchers.logging.getLogger"),
     ):
         mock_resp = MagicMock()
-        mock_resp.json.return_value = {"route": "best"}
+        mock_resp.json.return_value = {
+            "duration": 45,
+            "arrival": "2025-11-03T15:30:00",
+            "legs": [{"mode": "tube", "instruction": "Take the tube"}],
+        }
         mock_resp.raise_for_status.return_value = None
         mock_get.return_value = mock_resp
         result = fetch_best_route("AAA", "BBB")
@@ -38,7 +53,9 @@ def test_fetch_best_route():
             "http://localhost:8000/tfl/best-route/AAA/BBB", timeout=30
         )
         mock_resp.raise_for_status.assert_called_once()
-        assert result == {"route": "best"}
+        assert result.duration == 45
+        assert len(result.legs) == 1
+        assert result.legs[0].mode == "tube"
 
 
 def test_fetch_tube_line_statuses():
@@ -47,7 +64,7 @@ def test_fetch_tube_line_statuses():
         patch("src.fetchers.fetchers.logging.getLogger"),
     ):
         mock_resp = MagicMock()
-        mock_resp.json.return_value = {"status": "ok"}
+        mock_resp.json.return_value = [{"name": "Central", "status": "Good Service"}]
         mock_resp.raise_for_status.return_value = None
         mock_get.return_value = mock_resp
         result = fetch_tube_line_statuses()
@@ -55,4 +72,6 @@ def test_fetch_tube_line_statuses():
             "http://localhost:8000/tfl/line-status", timeout=30
         )
         mock_resp.raise_for_status.assert_called_once()
-        assert result == {"status": "ok"}
+        assert len(result) == 1
+        assert result[0].name == "Central"
+        assert result[0].status == "Good Service"

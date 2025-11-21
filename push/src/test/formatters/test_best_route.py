@@ -1,15 +1,18 @@
 from src.formatters.best_route import format_best_route_markdown
+from src.models.models import BestRoute, RouteInstruction
 
 
 def test_format_best_route_markdown_basic():
-    best_route = {
-        "duration": 45,
-        "arrival": "2025-11-03T15:30:00",
-        "legs": [
-            {"mode": "national-rail", "instruction": "Take the train from A to B"},
-            {"mode": "tube", "instruction": "Change to the tube at B"},
+    best_route = BestRoute(
+        duration=45,
+        arrival="2025-11-03T15:30:00",
+        legs=[
+            RouteInstruction(
+                mode="national-rail", instruction="Take the train from A to B"
+            ),
+            RouteInstruction(mode="tube", instruction="Change to the tube at B"),
         ],
-    }
+    )
     result = format_best_route_markdown(best_route, "A", "C")
     expected = (
         "# 🗺️ Best Route from A to C\n"
@@ -24,7 +27,7 @@ def test_format_best_route_markdown_basic():
 
 
 def test_format_best_route_markdown_no_arrival():
-    best_route = {"duration": 10, "legs": []}
+    best_route = BestRoute(duration=10, arrival="", legs=[])
     result = format_best_route_markdown(best_route, "X", "Y")
     expected = (
         "# 🗺️ Best Route from X to Y\n"
@@ -37,13 +40,13 @@ def test_format_best_route_markdown_no_arrival():
 
 
 def test_format_best_route_markdown_invalid_arrival():
-    best_route = {
-        "duration": 20,
-        "arrival": "not-a-date",
-        "legs": [
-            {"mode": "bus", "instruction": "Take the bus from D to E"},
+    best_route = BestRoute(
+        duration=20,
+        arrival="not-a-date",
+        legs=[
+            RouteInstruction(mode="bus", instruction="Take the bus from D to E"),
         ],
-    }
+    )
     result = format_best_route_markdown(best_route, "D", "E")
     expected = (
         "# 🗺️ Best Route from D to E\n"
