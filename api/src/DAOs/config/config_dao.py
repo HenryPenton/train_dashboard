@@ -33,5 +33,5 @@ class ConfigDAO(BaseModel):
     tfl_best_routes: List[TubeRoute] = []
     rail_departures: List[RailDeparture] = []
     tube_departures: List[TubeDeparture] = []
-    tfl_line_status: TflLineStatus
+    tfl_line_status: TflLineStatus = TflLineStatus()
     refresh_timer: int = 300
