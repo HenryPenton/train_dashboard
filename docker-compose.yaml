@@ -24,6 +24,8 @@ services:
   push:
     container_name: train_dashboard_push
     image: henrypenton/train-dashboard-push:stable
+    volumes:
+      - ./push-server-logs:/app/push-server-logs:rw
     env_file:
       - .env
     depends_on:

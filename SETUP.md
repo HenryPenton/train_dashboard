@@ -59,6 +59,10 @@ LINE_STATUS_TOPIC=some-random-string
 # Schedule refresh interval in seconds (default: 300)
 SCHEDULE_REFRESH_INTERVAL=300
 
+# Push service logging level (default: INFO)
+# Options: DEBUG, INFO, WARNING, ERROR, CRITICAL
+PUSH_LOG_LEVEL=INFO
+
 # Optional: Custom NTFY server (leave empty for default ntfy.sh)
 NTFY_SERVER=
 ```

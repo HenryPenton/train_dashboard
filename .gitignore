@@ -2,3 +2,5 @@
 config.json
 .DS_Store
 schedules.json
+**/*.log
+**/*.log*
