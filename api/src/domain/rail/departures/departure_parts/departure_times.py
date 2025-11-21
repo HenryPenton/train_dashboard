@@ -15,7 +15,7 @@ class RailDepartureTimes:
         self.delay = self._adjust_delay_for_overnight(
             self.delay, self.scheduled_departure, self.real_departure
         )
-        self.status = self._get_status(self.delay, service.cancelReasonCode)
+        self.status = self._get_status(self.delay, service.displayAs)
 
     @staticmethod
     def _get_scheduled_departure(service: DepartureDAO) -> str:
@@ -49,8 +49,8 @@ class RailDepartureTimes:
         return 0
 
     @staticmethod
-    def _get_status(delay: int, cancel_reason_code: str = None) -> str:
-        if cancel_reason_code:
+    def _get_status(delay: int, display_as: str) -> str:
+        if display_as in ["CANCELLED_CALL", "CANCELLED_PASS", "TERMINATES"]:
             return "Cancelled"
         if delay > 0:
             return "Late"

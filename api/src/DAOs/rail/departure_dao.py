@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Literal
 
 from pydantic import BaseModel
 
@@ -15,7 +15,19 @@ class DepartureDAO(BaseModel):
     runDate: str
     realtimeDeparture: Optional[str] = None
     platform: Optional[str] = None
-    cancelReasonCode: Optional[str] = None
+    displayAs: Optional[
+        Literal[
+            "CALL",
+            "PASS",
+            "ORIGIN",
+            "DESTINATION",
+            "STARTS",
+            "TERMINATES",
+            "CANCELLED_CALL",
+            "CANCELLED_PASS",
+        ]
+    ] = None
+    locations: List[dict] = []  # Service locations from RTT API
 
     @property
     def origins(self) -> List[str]:

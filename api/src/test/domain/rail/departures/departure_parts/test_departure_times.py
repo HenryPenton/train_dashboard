@@ -175,7 +175,7 @@ class TestRailDepartureTimes:
                 "realtimeDeparture": "0930",
                 "serviceUid": "EDG132",
                 "runDate": "2025-10-29",
-                "cancelReasonCode": "ZW",
+                "displayAs": "CANCELLED_CALL",
             }
         )
         dep = RailDepartureTimes(model)
@@ -195,7 +195,7 @@ class TestRailDepartureTimes:
                 "realtimeDeparture": "0930",
                 "serviceUid": "EDG133",
                 "runDate": "2025-10-29",
-                "cancelReasonCode": None,
+                "displayAs": "CALL",
             }
         )
         dep = RailDepartureTimes(model)
@@ -204,5 +204,62 @@ class TestRailDepartureTimes:
             "delay": 0,
             "status": "On time",
             "actual": "0930",
+        }
+        assert dep.get_rail_departure_times() == expected
+
+    def test_cancelled_pass_train_is_cancelled(self):
+        model = DepartureDAO(
+            **{
+                "gbttBookedDeparture": "0930",
+                "platform": "5",
+                "realtimeDeparture": "0930",
+                "serviceUid": "EDG134",
+                "runDate": "2025-10-29",
+                "displayAs": "CANCELLED_PASS",
+            }
+        )
+        dep = RailDepartureTimes(model)
+        expected = {
+            "delay": 0,
+            "status": "Cancelled",
+            "actual": "0930",
+        }
+        assert dep.get_rail_departure_times() == expected
+
+    def test_terminates_train_is_cancelled(self):
+        model = DepartureDAO(
+            **{
+                "gbttBookedDeparture": "0930",
+                "platform": "5",
+                "realtimeDeparture": "0930",
+                "serviceUid": "EDG135",
+                "runDate": "2025-10-29",
+                "displayAs": "TERMINATES",
+            }
+        )
+        dep = RailDepartureTimes(model)
+        expected = {
+            "delay": 0,
+            "status": "Cancelled",
+            "actual": "0930",
+        }
+        assert dep.get_rail_departure_times() == expected
+
+    def test_origin_train_is_not_cancelled(self):
+        model = DepartureDAO(
+            **{
+                "gbttBookedDeparture": "0930",
+                "platform": "5",
+                "realtimeDeparture": "0935",
+                "serviceUid": "EDG136",
+                "runDate": "2025-10-29",
+                "displayAs": "ORIGIN",
+            }
+        )
+        dep = RailDepartureTimes(model)
+        expected = {
+            "delay": 5,
+            "status": "Late",
+            "actual": "0935",
         }
         assert dep.get_rail_departure_times() == expected
