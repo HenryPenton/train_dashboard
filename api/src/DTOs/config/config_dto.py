@@ -7,6 +7,7 @@ class TubeRouteDTO(BaseModel):
     originNaPTANOrATCO: str
     destination: str
     destinationNaPTANOrATCO: str
+    importance: int = 1  # User-defined priority (1=highest, higher numbers=lower priority)
 
 
 class RailDepartureDTO(BaseModel):
@@ -14,11 +15,13 @@ class RailDepartureDTO(BaseModel):
     originCode: str
     destination: str
     destinationCode: str
+    importance: int = 1  # User-defined priority (1=highest, higher numbers=lower priority)
 
 
 class TubeDepartureDTO(BaseModel):
     stationName: str
     stationId: str
+    importance: int = 1  # User-defined priority (1=highest, higher numbers=lower priority)
 
 
 class ConfigDTO(BaseModel):

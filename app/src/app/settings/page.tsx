@@ -25,6 +25,9 @@ export default function Settings() {
     removeRoute,
     removeTubeDeparture,
     saveConfig,
+    updateRouteImportance,
+    updateDepartureImportance,
+    updateTubeDepartureImportance,
   } = useConfigStore((state) => state);
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -179,6 +182,8 @@ export default function Settings() {
           }
           onRemove={(idx) => removeRoute(idx)}
           heading="Tube Routes"
+          onImportanceChange={(idx, importance) => updateRouteImportance(idx, importance)}
+          maxImportance={config.tfl_best_routes.length + config.rail_departures.length + config.tube_departures.length}
         />
 
         <AddItemForm
@@ -218,6 +223,8 @@ export default function Settings() {
           }
           onRemove={(idx) => removeDeparture(idx)}
           heading="Train Departures"
+          onImportanceChange={(idx, importance) => updateDepartureImportance(idx, importance)}
+          maxImportance={config.tfl_best_routes.length + config.rail_departures.length + config.tube_departures.length}
         />
 
         <ItemList
@@ -225,6 +232,8 @@ export default function Settings() {
           getLabel={(t) => `${t.stationName} (${t.stationId})`}
           onRemove={(idx) => removeTubeDeparture(idx)}
           heading="Tube Departures"
+          onImportanceChange={(idx, importance) => updateTubeDepartureImportance(idx, importance)}
+          maxImportance={config.tfl_best_routes.length + config.rail_departures.length + config.tube_departures.length}
         />
 
         {/* Refresh Timer Section */}

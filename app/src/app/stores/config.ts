@@ -6,6 +6,7 @@ export type BestRoute = {
   originNaPTANOrATCO: string;
   destination: string;
   destinationNaPTANOrATCO: string;
+  importance?: number;
 };
 
 export type DepartureConfig = {
@@ -13,11 +14,13 @@ export type DepartureConfig = {
   originCode: string;
   destination: string;
   destinationCode: string;
+  importance?: number;
 };
 
 export type TubeDeparture = {
   stationName: string;
   stationId: string;
+  importance?: number;
 };
 
 export type ConfigType = {
@@ -45,6 +48,9 @@ export type ConfigActions = {
   removeRoute: (index: number) => void;
   removeDeparture: (index: number) => void;
   removeTubeDeparture: (index: number) => void;
+  updateRouteImportance: (index: number, importance: number) => void;
+  updateDepartureImportance: (index: number, importance: number) => void;
+  updateTubeDepartureImportance: (index: number, importance: number) => void;
 };
 
 export type ConfigStore = ConfigState & ConfigActions;
@@ -194,6 +200,48 @@ export const createConfigStore = (
             tube_departures: state.config.tube_departures.filter(
               (_, i) => i !== index,
             ),
+          },
+        };
+      });
+    },
+    updateRouteImportance: (index: number, importance: number) => {
+      set((state) => {
+        const updatedRoutes = [...state.config.tfl_best_routes];
+        if (updatedRoutes[index]) {
+          updatedRoutes[index] = { ...updatedRoutes[index], importance };
+        }
+        return {
+          config: {
+            ...structuredClone(state.config),
+            tfl_best_routes: updatedRoutes,
+          },
+        };
+      });
+    },
+    updateDepartureImportance: (index: number, importance: number) => {
+      set((state) => {
+        const updatedDepartures = [...state.config.rail_departures];
+        if (updatedDepartures[index]) {
+          updatedDepartures[index] = { ...updatedDepartures[index], importance };
+        }
+        return {
+          config: {
+            ...structuredClone(state.config),
+            rail_departures: updatedDepartures,
+          },
+        };
+      });
+    },
+    updateTubeDepartureImportance: (index: number, importance: number) => {
+      set((state) => {
+        const updatedTubeDepartures = [...state.config.tube_departures];
+        if (updatedTubeDepartures[index]) {
+          updatedTubeDepartures[index] = { ...updatedTubeDepartures[index], importance };
+        }
+        return {
+          config: {
+            ...structuredClone(state.config),
+            tube_departures: updatedTubeDepartures,
           },
         };
       });
