@@ -42,6 +42,7 @@ valid_config = {
             "origin": "A",
             "originNaPTANOrATCO": "naptanA",
             "destination": "B",
+            "importance": 1,
             "destinationNaPTANOrATCO": "naptanB",
         }
     ],
@@ -51,6 +52,7 @@ valid_config = {
             "originCode": "codeC",
             "destination": "D",
             "destinationCode": "codeD",
+            "importance": 1,
         }
     ],
     "tube_departures": [
@@ -59,7 +61,10 @@ valid_config = {
             "stationId": "940GZZLUPAD",
         }
     ],
-    "show_tfl_lines": True,
+    "tfl_line_status": {
+        "enabled": True,
+        "importance": 1,
+    },
     "refresh_timer": 65,
     "extra_key": "should be removed",
 }
@@ -102,6 +107,7 @@ def test_get_config_happy():
                 "origin": "A",
                 "originNaPTANOrATCO": "naptanA",
                 "destination": "B",
+                "importance": 1,
                 "destinationNaPTANOrATCO": "naptanB",
             }
         ],
@@ -109,6 +115,7 @@ def test_get_config_happy():
             {
                 "origin": "C",
                 "originCode": "codeC",
+                "importance": 1,
                 "destination": "D",
                 "destinationCode": "codeD",
             }
@@ -116,11 +123,15 @@ def test_get_config_happy():
         "tube_departures": [
             {
                 "stationName": "Paddington",
+                "importance": 1,
                 "stationId": "940GZZLUPAD",
             }
         ],
+        "tfl_line_status": {
+            "enabled": True,
+            "importance": 1,
+        },
         "refresh_timer": 65,
-        "show_tfl_lines": True,
     }
     assert result == expected_result
 
@@ -157,3 +168,4 @@ def test_get_config_creates_file():
     assert "rail_departures" in result
     assert "tfl_best_routes" in result
     assert "tube_departures" in result
+    assert "tfl_line_status" in result

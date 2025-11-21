@@ -7,6 +7,7 @@ class TubeRoute(BaseModel):
     originNaPTANOrATCO: str
     destination: str
     destinationNaPTANOrATCO: str
+    importance: int = 1
 
 
 class RailDeparture(BaseModel):
@@ -14,16 +15,23 @@ class RailDeparture(BaseModel):
     originCode: str
     destination: str
     destinationCode: str
+    importance: int = 1
 
 
 class TubeDeparture(BaseModel):
     stationName: str
     stationId: str
+    importance: int = 1
+
+
+class TflLineStatus(BaseModel):
+    enabled: bool = True
+    importance: int = 1
 
 
 class ConfigDAO(BaseModel):
     tfl_best_routes: List[TubeRoute] = []
     rail_departures: List[RailDeparture] = []
     tube_departures: List[TubeDeparture] = []
-    show_tfl_lines: bool = False
+    tfl_line_status: TflLineStatus = TflLineStatus()
     refresh_timer: int = 300

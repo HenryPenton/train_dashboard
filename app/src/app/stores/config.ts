@@ -6,6 +6,7 @@ export type BestRoute = {
   originNaPTANOrATCO: string;
   destination: string;
   destinationNaPTANOrATCO: string;
+  importance: number;
 };
 
 export type DepartureConfig = {
@@ -13,18 +14,25 @@ export type DepartureConfig = {
   originCode: string;
   destination: string;
   destinationCode: string;
+  importance: number;
 };
 
 export type TubeDeparture = {
   stationName: string;
   stationId: string;
+  importance: number;
+};
+
+export type TflLineStatusConfig = {
+  enabled: boolean;
+  importance: number;
 };
 
 export type ConfigType = {
   tfl_best_routes: BestRoute[];
   rail_departures: DepartureConfig[];
   tube_departures: TubeDeparture[];
-  show_tfl_lines: boolean;
+  tfl_line_status: TflLineStatusConfig;
   refresh_timer: number;
 };
 
@@ -41,10 +49,15 @@ export type ConfigActions = {
   addTubeDeparture: (tubeDeparture: TubeDeparture) => void;
   setRefreshTimer: (timer: number) => void;
   setShowTflLines: (show: boolean) => void;
+  updateTflLineStatusImportance: (importance: number) => void;
+  setTflLineStatusEnabled: (enabled: boolean) => void;
   saveConfig: () => Promise<boolean>;
   removeRoute: (index: number) => void;
   removeDeparture: (index: number) => void;
   removeTubeDeparture: (index: number) => void;
+  updateRouteImportance: (index: number, importance: number) => void;
+  updateDepartureImportance: (index: number, importance: number) => void;
+  updateTubeDepartureImportance: (index: number, importance: number) => void;
 };
 
 export type ConfigStore = ConfigState & ConfigActions;
@@ -55,7 +68,7 @@ export const initConfigStore = (): ConfigState => {
       tfl_best_routes: [],
       rail_departures: [],
       tube_departures: [],
-      show_tfl_lines: false,
+      tfl_line_status: { enabled: false, importance: 1 },
       refresh_timer: APP_CONSTANTS.DEFAULT_REFRESH_TIMER,
     },
     lastRefreshTimeStamp: "",
@@ -67,7 +80,7 @@ export const defaultInitState: ConfigState = {
     tfl_best_routes: [],
     rail_departures: [],
     tube_departures: [],
-    show_tfl_lines: false,
+    tfl_line_status: { enabled: false, importance: 1 },
     refresh_timer: APP_CONSTANTS.DEFAULT_REFRESH_TIMER,
   },
   lastRefreshTimeStamp: "",
@@ -143,6 +156,32 @@ export const createConfigStore = (
         };
       });
     },
+    updateTflLineStatusImportance: (importance: number) => {
+      set((state) => {
+        return {
+          config: {
+            ...structuredClone(state.config),
+            tfl_line_status: {
+              ...state.config.tfl_line_status,
+              importance,
+            },
+          },
+        };
+      });
+    },
+    setTflLineStatusEnabled: (enabled: boolean) => {
+      set((state) => {
+        return {
+          config: {
+            ...structuredClone(state.config),
+            tfl_line_status: {
+              ...state.config.tfl_line_status,
+              enabled,
+            },
+          },
+        };
+      });
+    },
     saveConfig: async () => {
       const currentConfig = get().config;
 
@@ -194,6 +233,54 @@ export const createConfigStore = (
             tube_departures: state.config.tube_departures.filter(
               (_, i) => i !== index,
             ),
+          },
+        };
+      });
+    },
+    updateRouteImportance: (index: number, importance: number) => {
+      set((state) => {
+        const updatedRoutes = [...state.config.tfl_best_routes];
+        if (updatedRoutes[index]) {
+          updatedRoutes[index] = { ...updatedRoutes[index], importance };
+        }
+        return {
+          config: {
+            ...structuredClone(state.config),
+            tfl_best_routes: updatedRoutes,
+          },
+        };
+      });
+    },
+    updateDepartureImportance: (index: number, importance: number) => {
+      set((state) => {
+        const updatedDepartures = [...state.config.rail_departures];
+        if (updatedDepartures[index]) {
+          updatedDepartures[index] = {
+            ...updatedDepartures[index],
+            importance,
+          };
+        }
+        return {
+          config: {
+            ...structuredClone(state.config),
+            rail_departures: updatedDepartures,
+          },
+        };
+      });
+    },
+    updateTubeDepartureImportance: (index: number, importance: number) => {
+      set((state) => {
+        const updatedTubeDepartures = [...state.config.tube_departures];
+        if (updatedTubeDepartures[index]) {
+          updatedTubeDepartures[index] = {
+            ...updatedTubeDepartures[index],
+            importance,
+          };
+        }
+        return {
+          config: {
+            ...structuredClone(state.config),
+            tube_departures: updatedTubeDepartures,
           },
         };
       });

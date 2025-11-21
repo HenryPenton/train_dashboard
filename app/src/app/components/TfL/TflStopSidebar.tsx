@@ -23,12 +23,18 @@ export default function TflStopSidebar({
   setSelectedSidebarItem,
   onTubeStationsChange,
 }: TflStopSidebarProps) {
-  const { data: sidebarItems } = useFetch<SidebarItem[]>("/api/tfl/station-codes");
-  const { data: tubeStations } = useFetch<SidebarItem[]>("/api/tfl/station-codes?station_type=tube");
+  const { data: sidebarItems } = useFetch<SidebarItem[]>(
+    "/api/tfl/station-codes",
+  );
+  const { data: tubeStations } = useFetch<SidebarItem[]>(
+    "/api/tfl/station-codes?station_type=tube",
+  );
 
   useEffect(() => {
     if (tubeStations && onTubeStationsChange) {
-      const tubeStationIds = new Set(tubeStations.map((station) => station.naptanID));
+      const tubeStationIds = new Set(
+        tubeStations.map((station) => station.naptanID),
+      );
       onTubeStationsChange(tubeStationIds);
     }
   }, [tubeStations, onTubeStationsChange]);
@@ -48,7 +54,8 @@ export default function TflStopSidebar({
       setSearchTerm={setSearchTerm}
       selectedId={selectedSidebarItem?.naptanID ?? null}
       setSelectedId={(id) => {
-        const found = sidebarItems?.find((item) => item.naptanID === id) || null;
+        const found =
+          sidebarItems?.find((item) => item.naptanID === id) || null;
         setSelectedSidebarItem(found);
       }}
       renderItem={(item, selectedId, onClick) => (

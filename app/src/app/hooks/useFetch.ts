@@ -34,6 +34,5 @@ export function useFetch<T>(url: string | null): UseFetchState<T> {
     fetchData();
   }, [url]);
 
-
   return { data, loading, error };
 }

@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import Button from "../components/generic/Button";
 import Checkbox from "../components/generic/Checkbox";
 import AddItemForm from "../components/generic/forms/AddItemForm";
+import ImportanceSelector from "../components/generic/ImportanceSelector";
 import ItemList from "../components/generic/lists/ItemList";
 import SectionHeading from "../components/text/SectionHeading";
 import { SidebarItem } from "../components/TfL/lists/TfLStationSidebarListItem";
@@ -15,7 +16,6 @@ import { useConfigStore } from "../providers/config";
 export default function Settings() {
   const {
     config,
-    setShowTflLines,
     addDeparture,
     addRoute,
     addTubeDeparture,
@@ -25,6 +25,11 @@ export default function Settings() {
     removeRoute,
     removeTubeDeparture,
     saveConfig,
+    updateRouteImportance,
+    updateDepartureImportance,
+    updateTubeDepartureImportance,
+    updateTflLineStatusImportance,
+    setTflLineStatusEnabled,
   } = useConfigStore((state) => state);
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -60,10 +65,6 @@ export default function Settings() {
       ...partialDeparture,
       [e.target.name]: e.target.value,
     });
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setShowTflLines(e.target.checked);
   };
 
   const handleAddRoute = (e: React.FormEvent) => {
@@ -131,16 +132,38 @@ export default function Settings() {
             selectedSidebarItem={selectedSidebarItem}
             setPartialRoute={setPartialRoute}
             onAddTubeDeparture={handleAddTubeDepartureFromSidebar}
-            isInTubeStations={tubeStationIds.size > 0 && tubeStationIds.has(selectedSidebarItem.naptanID)}
+            isInTubeStations={
+              tubeStationIds.size > 0 &&
+              tubeStationIds.has(selectedSidebarItem.naptanID)
+            }
           />
         )}
 
-        <Checkbox
-          checked={config.show_tfl_lines}
-          onChange={handleChange}
-          label="Show Tube Line Status"
-          className="mb-8"
-        />
+        <div className="mb-8">
+          <h4 className="font-semibold mb-2">TFL Line Status</h4>
+          <div className="p-4 border rounded bg-gray-50">
+            <div className="flex items-center justify-between mb-2">
+              <Checkbox
+                checked={config.tfl_line_status.enabled}
+                onChange={(e) => setTflLineStatusEnabled(e.target.checked)}
+                label="Show Tube Line Status"
+              />
+            </div>
+            {config.tfl_line_status.enabled && (
+              <ImportanceSelector
+                id="tfl-importance"
+                value={config.tfl_line_status.importance}
+                onChange={updateTflLineStatusImportance}
+                maxImportance={
+                  config.tfl_best_routes.length +
+                  config.rail_departures.length +
+                  config.tube_departures.length +
+                  1
+                }
+              />
+            )}
+          </div>
+        </div>
 
         <AddItemForm
           fields={[
@@ -179,6 +202,15 @@ export default function Settings() {
           }
           onRemove={(idx) => removeRoute(idx)}
           heading="Tube Routes"
+          onImportanceChange={(idx, importance) =>
+            updateRouteImportance(idx, importance)
+          }
+          maxImportance={
+            config.tfl_best_routes.length +
+            config.rail_departures.length +
+            config.tube_departures.length +
+            (config.tfl_line_status.enabled ? 1 : 0)
+          }
         />
 
         <AddItemForm
@@ -218,6 +250,15 @@ export default function Settings() {
           }
           onRemove={(idx) => removeDeparture(idx)}
           heading="Train Departures"
+          onImportanceChange={(idx, importance) =>
+            updateDepartureImportance(idx, importance)
+          }
+          maxImportance={
+            config.tfl_best_routes.length +
+            config.rail_departures.length +
+            config.tube_departures.length +
+            (config.tfl_line_status.enabled ? 1 : 0)
+          }
         />
 
         <ItemList
@@ -225,6 +266,15 @@ export default function Settings() {
           getLabel={(t) => `${t.stationName} (${t.stationId})`}
           onRemove={(idx) => removeTubeDeparture(idx)}
           heading="Tube Departures"
+          onImportanceChange={(idx, importance) =>
+            updateTubeDepartureImportance(idx, importance)
+          }
+          maxImportance={
+            config.tfl_best_routes.length +
+            config.rail_departures.length +
+            config.tube_departures.length +
+            (config.tfl_line_status.enabled ? 1 : 0)
+          }
         />
 
         {/* Refresh Timer Section */}
