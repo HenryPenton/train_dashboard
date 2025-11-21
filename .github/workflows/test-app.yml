@@ -55,6 +55,14 @@ jobs:
             **/node_modules
           key: ${{ env.npm_dependencies_cache_key }}
 
+      - name: Run linting
+        working-directory: app
+        run: pnpm lint
+
       - name: Run unit tests
         working-directory: app
         run: pnpm test
+
+      - name: Build application
+        working-directory: app
+        run: pnpm build
