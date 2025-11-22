@@ -71,24 +71,17 @@ export default function TflBestRoute({ from, to }: TflBestRouteProps) {
   return (
     <SectionCard className="overflow-hidden">
       <div className="relative">
-        {/* Animated background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 via-purple-500/5 to-blue-500/5 animate-pulse"></div>
-
         <div className="relative">
           <SectionHeading className="mb-6">
-            <span className="inline-flex items-center gap-3">
-              <span className="text-2xl animate-bounce">🚀</span>
-              <span className="bg-gradient-to-r from-cyan-400 via-purple-400 to-blue-400 bg-clip-text text-transparent font-bold">
-                Optimal Route
-              </span>
+            <span className="bg-gradient-to-r from-cyan-400 via-purple-400 to-blue-400 bg-clip-text text-transparent font-bold">
+              Optimal Route
             </span>
           </SectionHeading>
 
           <div className="space-y-8">
             {/* Enhanced Journey Header */}
             <div className="relative group">
-              <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/20 via-purple-400/20 to-blue-400/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-500"></div>
-              <div className="relative p-6 bg-gradient-to-br from-[#2a2d35]/90 via-[#323741]/90 to-[#2a2d35]/90 rounded-2xl border border-cyan-400/30 backdrop-blur-sm">
+              <div className="relative p-6 bg-gradient-to-br from-[#2a2d35]/90 via-[#323741]/90 to-[#2a2d35]/90 rounded-2xl border border-cyan-400/30">
                 {/* Route Endpoints */}
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex-1">
@@ -127,8 +120,8 @@ export default function TflBestRoute({ from, to }: TflBestRouteProps) {
 
                 {/* Journey Metrics */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="group/metric hover:scale-105 transition-transform duration-300">
-                    <div className="p-4 bg-gradient-to-br from-emerald-500/10 to-green-500/10 rounded-xl border border-emerald-400/20 hover:border-emerald-400/40 transition-colors">
+                  <div className="group/metric">
+                    <div className="p-4 bg-gradient-to-br from-emerald-500/10 to-green-500/10 rounded-xl border border-emerald-400/20">
                       <div className="flex items-center gap-3">
                         <div className="p-2 bg-emerald-400/20 rounded-lg">
                           <span className="text-xl">⚡</span>
@@ -147,8 +140,8 @@ export default function TflBestRoute({ from, to }: TflBestRouteProps) {
                     </div>
                   </div>
 
-                  <div className="group/metric hover:scale-105 transition-transform duration-300">
-                    <div className="p-4 bg-gradient-to-br from-cyan-500/10 to-blue-500/10 rounded-xl border border-cyan-400/20 hover:border-cyan-400/40 transition-colors">
+                  <div className="group/metric">
+                    <div className="p-4 bg-gradient-to-br from-cyan-500/10 to-blue-500/10 rounded-xl border border-cyan-400/20">
                       <div className="flex items-center gap-3">
                         <div className="p-2 bg-cyan-400/20 rounded-lg">
                           <span className="text-xl">🎯</span>
@@ -166,8 +159,8 @@ export default function TflBestRoute({ from, to }: TflBestRouteProps) {
                   </div>
 
                   {data.fare && typeof data.fare === "number" && (
-                    <div className="group/metric hover:scale-105 transition-transform duration-300">
-                      <div className="p-4 bg-gradient-to-br from-yellow-500/10 to-orange-500/10 rounded-xl border border-yellow-400/20 hover:border-yellow-400/40 transition-colors">
+                    <div className="group/metric">
+                      <div className="p-4 bg-gradient-to-br from-yellow-500/10 to-orange-500/10 rounded-xl border border-yellow-400/20">
                         <div className="flex items-center gap-3">
                           <div className="p-2 bg-yellow-400/20 rounded-lg">
                             <span className="text-xl">💰</span>
@@ -190,8 +183,7 @@ export default function TflBestRoute({ from, to }: TflBestRouteProps) {
 
             {/* Enhanced Route Steps */}
             <div className="relative group">
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-400/10 via-cyan-400/10 to-blue-400/10 rounded-2xl blur-lg group-hover:blur-xl transition-all duration-500"></div>
-              <div className="relative p-6 bg-gradient-to-br from-[#2a2d35]/95 via-[#1e2128]/95 to-[#2a2d35]/95 rounded-2xl border border-purple-400/20 backdrop-blur-sm">
+              <div className="relative p-6 bg-gradient-to-br from-[#2a2d35]/95 via-[#1e2128]/95 to-[#2a2d35]/95 rounded-2xl border border-purple-400/20">
                 <div className="flex items-center gap-4 mb-6">
                   <div className="flex items-center gap-3">
                     <div className="p-2 bg-gradient-to-r from-purple-500/20 to-cyan-500/20 rounded-lg">
@@ -211,20 +203,6 @@ export default function TflBestRoute({ from, to }: TflBestRouteProps) {
 
                 <div className="space-y-4">
                   {data.legs.map((leg, i) => {
-                    const getModeIcon = (mode: string) => {
-                      const modeIcons: Record<string, string> = {
-                        tube: "🚇",
-                        bus: "🚌",
-                        walking: "🚶‍♂️",
-                        train: "🚆",
-                        overground: "🚊",
-                        "elizabeth-line": "🚄",
-                        tram: "🚋",
-                        "national-rail": "🚂",
-                      };
-                      return modeIcons[mode.toLowerCase()] || "🚌";
-                    };
-
                     const getModeColors = (mode: string) => {
                       const modeColorSchemes: Record<
                         string,
@@ -299,58 +277,55 @@ export default function TflBestRoute({ from, to }: TflBestRouteProps) {
                     return (
                       <div key={i} className="relative group/step">
                         <div
-                          className={`relative flex items-center p-4 bg-gradient-to-br ${colors.bg} rounded-xl border ${colors.border} hover:scale-[1.02] hover:shadow-lg ${colors.glow} transition-all duration-300`}
+                          className={`relative p-4 bg-gradient-to-br ${colors.bg} rounded-xl border ${colors.border}`}
                         >
-                          {/* Enhanced Step Number */}
-                          <div className="flex-shrink-0 relative mr-5">
-                            <div className="w-10 h-10 bg-gradient-to-br from-white to-gray-200 rounded-full flex items-center justify-center text-gray-800 font-bold text-sm shadow-lg relative z-10">
-                              {i + 1}
-                            </div>
-                            <div className="absolute inset-0 bg-gradient-to-br from-cyan-400 to-purple-400 rounded-full blur-sm opacity-50 group-hover/step:opacity-80 transition-opacity duration-300"></div>
-                          </div>
-
-                          {/* Enhanced Mode Info */}
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-3 mb-2">
-                              <span className="text-2xl filter drop-shadow-lg">
-                                {getModeIcon(leg.mode)}
-                              </span>
-                              <div className="flex flex-col items-center">
-                                <span
-                                  className={`font-bold text-base ${colors.text} capitalize tracking-wide`}
-                                >
-                                  {leg.mode.replace("-", " ")}
-                                </span>
-                                {leg.line && (
-                                  <div className="text-gray-300 text-sm font-medium mt-1 px-2 py-1 bg-black/20 rounded-md w-fit">
-                                    {leg.line}
-                                  </div>
-                                )}
+                          {/* Step Header */}
+                          <div className="flex items-center mb-3">
+                            {/* Enhanced Step Number */}
+                            <div className="flex-shrink-0 relative mr-5">
+                              <div className="w-10 h-10 bg-gradient-to-br from-white to-gray-200 rounded-full flex items-center justify-center text-gray-800 font-bold text-sm shadow-lg relative z-10">
+                                {i + 1}
                               </div>
                             </div>
+
+                            {/* Enhanced Mode Info */}
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-3">
+                                <div className="flex flex-wrap items-center gap-2">
+                                  <span
+                                    className={`font-bold text-base ${colors.text} capitalize tracking-wide`}
+                                  >
+                                    {leg.mode.replace("-", " ")}
+                                  </span>
+                                  {leg.line && leg.mode.toLowerCase() !== 'elizabeth-line' && leg.mode.toLowerCase() !== 'tram' && (
+                                    <div className="text-gray-300 text-sm font-medium px-2 py-1 bg-black/20 rounded-md w-fit">
+                                      {leg.line}
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
                           </div>
 
-                          {/* Enhanced Route Info */}
-                          <div className="flex-shrink-0 text-right max-w-[200px]">
-                            <div className="bg-black/30 rounded-lg p-3 backdrop-blur-sm">
-                              <div className="text-emerald-300 text-xs font-bold uppercase tracking-wider mb-1">
-                                From
+                          {/* Route Bar */}
+                          <div className="w-full bg-black/30 rounded-lg p-3 backdrop-blur-sm">
+                            <div className="grid grid-cols-2 gap-4">
+                              <div className="flex flex-col items-start">
+                                <div className="text-emerald-300 text-xs font-bold uppercase tracking-wider mb-1">
+                                  From
+                                </div>
+                                <div className="text-white font-bold text-sm">
+                                  {leg.departure}
+                                </div>
                               </div>
-                              <div className="text-white font-bold text-xs mb-2 truncate">
-                                {leg.departure}
-                              </div>
-                              <div className="flex items-center justify-center mb-2">
-                                <div className="w-px h-4 bg-gradient-to-b from-transparent via-gray-400 to-transparent"></div>
-                                <span className="text-gray-400 text-xs mx-1">
-                                  ↓
-                                </span>
-                                <div className="w-px h-4 bg-gradient-to-b from-transparent via-gray-400 to-transparent"></div>
-                              </div>
-                              <div className="text-red-300 text-xs font-bold uppercase tracking-wider mb-1">
-                                To
-                              </div>
-                              <div className="text-white font-bold text-xs truncate">
-                                {leg.arrival}
+                              
+                              <div className="flex flex-col items-start">
+                                <div className="text-red-300 text-xs font-bold uppercase tracking-wider mb-1">
+                                  To
+                                </div>
+                                <div className="text-white font-bold text-sm">
+                                  {leg.arrival}
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -359,7 +334,7 @@ export default function TflBestRoute({ from, to }: TflBestRouteProps) {
                         {/* Enhanced Connection Line */}
                         {i < data.legs.length - 1 && (
                           <div className="flex justify-center py-2">
-                            <div className="w-1 h-6 bg-gradient-to-b from-cyan-400 via-purple-400 to-cyan-400 rounded-full shadow-lg shadow-cyan-400/50 animate-pulse"></div>
+                            <div className="w-1 h-6 bg-gradient-to-b from-cyan-400 via-purple-400 to-cyan-400 rounded-full animate-pulse"></div>
                           </div>
                         )}
                       </div>
