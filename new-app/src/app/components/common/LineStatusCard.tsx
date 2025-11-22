@@ -13,7 +13,7 @@ export default function LineStatusCard({ name, statusList, severity }: LineStatu
 
   return (
     <div className="group">
-      <div className={`bg-gradient-to-r from-[#2a2d35] to-[#323741] rounded-xl border ${getSeverityBorderColor(severity)}/30 shadow-lg overflow-hidden transition-transform hover:scale-[1.02] hover:shadow-xl`}>
+      <div className={`bg-gradient-to-r from-[#2a2d35] to-[#323741] rounded-xl border ${getSeverityBorderColor(severity)}/30 shadow-lg overflow-hidden`}>
         <StatusBar backgroundColor={getSeverityStatusBarColor(severity)} />
         
         <div className="p-4">

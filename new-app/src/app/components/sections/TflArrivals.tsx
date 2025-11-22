@@ -6,6 +6,9 @@ import SectionHeading from "../common/SectionHeading";
 import SectionCard from "../common/SectionCard";
 import Loading from "../common/Loading";
 import ErrorDisplay from "../common/ErrorDisplay";
+import TflLineCard from "../common/TflLineCard";
+import TflArrivalCard from "../common/TflArrivalCard";
+import PlatformHeader from "../common/PlatformHeader";
 
 type ArrivalType = {
   id: string;
@@ -76,52 +79,34 @@ export default function TflArrivals({
 
   return (
     <SectionCard>
-      <SectionHeading>🚇 {stationName}</SectionHeading>
+      <SectionHeading>{stationName}</SectionHeading>
 
-      <div className="space-y-6">
+      <div className="space-y-3">
         {Object.entries(arrivals.lines).map(([lineId, lineData]) => (
-          <div key={lineId} className="space-y-3">
-            {/* Line Header */}
-            <div className="text-lg font-bold text-cyan-200 border-b border-gray-600/50 pb-2">
-              {lineData.lineName}
-            </div>
-
-            {/* Platforms within this line */}
+          <TflLineCard key={lineId} lineName={lineData.lineName}>
             {Object.entries(lineData.arrivals).map(
               ([platformName, platformArrivals]) => (
                 <div key={platformName} className="space-y-2">
-                  {/* Platform Header */}
-                  <div className="text-sm font-semibold text-yellow-300">
-                    {transformPlatformName(platformName, lineData.lineName)}
-                  </div>
+                  <PlatformHeader
+                    platformName={transformPlatformName(
+                      platformName,
+                      lineData.lineName,
+                    )}
+                  />
 
-                  {/* Arrivals for this platform */}
                   <div className="space-y-2">
                     {platformArrivals.slice(0, 3).map((arrival) => (
-                      <div
+                      <TflArrivalCard
                         key={arrival.id}
-                        className="flex justify-between items-center p-3 bg-[#2a2d35] rounded border-l-4 border-yellow-500"
-                      >
-                        <div className="flex flex-col">
-                          <div className="text-base font-medium text-white">
-                            to {arrival.towards}
-                          </div>
-                          {arrival.currentLocation && (
-                            <div className="text-xs text-gray-400">
-                              {arrival.currentLocation}
-                            </div>
-                          )}
-                        </div>
-                        <div className="text-lg font-bold text-cyan-300">
-                          {formatTimeToStation(arrival.timeToStation)}
-                        </div>
-                      </div>
+                        arrival={arrival}
+                        formatTimeToStation={formatTimeToStation}
+                      />
                     ))}
                   </div>
                 </div>
               ),
             )}
-          </div>
+          </TflLineCard>
         ))}
       </div>
     </SectionCard>
