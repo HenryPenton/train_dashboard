@@ -1,16 +1,15 @@
-from collections import Counter
-
-from src.DAOs.tfl.line_dao import LineDAO
+from typing import List
+from src.DAOs.tfl.line_dao import LineDAO, LineStatusDAO
 
 
 class LineStatusModel:
     def __init__(self, line: LineDAO, logger):
         self.logger = logger
-        self.status = self._get_status(line)
+        self.statusList = self._get_status_list(line)
         self.name = self._get_name(line)
         self.statusSeverity = self._get_status_severity(line)
         self.logger.debug(
-            f"LineStatusModel created for {self.name}: status={self.status}, severity={self.statusSeverity}"
+            f"LineStatusModel created for {self.name}: status={self.statusList}, severity={self.statusSeverity}"
         )
 
     @staticmethod
@@ -26,25 +25,22 @@ class LineStatusModel:
             )
 
     @staticmethod
-    def _get_status(line) -> str:
+    def _get_status_list(line: List[LineStatusDAO]) -> list[str]:
         line_statuses = line.line_statuses
         if line_statuses:
-            status_list = [s.statusSeverityDescription for s in line_statuses]
-            counts = Counter(status_list)
-            status_parts = []
-            for status, count in counts.items():
-                if count > 1:
-                    status_parts.append(f"{status} x{count}")
-                else:
-                    status_parts.append(status)
-            status_str = ", ".join(status_parts)
-            return status_str
+            status_list = []
+            for s in line_statuses:
+                status_list.append(s.statusSeverityDescription)
+                print(s)
+
+            return list(set(status_list))
+        return []
 
     def as_dict(self) -> dict:
         self.logger.debug(f"Converting LineStatusModel for {self.name} to dict")
         return {
             "name": self.name,
-            "status": self.status,
+            "statusList": self.statusList,
             "statusSeverity": self.statusSeverity,
         }
 

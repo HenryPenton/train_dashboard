@@ -5,11 +5,11 @@ import { getSeverityStatusBarColor, getSeverityBorderColor } from "../../utils/c
 
 type LineStatusCardProps = {
   name: string;
-  status: string;
+  statusList: string[];
   severity: number;
 };
 
-export default function LineStatusCard({ name, status, severity }: LineStatusCardProps) {
+export default function LineStatusCard({ name, statusList, severity }: LineStatusCardProps) {
 
   return (
     <div className="group">
@@ -17,11 +17,19 @@ export default function LineStatusCard({ name, status, severity }: LineStatusCar
         <StatusBar backgroundColor={getSeverityStatusBarColor(severity)} />
         
         <div className="p-4">
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-start">
             <div className="text-lg font-bold text-cyan-200">
               {name}
             </div>
-            <StatusBadge status={status} severity={severity} />
+            <div className="flex flex-col text-center gap-2">
+              {statusList && statusList.length > 0 ? (
+                statusList.map((status, index) => (
+                  <StatusBadge key={index} status={status} severity={severity} />
+                ))
+              ) : (
+                <StatusBadge status="Unknown" severity={severity} />
+              )}
+            </div>
           </div>
         </div>
       </div>

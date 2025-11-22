@@ -9,34 +9,32 @@ import LineStatusCard from "../common/LineStatusCard";
 
 type TflLineStatusType = {
   name: string;
-  status: string;
+  statusList: string[];
   statusSeverity: number;
 };
 
 export default function TflLineStatus() {
-  const { data: lineStatuses, loading, error } = useFetch<TflLineStatusType[]>(
-    APP_CONSTANTS.API_ENDPOINTS.LINE_STATUS
-  );
+  const {
+    data: lineStatuses,
+    loading,
+    error,
+  } = useFetch<TflLineStatusType[]>(APP_CONSTANTS.API_ENDPOINTS.LINE_STATUS);
 
   if (loading) return <Loading message="Loading line status..." />;
   if (error) return <ErrorDisplay message={error} />;
-  if (!lineStatuses || lineStatuses.length === 0) 
+  if (!lineStatuses || lineStatuses.length === 0)
     return <ErrorDisplay message="No line status data available" />;
-
-
 
   return (
     <SectionCard>
-      <SectionHeading>
-        🚇 TfL Line Status
-      </SectionHeading>
-      
+      <SectionHeading>TfL Line Status</SectionHeading>
+
       <div className="space-y-3">
         {lineStatuses.map((line, i) => (
           <LineStatusCard
             key={i}
             name={line.name}
-            status={line.status}
+            statusList={line.statusList}
             severity={line.statusSeverity}
           />
         ))}

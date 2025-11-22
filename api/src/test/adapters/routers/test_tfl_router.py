@@ -29,7 +29,7 @@ class DummyTFLService:
             def as_dict(self):
                 return {
                     "name": "Central",
-                    "status": "Good Service",
+                    "statusList": ["Good Service"],
                     "statusSeverity": 10,
                 }
 
@@ -49,10 +49,10 @@ class DummyTFLService:
                                 "platformName": "Platform 1",
                                 "timeToStation": 120,
                                 "expectedArrival": "2025-11-13T18:12:32Z",
-                                "towards": "Edgware Road"
+                                "towards": "Edgware Road",
                             }
                         ]
-                    }
+                    },
                 }
             }
         }
@@ -91,7 +91,7 @@ def test_get_line_status():
     response = client.get("/tfl/line-status")
     assert response.status_code == 200
     assert response.json() == [
-        {"name": "Central", "status": "Good Service", "statusSeverity": 10}
+        {"name": "Central", "statusList": ["Good Service"], "statusSeverity": 10}
     ]
 
 
@@ -153,10 +153,10 @@ def test_get_station_arrivals():
                             "platformName": "Platform 1",
                             "timeToStation": 120,
                             "expectedArrival": "2025-11-13T18:12:32Z",
-                            "towards": "Edgware Road"
+                            "towards": "Edgware Road",
                         }
                     ]
-                }
+                },
             }
         }
     }

@@ -58,7 +58,7 @@ class DummyTflClient:
                     "platformName": "Platform 1",
                     "timeToStation": 120,
                     "expectedArrival": "2025-11-13T18:12:32Z",
-                    "towards": "Edgware Road"
+                    "towards": "Edgware Road",
                 }
             )
         ]
@@ -85,7 +85,7 @@ def test_get_line_status():
     result = asyncio.run(service.get_line_statuses())
     assert (result[0].as_dict()) == {
         "name": "Central",
-        "status": "Good Service",
+        "statusList": ["Good Service"],
         "statusSeverity": 10,
     }
 
@@ -150,10 +150,10 @@ def test_get_arrivals_by_line():
                             "towards": "Edgware Road",
                             "currentLocation": None,
                             "destinationName": None,
-                            "direction": None
+                            "direction": None,
                         }
                     ]
-                }
+                },
             }
         }
     }
