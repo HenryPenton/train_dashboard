@@ -86,7 +86,9 @@ export default function Schedules() {
   const [schedules, setSchedules] = useState<SchedulesData>({ schedules: [] });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [validationError, setValidationError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
 
   const [newSchedule, setNewSchedule] = useState({
     type: "rail_departure" as Schedule["type"],
@@ -117,29 +119,44 @@ export default function Schedules() {
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
+    // Clear validation error when user starts typing
+    if (validationError) {
+      setValidationError(null);
+    }
     setNewSchedule({ ...newSchedule, [e.target.name]: e.target.value });
   };
 
   const handleAddSchedule = (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Clear any previous validation errors
+    setValidationError(null);
+
+    // Validate time format (HH:MM)
+    const timeRegex = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/;
+    if (newSchedule.time && !timeRegex.test(newSchedule.time)) {
+      setValidationError("Please enter time in valid 24-hour format (HH:MM, e.g., 08:30 or 14:15)");
+      return;
+    }
+
     // Validate at least one day is selected
     if (!newSchedule.day_of_week) {
-      setError("Please select at least one day of the week");
+      setValidationError("Please select at least one day of the week");
       return;
     }
 
     let schedule: Schedule;
 
     if (newSchedule.type === "rail_departure") {
-      if (
-        !newSchedule.from_station_name ||
-        !newSchedule.from_station_code ||
-        !newSchedule.to_station_name ||
-        !newSchedule.to_station_code ||
-        !newSchedule.time
-      ) {
-        setError("Please fill in all required fields");
+      const missingFields = [];
+      if (!newSchedule.from_station_name) missingFields.push("From Station Name");
+      if (!newSchedule.from_station_code) missingFields.push("From Station Code");
+      if (!newSchedule.to_station_name) missingFields.push("To Station Name");
+      if (!newSchedule.to_station_code) missingFields.push("To Station Code");
+      if (!newSchedule.time) missingFields.push("Time");
+      
+      if (missingFields.length > 0) {
+        setValidationError(`Please fill in the following required fields: ${missingFields.join(", ")}`);
         return;
       }
       schedule = {
@@ -153,7 +170,7 @@ export default function Schedules() {
       };
     } else if (newSchedule.type === "tube_line_status") {
       if (!newSchedule.time) {
-        setError("Please enter a time");
+        setValidationError("Please enter a time");
         return;
       }
       schedule = {
@@ -162,14 +179,15 @@ export default function Schedules() {
         time: newSchedule.time,
       };
     } else {
-      if (
-        !newSchedule.from_name ||
-        !newSchedule.from_code ||
-        !newSchedule.to_name ||
-        !newSchedule.to_code ||
-        !newSchedule.time
-      ) {
-        setError("Please fill in all required fields");
+      const missingFields = [];
+      if (!newSchedule.from_name) missingFields.push("From Place Name");
+      if (!newSchedule.from_code) missingFields.push("From Code");
+      if (!newSchedule.to_name) missingFields.push("To Place Name");
+      if (!newSchedule.to_code) missingFields.push("To Code");
+      if (!newSchedule.time) missingFields.push("Time");
+      
+      if (missingFields.length > 0) {
+        setValidationError(`Please fill in the following required fields: ${missingFields.join(", ")}`);
         return;
       }
       schedule = {
@@ -188,7 +206,7 @@ export default function Schedules() {
     });
 
     // Clear any previous error messages
-    setError(null);
+    setValidationError(null);
 
     // Reset form
     setNewSchedule({
@@ -214,8 +232,15 @@ export default function Schedules() {
 
   const handleSave = async () => {
     setSaving(true);
+    // Clear validation errors since we're saving existing schedules
+    setValidationError(null);
+    setSaveSuccess(false);
+    
     try {
       await saveSchedules(schedules);
+      setSaveSuccess(true);
+      // Clear success message after 3 seconds
+      setTimeout(() => setSaveSuccess(false), 3000);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to save schedules");
     } finally {
@@ -224,6 +249,11 @@ export default function Schedules() {
   };
 
   const handleDayCheckbox = (checked: boolean, day: string) => {
+    // Clear validation error when user selects days
+    if (validationError) {
+      setValidationError(null);
+    }
+    
     const currentDays = parseDays(newSchedule.day_of_week);
     let newDays;
     if (checked) {
@@ -240,6 +270,7 @@ export default function Schedules() {
         <Loading message="Loading schedules..." />
       </PageLayout>
     );
+  // Only show error page for critical errors (loading/saving), not validation errors
   if (error)
     return (
       <PageLayout title="SCHEDULES">
@@ -274,6 +305,12 @@ export default function Schedules() {
             {/* Add New Schedule */}
             <SectionCard>
               <SectionHeading>📅 Add New Schedule</SectionHeading>
+              {validationError && (
+                <div className="mb-4 p-3 bg-red-900/50 border border-red-600 rounded text-red-200">
+                  <span className="font-semibold">Validation Error: </span>
+                  {validationError}
+                </div>
+              )}
               <form onSubmit={handleAddSchedule} className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="flex flex-col gap-1">
@@ -487,7 +524,13 @@ export default function Schedules() {
 
             {/* Actions */}
             <SectionCard>
-              <div className="flex gap-4 justify-center">
+              <div className="flex flex-col items-center gap-4">
+                {saveSuccess && (
+                  <div className="p-3 bg-green-900/50 border border-green-600 rounded text-green-200">
+                    <span className="font-semibold">✅ Success: </span>
+                    Schedules saved successfully!
+                  </div>
+                )}
                 <Button
                   variant="primary"
                   onClick={handleSave}
