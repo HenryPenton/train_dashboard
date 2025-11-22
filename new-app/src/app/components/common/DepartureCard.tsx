@@ -5,6 +5,7 @@ import RouteInfo from "./RouteInfo";
 import DepartureTime from "./DepartureTime";
 import PlatformInfo from "./PlatformInfo";
 import DelayInfo from "./DelayInfo";
+import { getDepartureStatusBarColor } from "../../utils/colorMappings";
 
 type DepartureCardProps = {
   departure: Departure;
@@ -24,7 +25,7 @@ export default function DepartureCard({ departure }: DepartureCardProps) {
   return (
     <CardWrapper {...cardProps}>
       <div className="group bg-gradient-to-r from-[#2a2d35] to-[#323741] rounded-xl border border-cyan-500/30 shadow-lg overflow-hidden">
-        <StatusBar status={departure.status} />
+        <StatusBar backgroundColor={getDepartureStatusBarColor(departure.status)} />
 
         <div className="p-4">
           {departure.origin && departure.destination && (
