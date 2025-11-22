@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import PageLayout from "../components/layout/PageLayout";
 import SectionCard from "../components/common/SectionCard";
 import SectionHeading from "../components/common/SectionHeading";
@@ -11,6 +11,8 @@ import Loading from "../components/common/Loading";
 import TflStopSidebar, { SidebarItem } from "../components/tfl/TflStopSidebar";
 import PlaceDetails from "../components/tfl/PlaceDetails";
 import { APP_CONSTANTS } from "../constants/app";
+import { useFetch } from "../hooks/useFetch";
+import { useMutation } from "../hooks/useMutation";
 
 type ScheduleBase = {
   day_of_week: string;
@@ -57,38 +59,34 @@ function joinDays(days: string[]): string {
   return days.join(",");
 }
 
-async function fetchSchedules(): Promise<SchedulesData> {
-  try {
-    const res = await fetch(APP_CONSTANTS.API_ENDPOINTS.SCHEDULES);
-    if (!res.ok) throw new Error("Failed to fetch schedules");
-    return await res.json();
-  } catch (e) {
-    console.log("Error fetching schedules:", e);
-    throw e;
-  }
-}
 
-async function saveSchedules(schedules: SchedulesData): Promise<void> {
-  try {
-    const res = await fetch(APP_CONSTANTS.API_ENDPOINTS.SCHEDULES, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(schedules),
-    });
-    if (!res.ok) throw new Error("Failed to save schedules");
-  } catch (e) {
-    console.log("Error saving schedules:", e);
-    throw e;
-  }
-}
 
 export default function Schedules() {
-  const [schedules, setSchedules] = useState<SchedulesData>({ schedules: [] });
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  // Use useFetch hook for loading schedules
+  const { data: fetchedSchedules, loading, error } = useFetch<SchedulesData>(
+    APP_CONSTANTS.API_ENDPOINTS.SCHEDULES
+  );
+  
+  // Use useMutation hook for saving schedules
+  const saveSchedulesMutation = useMutation<{ status: string }, SchedulesData>(
+    APP_CONSTANTS.API_ENDPOINTS.SCHEDULES,
+    {
+      onSuccess: () => {
+        setSaveSuccess(true);
+        // Clear success message after 3 seconds
+        setTimeout(() => setSaveSuccess(false), 3000);
+      },
+    }
+  );
+  
+  // Local state for form and UI
+  const [localSchedules, setLocalSchedules] = useState<SchedulesData>({ schedules: [] });
   const [validationError, setValidationError] = useState<string | null>(null);
-  const [saving, setSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
+
+  // Use fetched schedules or local schedules (preference for fetched data)
+  const schedules = fetchedSchedules || localSchedules;
+  const setSchedules = setLocalSchedules;
 
   const [newSchedule, setNewSchedule] = useState({
     type: "rail_departure" as Schedule["type"],
@@ -108,13 +106,6 @@ export default function Schedules() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSidebarItem, setSelectedSidebarItem] =
     useState<SidebarItem | null>(null);
-
-  useEffect(() => {
-    fetchSchedules()
-      .then(setSchedules)
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false));
-  }, []);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -231,20 +222,16 @@ export default function Schedules() {
   };
 
   const handleSave = async () => {
-    setSaving(true);
     // Clear validation errors since we're saving existing schedules
     setValidationError(null);
     setSaveSuccess(false);
     
     try {
-      await saveSchedules(schedules);
-      setSaveSuccess(true);
-      // Clear success message after 3 seconds
-      setTimeout(() => setSaveSuccess(false), 3000);
+      // Use current schedules (which could be fetched or local)
+      await saveSchedulesMutation.mutate(schedules);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to save schedules");
-    } finally {
-      setSaving(false);
+      // Error handling is done by the useMutation hook
+      console.error("Save failed:", err);
     }
   };
 
@@ -270,7 +257,7 @@ export default function Schedules() {
         <Loading message="Loading schedules..." />
       </PageLayout>
     );
-  // Only show error page for critical errors (loading/saving), not validation errors
+  // Only show error page for critical errors (loading), not validation errors or save errors
   if (error)
     return (
       <PageLayout title="SCHEDULES">
@@ -531,12 +518,18 @@ export default function Schedules() {
                     Schedules saved successfully!
                   </div>
                 )}
+                {saveSchedulesMutation.error && (
+                  <div className="p-3 bg-red-900/50 border border-red-600 rounded text-red-200">
+                    <span className="font-semibold">❌ Error: </span>
+                    {saveSchedulesMutation.error}
+                  </div>
+                )}
                 <Button
                   variant="primary"
                   onClick={handleSave}
-                  disabled={saving}
+                  disabled={saveSchedulesMutation.loading}
                 >
-                  {saving ? "Saving..." : "Save Schedules"}
+                  {saveSchedulesMutation.loading ? "Saving..." : "Save Schedules"}
                 </Button>
               </div>
             </SectionCard>
