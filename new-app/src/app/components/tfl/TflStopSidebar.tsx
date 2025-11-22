@@ -42,7 +42,8 @@ export default function TflStopSidebar({
   const filteredSidebarItems = useMemo(
     () =>
       sidebarItems?.filter((item) =>
-        item.CommonName.toLowerCase().includes(searchTerm.toLowerCase()),
+        item.CommonName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.naptanID.toLowerCase().includes(searchTerm.toLowerCase())
       ) || [],
     [sidebarItems, searchTerm],
   );
