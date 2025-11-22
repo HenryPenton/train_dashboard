@@ -58,7 +58,7 @@ export default function TrainDepartures({
   return (
     <SectionCard>
       <SectionHeading>
-        🚂 {fromStation.stationName} → {toStation.stationName}
+        {fromStation.stationName} → {toStation.stationName}
       </SectionHeading>
 
       <div className="space-y-3">
