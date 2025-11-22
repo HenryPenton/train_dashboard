@@ -67,13 +67,13 @@ export default function TflBestRoute({ from, to }: TflBestRouteProps) {
     if (duration <= 60) return "text-yellow-400";
     return "text-orange-400";
   };
-
+  console.log(data);
   return (
     <SectionCard className="overflow-hidden">
       <div className="relative">
         {/* Animated background gradient */}
         <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 via-purple-500/5 to-blue-500/5 animate-pulse"></div>
-        
+
         <div className="relative">
           <SectionHeading className="mb-6">
             <span className="inline-flex items-center gap-3">
@@ -94,27 +94,37 @@ export default function TflBestRoute({ from, to }: TflBestRouteProps) {
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
                       <div className="w-4 h-4 rounded-full bg-gradient-to-r from-emerald-400 to-green-500 shadow-lg shadow-emerald-400/50"></div>
-                      <span className="text-emerald-300 text-sm font-medium uppercase tracking-wider">Departure</span>
+                      <span className="text-emerald-300 text-sm font-medium uppercase tracking-wider">
+                        Departure
+                      </span>
                     </div>
-                    <span className="text-white font-bold text-lg block ml-7">{from.placeName}</span>
+                    <span className="text-white font-bold text-lg block ml-7">
+                      {from.placeName}
+                    </span>
                   </div>
-                  
+
                   <div className="flex-shrink-0 mx-6">
                     <div className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-full border border-cyan-400/30">
                       <span className="text-2xl animate-pulse">✨</span>
-                      <span className="text-cyan-300 font-semibold text-sm">BEST</span>
+                      <span className="text-cyan-300 font-semibold text-sm">
+                        BEST
+                      </span>
                     </div>
                   </div>
-                  
+
                   <div className="flex-1 text-right">
                     <div className="flex items-center justify-end gap-3 mb-2">
-                      <span className="text-red-300 text-sm font-medium uppercase tracking-wider">Destination</span>
+                      <span className="text-red-300 text-sm font-medium uppercase tracking-wider">
+                        Destination
+                      </span>
                       <div className="w-4 h-4 rounded-full bg-gradient-to-r from-red-400 to-pink-500 shadow-lg shadow-red-400/50"></div>
                     </div>
-                    <span className="text-white font-bold text-lg block mr-7">{to.placeName}</span>
+                    <span className="text-white font-bold text-lg block mr-7">
+                      {to.placeName}
+                    </span>
                   </div>
                 </div>
-                
+
                 {/* Journey Metrics */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="group/metric hover:scale-105 transition-transform duration-300">
@@ -124,15 +134,19 @@ export default function TflBestRoute({ from, to }: TflBestRouteProps) {
                           <span className="text-xl">⚡</span>
                         </div>
                         <div>
-                          <div className="text-emerald-300 text-xs font-medium uppercase tracking-wider">Duration</div>
-                          <div className={`font-bold text-xl ${getDurationColor(data.duration)}`}>
+                          <div className="text-emerald-300 text-xs font-medium uppercase tracking-wider">
+                            Duration
+                          </div>
+                          <div
+                            className={`font-bold text-xl ${getDurationColor(data.duration)}`}
+                          >
                             {data.duration} <span className="text-sm">min</span>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="group/metric hover:scale-105 transition-transform duration-300">
                     <div className="p-4 bg-gradient-to-br from-cyan-500/10 to-blue-500/10 rounded-xl border border-cyan-400/20 hover:border-cyan-400/40 transition-colors">
                       <div className="flex items-center gap-3">
@@ -140,7 +154,9 @@ export default function TflBestRoute({ from, to }: TflBestRouteProps) {
                           <span className="text-xl">🎯</span>
                         </div>
                         <div>
-                          <div className="text-cyan-300 text-xs font-medium uppercase tracking-wider">Arrives</div>
+                          <div className="text-cyan-300 text-xs font-medium uppercase tracking-wider">
+                            Arrives
+                          </div>
                           <div className="text-white font-bold text-xl">
                             {formatArrivalTime(data.arrival)}
                           </div>
@@ -148,7 +164,7 @@ export default function TflBestRoute({ from, to }: TflBestRouteProps) {
                       </div>
                     </div>
                   </div>
-                  
+
                   {data.fare && typeof data.fare === "number" && (
                     <div className="group/metric hover:scale-105 transition-transform duration-300">
                       <div className="p-4 bg-gradient-to-br from-yellow-500/10 to-orange-500/10 rounded-xl border border-yellow-400/20 hover:border-yellow-400/40 transition-colors">
@@ -157,7 +173,9 @@ export default function TflBestRoute({ from, to }: TflBestRouteProps) {
                             <span className="text-xl">💰</span>
                           </div>
                           <div>
-                            <div className="text-yellow-300 text-xs font-medium uppercase tracking-wider">Fare</div>
+                            <div className="text-yellow-300 text-xs font-medium uppercase tracking-wider">
+                              Fare
+                            </div>
                             <div className="text-white font-bold text-xl">
                               £{(data.fare / 100).toFixed(2)}
                             </div>
@@ -179,49 +197,110 @@ export default function TflBestRoute({ from, to }: TflBestRouteProps) {
                     <div className="p-2 bg-gradient-to-r from-purple-500/20 to-cyan-500/20 rounded-lg">
                       <span className="text-2xl">🗺️</span>
                     </div>
-                    <span className="text-white font-bold text-lg">Journey Steps</span>
+                    <span className="text-white font-bold text-lg">
+                      Journey Steps
+                    </span>
                   </div>
                   <div className="flex-1 h-px bg-gradient-to-r from-purple-400/50 via-cyan-400/50 to-transparent"></div>
                   <div className="px-3 py-1 bg-gradient-to-r from-purple-500/10 to-cyan-500/10 rounded-full border border-purple-400/30">
-                    <span className="text-purple-300 text-xs font-medium">{data.legs.length} steps</span>
+                    <span className="text-purple-300 text-xs font-medium">
+                      {data.legs.length} steps
+                    </span>
                   </div>
                 </div>
-                
+
                 <div className="space-y-4">
                   {data.legs.map((leg, i) => {
                     const getModeIcon = (mode: string) => {
                       const modeIcons: Record<string, string> = {
-                        'tube': '🚇',
-                        'bus': '🚌',
-                        'walking': '🚶‍♂️',
-                        'train': '🚆',
-                        'overground': '🚊',
-                        'elizabeth-line': '🚄',
-                        'tram': '🚋',
-                        'national-rail': '🚂'
+                        tube: "🚇",
+                        bus: "🚌",
+                        walking: "🚶‍♂️",
+                        train: "🚆",
+                        overground: "🚊",
+                        "elizabeth-line": "🚄",
+                        tram: "🚋",
+                        "national-rail": "🚂",
                       };
-                      return modeIcons[mode.toLowerCase()] || '🚌';
+                      return modeIcons[mode.toLowerCase()] || "🚌";
                     };
-                    
+
                     const getModeColors = (mode: string) => {
-                      const modeColorSchemes: Record<string, { text: string; bg: string; border: string; glow: string }> = {
-                        'tube': { text: 'text-yellow-300', bg: 'from-yellow-500/20 to-orange-500/20', border: 'border-yellow-400/30', glow: 'shadow-yellow-400/20' },
-                        'bus': { text: 'text-red-300', bg: 'from-red-500/20 to-pink-500/20', border: 'border-red-400/30', glow: 'shadow-red-400/20' },
-                        'walking': { text: 'text-green-300', bg: 'from-green-500/20 to-emerald-500/20', border: 'border-green-400/30', glow: 'shadow-green-400/20' },
-                        'train': { text: 'text-blue-300', bg: 'from-blue-500/20 to-indigo-500/20', border: 'border-blue-400/30', glow: 'shadow-blue-400/20' },
-                        'overground': { text: 'text-orange-300', bg: 'from-orange-500/20 to-red-500/20', border: 'border-orange-400/30', glow: 'shadow-orange-400/20' },
-                        'elizabeth-line': { text: 'text-purple-300', bg: 'from-purple-500/20 to-pink-500/20', border: 'border-purple-400/30', glow: 'shadow-purple-400/20' },
-                        'tram': { text: 'text-lime-300', bg: 'from-lime-500/20 to-green-500/20', border: 'border-lime-400/30', glow: 'shadow-lime-400/20' },
-                        'national-rail': { text: 'text-indigo-300', bg: 'from-indigo-500/20 to-blue-500/20', border: 'border-indigo-400/30', glow: 'shadow-indigo-400/20' }
+                      const modeColorSchemes: Record<
+                        string,
+                        {
+                          text: string;
+                          bg: string;
+                          border: string;
+                          glow: string;
+                        }
+                      > = {
+                        tube: {
+                          text: "text-yellow-300",
+                          bg: "from-yellow-500/20 to-orange-500/20",
+                          border: "border-yellow-400/30",
+                          glow: "shadow-yellow-400/20",
+                        },
+                        bus: {
+                          text: "text-red-300",
+                          bg: "from-red-500/20 to-pink-500/20",
+                          border: "border-red-400/30",
+                          glow: "shadow-red-400/20",
+                        },
+                        walking: {
+                          text: "text-green-300",
+                          bg: "from-green-500/20 to-emerald-500/20",
+                          border: "border-green-400/30",
+                          glow: "shadow-green-400/20",
+                        },
+                        train: {
+                          text: "text-blue-300",
+                          bg: "from-blue-500/20 to-indigo-500/20",
+                          border: "border-blue-400/30",
+                          glow: "shadow-blue-400/20",
+                        },
+                        overground: {
+                          text: "text-orange-300",
+                          bg: "from-orange-500/20 to-red-500/20",
+                          border: "border-orange-400/30",
+                          glow: "shadow-orange-400/20",
+                        },
+                        "elizabeth-line": {
+                          text: "text-purple-300",
+                          bg: "from-purple-500/20 to-pink-500/20",
+                          border: "border-purple-400/30",
+                          glow: "shadow-purple-400/20",
+                        },
+                        tram: {
+                          text: "text-lime-300",
+                          bg: "from-lime-500/20 to-green-500/20",
+                          border: "border-lime-400/30",
+                          glow: "shadow-lime-400/20",
+                        },
+                        "national-rail": {
+                          text: "text-indigo-300",
+                          bg: "from-indigo-500/20 to-blue-500/20",
+                          border: "border-indigo-400/30",
+                          glow: "shadow-indigo-400/20",
+                        },
                       };
-                      return modeColorSchemes[mode.toLowerCase()] || { text: 'text-cyan-300', bg: 'from-cyan-500/20 to-blue-500/20', border: 'border-cyan-400/30', glow: 'shadow-cyan-400/20' };
+                      return (
+                        modeColorSchemes[mode.toLowerCase()] || {
+                          text: "text-cyan-300",
+                          bg: "from-cyan-500/20 to-blue-500/20",
+                          border: "border-cyan-400/30",
+                          glow: "shadow-cyan-400/20",
+                        }
+                      );
                     };
-                    
+
                     const colors = getModeColors(leg.mode);
-                    
+
                     return (
                       <div key={i} className="relative group/step">
-                        <div className={`relative flex items-center p-4 bg-gradient-to-br ${colors.bg} rounded-xl border ${colors.border} hover:scale-[1.02] hover:shadow-lg ${colors.glow} transition-all duration-300`}>
+                        <div
+                          className={`relative flex items-center p-4 bg-gradient-to-br ${colors.bg} rounded-xl border ${colors.border} hover:scale-[1.02] hover:shadow-lg ${colors.glow} transition-all duration-300`}
+                        >
                           {/* Enhanced Step Number */}
                           <div className="flex-shrink-0 relative mr-5">
                             <div className="w-10 h-10 bg-gradient-to-br from-white to-gray-200 rounded-full flex items-center justify-center text-gray-800 font-bold text-sm shadow-lg relative z-10">
@@ -229,14 +308,18 @@ export default function TflBestRoute({ from, to }: TflBestRouteProps) {
                             </div>
                             <div className="absolute inset-0 bg-gradient-to-br from-cyan-400 to-purple-400 rounded-full blur-sm opacity-50 group-hover/step:opacity-80 transition-opacity duration-300"></div>
                           </div>
-                          
+
                           {/* Enhanced Mode Info */}
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-3 mb-2">
-                              <span className="text-2xl filter drop-shadow-lg">{getModeIcon(leg.mode)}</span>
+                              <span className="text-2xl filter drop-shadow-lg">
+                                {getModeIcon(leg.mode)}
+                              </span>
                               <div>
-                                <span className={`font-bold text-base ${colors.text} capitalize tracking-wide`}>
-                                  {leg.mode.replace('-', ' ')}
+                                <span
+                                  className={`font-bold text-base ${colors.text} capitalize tracking-wide`}
+                                >
+                                  {leg.mode.replace("-", " ")}
                                 </span>
                                 {leg.line && (
                                   <div className="text-gray-300 text-sm font-medium mt-1 px-2 py-1 bg-black/20 rounded-md inline-block">
@@ -245,33 +328,34 @@ export default function TflBestRoute({ from, to }: TflBestRouteProps) {
                                 )}
                               </div>
                             </div>
-                            {leg.instruction && (
-                              <div className="text-gray-300 text-sm ml-11 opacity-80">
-                                {leg.instruction}
-                              </div>
-                            )}
                           </div>
-                          
-                          {/* Enhanced Timing */}
-                          <div className="flex-shrink-0 text-right">
+
+                          {/* Enhanced Route Info */}
+                          <div className="flex-shrink-0 text-right max-w-[200px]">
                             <div className="bg-black/30 rounded-lg p-3 backdrop-blur-sm">
-                              <div className="text-emerald-300 text-xs font-bold uppercase tracking-wider mb-1">Depart</div>
-                              <div className="text-white font-mono font-bold text-sm mb-2">
-                                {formatTime(leg.departure)}
+                              <div className="text-emerald-300 text-xs font-bold uppercase tracking-wider mb-1">
+                                From
+                              </div>
+                              <div className="text-white font-bold text-xs mb-2 truncate">
+                                {leg.departure}
                               </div>
                               <div className="flex items-center justify-center mb-2">
                                 <div className="w-px h-4 bg-gradient-to-b from-transparent via-gray-400 to-transparent"></div>
-                                <span className="text-gray-400 text-xs mx-1">↓</span>
+                                <span className="text-gray-400 text-xs mx-1">
+                                  ↓
+                                </span>
                                 <div className="w-px h-4 bg-gradient-to-b from-transparent via-gray-400 to-transparent"></div>
                               </div>
-                              <div className="text-red-300 text-xs font-bold uppercase tracking-wider mb-1">Arrive</div>
-                              <div className="text-white font-mono font-bold text-sm">
-                                {formatTime(leg.arrival)}
+                              <div className="text-red-300 text-xs font-bold uppercase tracking-wider mb-1">
+                                To
+                              </div>
+                              <div className="text-white font-bold text-xs truncate">
+                                {leg.arrival}
                               </div>
                             </div>
                           </div>
                         </div>
-                        
+
                         {/* Enhanced Connection Line */}
                         {i < data.legs.length - 1 && (
                           <div className="flex justify-center py-2">
@@ -281,24 +365,6 @@ export default function TflBestRoute({ from, to }: TflBestRouteProps) {
                       </div>
                     );
                   })}
-                </div>
-                
-                {/* Journey Summary Footer */}
-                <div className="mt-6 pt-4 border-t border-gray-600/30">
-                  <div className="flex items-center justify-center gap-6 text-sm">
-                    <div className="flex items-center gap-2">
-                      <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
-                      <span className="text-gray-300">Real-time updates</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></span>
-                      <span className="text-gray-300">Optimized route</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></span>
-                      <span className="text-gray-300">Live disruptions</span>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
