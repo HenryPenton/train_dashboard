@@ -315,14 +315,14 @@ export default function TflBestRoute({ from, to }: TflBestRouteProps) {
                               <span className="text-2xl filter drop-shadow-lg">
                                 {getModeIcon(leg.mode)}
                               </span>
-                              <div>
+                              <div className="flex flex-col items-center">
                                 <span
                                   className={`font-bold text-base ${colors.text} capitalize tracking-wide`}
                                 >
                                   {leg.mode.replace("-", " ")}
                                 </span>
                                 {leg.line && (
-                                  <div className="text-gray-300 text-sm font-medium mt-1 px-2 py-1 bg-black/20 rounded-md inline-block">
+                                  <div className="text-gray-300 text-sm font-medium mt-1 px-2 py-1 bg-black/20 rounded-md w-fit">
                                     {leg.line}
                                   </div>
                                 )}
