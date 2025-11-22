@@ -28,11 +28,19 @@ export default function TflBestRoute({ from, to }: TflBestRouteProps) {
 
   const { data, loading, error } = useFetch<BestRouteData>(url);
 
+  // Show loading state first - this takes priority
   if (loading) return <Loading message="Finding your perfect route..." />;
-  if (error) return <ErrorDisplay message={error} />;
-  if (!data) return <ErrorDisplay message="No route data available" />;
 
-  console.log(data);
+  // Show error if there's an error and we're not loading
+  if (error && !loading) return <ErrorDisplay message={error} />;
+
+  // Show error if no data is available and we're not loading
+  if (!data && !loading)
+    return <ErrorDisplay message="No route data available" />;
+
+  // At this point, we know data is not null
+  if (!data) return null; // This shouldn't happen but keeps TypeScript happy
+
   return (
     <SectionCard className="overflow-hidden">
       <div className="relative">
