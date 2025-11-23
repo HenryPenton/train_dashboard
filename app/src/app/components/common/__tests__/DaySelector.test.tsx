@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
-import DaySelector, { parseDays, joinDays } from "./DaySelector";
+import DaySelector, { parseDays, joinDays } from "../DaySelector";
 
 describe("DaySelector", () => {
   test("renders role=group with label and individual day checkboxes", () => {

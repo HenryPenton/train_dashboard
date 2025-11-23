@@ -1,20 +1,23 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Button from "../components/common/Button";
 import Checkbox from "../components/common/Checkbox";
 import InputField from "../components/common/InputField";
+import Select from "../components/common/Select";
 import SectionCard from "../components/common/SectionCard";
 import SectionHeading from "../components/common/SectionHeading";
 import PageLayout from "../components/layout/PageLayout";
 import PlaceDetails from "../components/TfL/PlaceDetails";
 import TflStopSidebar, { SidebarItem } from "../components/TfL/TflStopSidebar";
+import ItemList from "../components/settings/ItemList";
 import { useConfigStore } from "../providers/config";
 
 export default function Settings() {
   const {
     config,
+    fetchConfig,
     addDeparture,
     addRoute,
     addTubeDeparture,
@@ -31,6 +34,22 @@ export default function Settings() {
   } = useConfigStore((state) => state);
 
   const router = useRouter();
+
+  // Fetch config on page load
+  useEffect(() => {
+    fetchConfig().catch(() => {
+      /* errors are handled in store */
+    });
+  }, [fetchConfig]);
+
+  // Calculate total items for importance ordering
+  const totalItems = Math.max(
+    (config?.tfl_best_routes?.length || 0) + 
+    (config?.rail_departures?.length || 0) + 
+    (config?.tube_departures?.length || 0) + 
+    (config?.tfl_line_status?.enabled ? 1 : 0),
+    1
+  );
 
   const [partialRoute, setPartialRoute] = useState({
     origin: "",
@@ -201,41 +220,18 @@ export default function Settings() {
               </Button>
             </form>
 
-            {config?.tfl_best_routes && config.tfl_best_routes.length > 0 && (
-              <div className="space-y-2">
-                {config.tfl_best_routes.map((route, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between p-3 bg-[#2a2d35] rounded"
-                  >
-                    <div>
-                      <span className="font-semibold">
-                        {route.origin} → {route.destination}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <InputField
-                        label=""
-                        value={route.importance?.toString() || "1"}
-                        onChange={(e) =>
-                          updateRouteImportance(
-                            index,
-                            parseInt(e.target.value) || 1,
-                          )
-                        }
-                        className="w-20"
-                      />
-                      <Button
-                        variant="danger"
-                        onClick={() => removeRoute(index)}
-                      >
-                        Remove
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+            <ItemList
+              items={config?.tfl_best_routes || []}
+              renderItemContent={(route) => (
+                <span className="font-semibold">
+                  {route.origin} → {route.destination}
+                </span>
+              )}
+              onUpdateImportance={updateRouteImportance}
+              onRemoveItem={removeRoute}
+              getImportance={(route) => route.importance}
+              totalItems={totalItems}
+            />
           </SectionCard>
 
           {/* Rail Departures */}
@@ -281,44 +277,23 @@ export default function Settings() {
               </Button>
             </form>
 
-            {config?.rail_departures && config.rail_departures.length > 0 && (
-              <div className="space-y-2">
-                {config.rail_departures.map((departure, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between p-3 bg-[#2a2d35] rounded"
-                  >
-                    <div>
-                      <span className="font-semibold">
-                        {departure.origin} → {departure.destination}
-                      </span>
-                      <span className="text-gray-400 ml-2">
-                        ({departure.originCode} → {departure.destinationCode})
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <InputField
-                        label=""
-                        value={departure.importance?.toString() || "1"}
-                        onChange={(e) =>
-                          updateDepartureImportance(
-                            index,
-                            parseInt(e.target.value) || 1,
-                          )
-                        }
-                        className="w-20"
-                      />
-                      <Button
-                        variant="danger"
-                        onClick={() => removeDeparture(index)}
-                      >
-                        Remove
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+            <ItemList
+              items={config?.rail_departures || []}
+              renderItemContent={(departure) => (
+                <div>
+                  <span className="font-semibold">
+                    {departure.origin} → {departure.destination}
+                  </span>
+                  <span className="text-gray-400 ml-2">
+                    ({departure.originCode} → {departure.destinationCode})
+                  </span>
+                </div>
+              )}
+              onUpdateImportance={updateDepartureImportance}
+              onRemoveItem={removeDeparture}
+              getImportance={(departure) => departure.importance}
+              totalItems={totalItems}
+            />
           </SectionCard>
 
           {/* Tube Departures */}
@@ -348,44 +323,18 @@ export default function Settings() {
               </Button>
             </form>
 
-            {config?.tube_departures && config.tube_departures.length > 0 && (
-              <div className="space-y-2">
-                {config.tube_departures.map((departure, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between p-3 bg-[#2a2d35] rounded"
-                  >
-                    <div>
-                      <span className="font-semibold">
-                        {departure.stationName}
-                      </span>
-                      <span className="text-gray-400 ml-2">
-                        ({departure.stationId})
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <InputField
-                        label=""
-                        value={departure.importance?.toString() || "1"}
-                        onChange={(e) =>
-                          updateTubeDepartureImportance(
-                            index,
-                            parseInt(e.target.value) || 1,
-                          )
-                        }
-                        className="w-20"
-                      />
-                      <Button
-                        variant="danger"
-                        onClick={() => removeTubeDeparture(index)}
-                      >
-                        Remove
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+            <ItemList
+              items={config?.tube_departures || []}
+              renderItemContent={(departure) => (
+                <div>
+                  <span className="font-semibold">{departure.stationName}</span>
+                </div>
+              )}
+              onUpdateImportance={updateTubeDepartureImportance}
+              onRemoveItem={removeTubeDeparture}
+              getImportance={(departure) => departure.importance}
+              totalItems={totalItems}
+            />
           </SectionCard>
 
           {/* TfL Line Status */}
@@ -398,13 +347,18 @@ export default function Settings() {
                 label="Enable TfL Line Status"
               />
               {config?.tfl_line_status?.enabled && (
-                <InputField
+                <Select
                   label="Importance (1 = highest priority)"
                   value={config.tfl_line_status.importance?.toString() || "1"}
                   onChange={(e) =>
                     updateTflLineStatusImportance(parseInt(e.target.value) || 1)
                   }
-                  placeholder="1"
+                  options={Array.from({ length: Math.max(totalItems || 1, 1) }, (_, i) => {
+                    const maxItems = Math.max(totalItems || 1, 1);
+                    const value = (i + 1).toString();
+                    const label = i === 0 ? `${i + 1} (Highest)` : i === maxItems - 1 ? `${i + 1} (Lowest)` : `${i + 1}`;
+                    return { value, label };
+                  })}
                 />
               )}
             </div>
