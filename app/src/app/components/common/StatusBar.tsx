@@ -8,9 +8,9 @@ export default function StatusBar({ backgroundColor }: StatusBarProps) {
   return (
     <div 
       className={`h-1 w-full relative overflow-hidden ${backgroundColor}`}
-      role="progressbar"
-      aria-label="Loading status indicator"
-      aria-valuetext="Loading in progress"
+      role="status"
+      aria-label="Status indicator"
+      aria-live="polite"
     >
       <div
         className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent animate-shimmer"
