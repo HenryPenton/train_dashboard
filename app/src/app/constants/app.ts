@@ -13,7 +13,7 @@ export const APP_CONSTANTS = {
   },
   ERROR_MESSAGES: {
     FETCH_FAILED: "Failed to fetch data",
-    NO_SERVICES: "Could not find any services for the configured route.",
+    NO_SERVICES: (from: string, to: string) => `Could not find any services between ${from} and ${to}.`,
     UNKNOWN_ERROR: "Unknown error occurred",
   },
 } as const;

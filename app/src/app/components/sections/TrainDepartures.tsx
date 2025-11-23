@@ -1,12 +1,13 @@
-import React from "react";
+import Link from "next/link";
 import { useMemo } from "react";
-import { useFetch } from "../../hooks/useFetch";
 import { APP_CONSTANTS } from "../../constants/app";
-import SectionHeading from "../common/SectionHeading";
-import SectionCard from "../common/SectionCard";
-import Loading from "../common/Loading";
-import ErrorDisplay from "../common/ErrorDisplay";
+import { useFetch } from "../../hooks/useFetch";
 import DepartureCard from "../common/DepartureCard";
+import ErrorDisplay from "../common/ErrorDisplay";
+import Loading from "../common/Loading";
+import NoTrainsCard from "../common/NoTrainsCard";
+import SectionCard from "../common/SectionCard";
+import SectionHeading from "../common/SectionHeading";
 
 export type DepartureStatus = "Early" | "On time" | "Late" | "Cancelled";
 
@@ -52,21 +53,28 @@ export default function TrainDepartures({
 
   if (loading) return <Loading message="Loading departures..." />;
   if (error) return <ErrorDisplay message={error} />;
-  if (!departures || departures.length === 0)
-    return <ErrorDisplay message={APP_CONSTANTS.ERROR_MESSAGES.NO_SERVICES} />;
 
   return (
     <SectionCard>
       <SectionHeading>
-        {fromStation.stationName} → {toStation.stationName}
+        <Link
+          target="_blank"
+          href={`https://www.realtimetrains.co.uk/search/simple/gb-nr:${fromStation.stationCode}/to/gb-nr:${toStation.stationCode}`}
+        >
+          {fromStation.stationName} → {toStation.stationName}
+        </Link>
       </SectionHeading>
 
       <div className="space-y-3">
-        {departures
-          .slice(0, APP_CONSTANTS.MAX_DEPARTURES)
-          .map((departure, i) => (
-            <DepartureCard key={i} departure={departure} />
-          ))}
+        {!departures || departures.length === 0 ? (
+          <NoTrainsCard fromStation={fromStation} toStation={toStation} />
+        ) : (
+          departures
+            .slice(0, APP_CONSTANTS.MAX_DEPARTURES)
+            .map((departure, i) => (
+              <DepartureCard key={i} departure={departure} />
+            ))
+        )}
       </div>
     </SectionCard>
   );
