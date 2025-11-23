@@ -4,9 +4,12 @@ export const APP_CONSTANTS = {
   API_ENDPOINTS: {
     CONFIG: "/api/config",
     LINE_STATUS: "/api/line-status",
+    ARRIVALS: (stationId: string) => `/api/arrivals/${stationId}`,
     DEPARTURES: (from: string, to: string) =>
       `/api/departures/${from}/to/${to}`,
     BEST_ROUTE: (from: string, to: string) => `/api/best-route/${from}/${to}`,
+    SCHEDULES: "/api/schedules",
+    TFL_STATION_CODES: "/api/tfl/station-codes",
   },
   ERROR_MESSAGES: {
     FETCH_FAILED: "Failed to fetch data",

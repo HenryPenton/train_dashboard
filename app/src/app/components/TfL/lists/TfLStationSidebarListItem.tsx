@@ -15,10 +15,15 @@ export default function TfLStationSidebarListItem({
   const selected = item.naptanID === matchingId;
   return (
     <li
-      className={`mb-2 cursor-pointer px-2 py-1 rounded ${selected ? "bg-blue-100" : ""}`}
+      className={`cursor-pointer px-3 py-2 rounded-md transition-all duration-200 ${
+        selected
+          ? "bg-blue-600 text-white shadow-md"
+          : "text-gray-300 hover:bg-[#2a2d35] hover:text-white"
+      }`}
       onClick={() => onClick(item.naptanID)}
     >
-      {item.CommonName}
+      <div className="font-medium">{item.CommonName}</div>
+      <div className="text-xs opacity-70 mt-1">{item.naptanID}</div>
     </li>
   );
 }
