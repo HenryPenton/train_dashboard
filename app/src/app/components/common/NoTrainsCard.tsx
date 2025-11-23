@@ -25,7 +25,11 @@ export default function NoTrainsCard({
   const [randomMessage] = useState(() => MESSAGES[Math.floor(Math.random() * MESSAGES.length)]);
 
   return (
-    <div className="group bg-gradient-to-r from-[#2a2d35] to-[#323741] rounded-xl border border-cyan-500/30 shadow-lg overflow-hidden">
+    <div 
+      className="group bg-gradient-to-r from-[#2a2d35] to-[#323741] rounded-xl border border-cyan-500/30 shadow-lg overflow-hidden"
+      role="alert"
+      aria-label={`No trains available between ${fromStation.stationName} and ${toStation.stationName}`}
+    >
       <div className="h-1 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-500"></div>
       
       <div className="p-6 text-center">

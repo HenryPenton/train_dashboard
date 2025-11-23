@@ -8,7 +8,11 @@ type RouteEndpointsProps = {
 
 export default function RouteEndpoints({ from, to }: RouteEndpointsProps) {
   return (
-    <div className="flex items-center justify-between mb-4">
+    <div 
+      className="flex items-center justify-between mb-4"
+      role="region"
+      aria-label="Journey route information"
+    >
       <div className="flex-1">
         <div className="flex items-center gap-3 mb-2">
           <div className="w-4 h-4 rounded-full bg-gradient-to-r from-emerald-400 to-green-500 shadow-lg shadow-emerald-400/50"></div>
