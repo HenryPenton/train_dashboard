@@ -1,6 +1,6 @@
 import React from "react";
-import Button from "../generic/Button";
-import { SidebarItem } from "../TfL/lists/TfLStationSidebarListItem";
+import Button from "../common/Button";
+import { SidebarItem } from "./lists/TfLStationSidebarListItem";
 
 export type Route = {
   origin: string;
@@ -25,23 +25,34 @@ const PlaceDetails: React.FC<PlaceDetailsProps> = ({
   isInTubeStations = false,
 }) => {
   return (
-    <div className="mb-8 p-4 border rounded bg-gray-50">
-      <h4 className="font-semibold mb-2">Place Details</h4>
-      <div className="text-lg">
-        <span className="font-medium">Name:</span>{" "}
-        {selectedSidebarItem.CommonName}
-      </div>
-      <div className="text-lg">
-        <span className="font-medium">NaPTAN ID:</span>{" "}
-        {selectedSidebarItem.naptanID}
+    <div className="bg-[#1a1d24] border border-gray-600 rounded-lg p-6 mb-6">
+      <h4 className="text-white font-semibold mb-4 text-lg">
+        📍 Place Details
+      </h4>
+      <div className="space-y-3 mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center">
+          <span className="font-medium text-gray-300 w-24 mb-1 sm:mb-0">
+            Name:
+          </span>
+          <span className="text-white font-semibold">
+            {selectedSidebarItem.CommonName}
+          </span>
+        </div>
+        <div className="flex flex-col sm:flex-row sm:items-center">
+          <span className="font-medium text-gray-300 w-24 mb-1 sm:mb-0">
+            NaPTAN:
+          </span>
+          <span className="text-gray-400 font-mono text-sm">
+            {selectedSidebarItem.naptanID}
+          </span>
+        </div>
       </div>
       {showButtons && (
-        <div className="flex gap-4 mt-4">
+        <div className="flex flex-wrap gap-3">
           {setPartialRoute && (
             <>
               <Button
                 variant="primary"
-                className="px-4 py-2"
                 onClick={() =>
                   setPartialRoute((r: Route) => ({
                     ...r,
@@ -50,11 +61,10 @@ const PlaceDetails: React.FC<PlaceDetailsProps> = ({
                   }))
                 }
               >
-                Set as Origin
+                🚀 Set as Origin
               </Button>
               <Button
                 variant="success"
-                className="px-4 py-2"
                 onClick={() =>
                   setPartialRoute((r: Route) => ({
                     ...r,
@@ -63,14 +73,13 @@ const PlaceDetails: React.FC<PlaceDetailsProps> = ({
                   }))
                 }
               >
-                Set as Destination
+                🎯 Set as Destination
               </Button>
             </>
           )}
           {onAddTubeDeparture && isInTubeStations && (
             <Button
               variant="info"
-              className="px-4 py-2"
               onClick={() =>
                 onAddTubeDeparture(
                   selectedSidebarItem.CommonName,
@@ -78,7 +87,7 @@ const PlaceDetails: React.FC<PlaceDetailsProps> = ({
                 )
               }
             >
-              Add to Tube Departures
+              ➕ Add to Tube Departures
             </Button>
           )}
         </div>

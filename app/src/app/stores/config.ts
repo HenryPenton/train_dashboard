@@ -43,21 +43,20 @@ export type ConfigState = {
 
 export type ConfigActions = {
   fetchConfig: () => Promise<void>;
-  forceRefresh: () => Promise<void>;
-  addDeparture: (departure: DepartureConfig) => void;
-  addRoute: (route: BestRoute) => void;
-  addTubeDeparture: (tubeDeparture: TubeDeparture) => void;
-  setRefreshTimer: (timer: number) => void;
-  setShowTflLines: (show: boolean) => void;
-  updateTflLineStatusImportance: (importance: number) => void;
-  setTflLineStatusEnabled: (enabled: boolean) => void;
-  saveConfig: () => Promise<boolean>;
+  forceRefresh: () => void;
+  addRoute: (route: Omit<BestRoute, "importance">) => void;
+  addDeparture: (departure: Omit<DepartureConfig, "importance">) => void;
+  addTubeDeparture: (departure: Omit<TubeDeparture, "importance">) => void;
   removeRoute: (index: number) => void;
   removeDeparture: (index: number) => void;
   removeTubeDeparture: (index: number) => void;
   updateRouteImportance: (index: number, importance: number) => void;
   updateDepartureImportance: (index: number, importance: number) => void;
   updateTubeDepartureImportance: (index: number, importance: number) => void;
+  updateTflLineStatusImportance: (importance: number) => void;
+  setTflLineStatusEnabled: (enabled: boolean) => void;
+  setRefreshTimer: (timer: number) => void;
+  saveConfig: () => Promise<void>;
 };
 
 export type ConfigStore = ConfigState & ConfigActions;
@@ -92,198 +91,157 @@ export const createConfigStore = (
   return createStore<ConfigStore>()((set, get) => ({
     ...initState,
     fetchConfig: async () => {
-      const res = await fetch(APP_CONSTANTS.API_ENDPOINTS.CONFIG);
-      if (!res.ok) throw new Error(`API error: ${res.status}`);
-      const config = await res.json();
-
-      set(() => ({
-        config,
-        lastRefreshTimeStamp: new Date().toISOString(),
-      }));
+      try {
+        const res = await fetch(APP_CONSTANTS.API_ENDPOINTS.CONFIG);
+        if (!res.ok) throw new Error("Failed to fetch config");
+        const config = await res.json();
+        set({
+          config,
+          lastRefreshTimeStamp: new Date().toISOString(),
+        });
+      } catch (error) {
+        console.error("Failed to fetch config:", error);
+      }
     },
-    forceRefresh: async () => {
-      set(() => ({
-        lastRefreshTimeStamp: new Date().toISOString(),
-      }));
+    forceRefresh: () => {
+      const { fetchConfig } = get();
+      fetchConfig();
     },
-    addDeparture: (departure: DepartureConfig) => {
-      set((state) => {
-        return {
-          config: {
-            ...structuredClone(state.config),
-            rail_departures: [...state.config.rail_departures, departure],
-          },
-        };
+    addRoute: (route) => {
+      const state = get();
+      const newRoute = { ...route, importance: 1 };
+      set({
+        config: {
+          ...state.config,
+          tfl_best_routes: [...state.config.tfl_best_routes, newRoute],
+        },
       });
     },
-    addRoute: (route: BestRoute) => {
-      set((state) => {
-        return {
-          config: {
-            ...structuredClone(state.config),
-            tfl_best_routes: [...state.config.tfl_best_routes, route],
-          },
-        };
+    addDeparture: (departure) => {
+      const state = get();
+      const newDeparture = { ...departure, importance: 1 };
+      set({
+        config: {
+          ...state.config,
+          rail_departures: [...state.config.rail_departures, newDeparture],
+        },
       });
     },
-    addTubeDeparture: (tubeDeparture: TubeDeparture) => {
-      set((state) => {
-        return {
-          config: {
-            ...structuredClone(state.config),
-            tube_departures: [...state.config.tube_departures, tubeDeparture],
-          },
-        };
+    addTubeDeparture: (departure) => {
+      const state = get();
+      const newDeparture = { ...departure, importance: 1 };
+      set({
+        config: {
+          ...state.config,
+          tube_departures: [...state.config.tube_departures, newDeparture],
+        },
       });
     },
-    setRefreshTimer: (timer: number) => {
-      set((state) => {
-        return {
-          config: {
-            ...structuredClone(state.config),
-            refresh_timer: timer,
-          },
-        };
+    removeRoute: (index) => {
+      const state = get();
+      const routes = [...state.config.tfl_best_routes];
+      routes.splice(index, 1);
+      set({
+        config: {
+          ...state.config,
+          tfl_best_routes: routes,
+        },
       });
     },
-    setShowTflLines: (show: boolean) => {
-      set((state) => {
-        return {
-          config: {
-            ...structuredClone(state.config),
-            show_tfl_lines: show,
-          },
-        };
+    removeDeparture: (index) => {
+      const state = get();
+      const departures = [...state.config.rail_departures];
+      departures.splice(index, 1);
+      set({
+        config: {
+          ...state.config,
+          rail_departures: departures,
+        },
       });
     },
-    updateTflLineStatusImportance: (importance: number) => {
-      set((state) => {
-        return {
-          config: {
-            ...structuredClone(state.config),
-            tfl_line_status: {
-              ...state.config.tfl_line_status,
-              importance,
-            },
-          },
-        };
+    removeTubeDeparture: (index) => {
+      const state = get();
+      const departures = [...state.config.tube_departures];
+      departures.splice(index, 1);
+      set({
+        config: {
+          ...state.config,
+          tube_departures: departures,
+        },
       });
     },
-    setTflLineStatusEnabled: (enabled: boolean) => {
-      set((state) => {
-        return {
-          config: {
-            ...structuredClone(state.config),
-            tfl_line_status: {
-              ...state.config.tfl_line_status,
-              enabled,
-            },
-          },
-        };
+    updateRouteImportance: (index, importance) => {
+      const state = get();
+      const routes = [...state.config.tfl_best_routes];
+      routes[index] = { ...routes[index], importance };
+      set({
+        config: {
+          ...state.config,
+          tfl_best_routes: routes,
+        },
+      });
+    },
+    updateDepartureImportance: (index, importance) => {
+      const state = get();
+      const departures = [...state.config.rail_departures];
+      departures[index] = { ...departures[index], importance };
+      set({
+        config: {
+          ...state.config,
+          rail_departures: departures,
+        },
+      });
+    },
+    updateTubeDepartureImportance: (index, importance) => {
+      const state = get();
+      const departures = [...state.config.tube_departures];
+      departures[index] = { ...departures[index], importance };
+      set({
+        config: {
+          ...state.config,
+          tube_departures: departures,
+        },
+      });
+    },
+    updateTflLineStatusImportance: (importance) => {
+      const state = get();
+      set({
+        config: {
+          ...state.config,
+          tfl_line_status: { ...state.config.tfl_line_status, importance },
+        },
+      });
+    },
+    setTflLineStatusEnabled: (enabled) => {
+      const state = get();
+      set({
+        config: {
+          ...state.config,
+          tfl_line_status: { ...state.config.tfl_line_status, enabled },
+        },
+      });
+    },
+    setRefreshTimer: (timer) => {
+      const state = get();
+      set({
+        config: {
+          ...state.config,
+          refresh_timer: timer,
+        },
       });
     },
     saveConfig: async () => {
-      const currentConfig = get().config;
-
+      const state = get();
       try {
         const res = await fetch(APP_CONSTANTS.API_ENDPOINTS.CONFIG, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(currentConfig),
+          body: JSON.stringify(state.config),
         });
-        if (res.ok) {
-          // Optionally update state if needed
-          return true;
-        } else {
-          return false;
-        }
-      } catch {
-        return false;
+        if (!res.ok) throw new Error("Failed to save config");
+      } catch (error) {
+        console.error("Failed to save config:", error);
       }
-    },
-    removeRoute: (index: number) => {
-      set((state) => {
-        return {
-          config: {
-            ...structuredClone(state.config),
-            tfl_best_routes: state.config.tfl_best_routes.filter(
-              (_, i) => i !== index,
-            ),
-          },
-        };
-      });
-    },
-    removeDeparture: (index: number) => {
-      set((state) => {
-        return {
-          config: {
-            ...structuredClone(state.config),
-            rail_departures: state.config.rail_departures.filter(
-              (_, i) => i !== index,
-            ),
-          },
-        };
-      });
-    },
-    removeTubeDeparture: (index: number) => {
-      set((state) => {
-        return {
-          config: {
-            ...structuredClone(state.config),
-            tube_departures: state.config.tube_departures.filter(
-              (_, i) => i !== index,
-            ),
-          },
-        };
-      });
-    },
-    updateRouteImportance: (index: number, importance: number) => {
-      set((state) => {
-        const updatedRoutes = [...state.config.tfl_best_routes];
-        if (updatedRoutes[index]) {
-          updatedRoutes[index] = { ...updatedRoutes[index], importance };
-        }
-        return {
-          config: {
-            ...structuredClone(state.config),
-            tfl_best_routes: updatedRoutes,
-          },
-        };
-      });
-    },
-    updateDepartureImportance: (index: number, importance: number) => {
-      set((state) => {
-        const updatedDepartures = [...state.config.rail_departures];
-        if (updatedDepartures[index]) {
-          updatedDepartures[index] = {
-            ...updatedDepartures[index],
-            importance,
-          };
-        }
-        return {
-          config: {
-            ...structuredClone(state.config),
-            rail_departures: updatedDepartures,
-          },
-        };
-      });
-    },
-    updateTubeDepartureImportance: (index: number, importance: number) => {
-      set((state) => {
-        const updatedTubeDepartures = [...state.config.tube_departures];
-        if (updatedTubeDepartures[index]) {
-          updatedTubeDepartures[index] = {
-            ...updatedTubeDepartures[index],
-            importance,
-          };
-        }
-        return {
-          config: {
-            ...structuredClone(state.config),
-            tube_departures: updatedTubeDepartures,
-          },
-        };
-      });
     },
   }));
 };

@@ -19,11 +19,16 @@ const config: Config = {
   // The directory where Jest should store its cached dependency information
   // cacheDirectory: "/private/var/folders/cq/5vv4ymhd0v90bkqc6sbnn3q80000gn/T/jest_dx",
 
+  // Enable caching to speed up subsequent test runs
+  cache: true,
+  cacheDirectory: "<rootDir>/.jest-cache",
+
   // Automatically clear mock calls, instances, contexts and results before every test
   clearMocks: true,
 
   // Indicates whether the coverage information should be collected while executing the test
-  collectCoverage: true,
+  // Disable coverage collection for faster test runs during development
+  collectCoverage: false,
 
   // An array of glob patterns indicating a set of files for which coverage information should be collected
   // collectCoverageFrom: undefined,
@@ -74,7 +79,10 @@ const config: Config = {
   // globals: {},
 
   // The maximum amount of workers used to run your tests. Can be specified as % or a number. E.g. maxWorkers: 10% will use 10% of your CPU amount + 1 as the maximum worker number. maxWorkers: 2 will use a maximum of 2 workers.
-  // maxWorkers: "50%",
+  // maxWorkers: "10",
+
+  // Enable concurrent test execution within test suites for better parallelization
+  maxConcurrency: 20,
 
   // An array of directory names to be searched recursively up from the requiring module's location
   // moduleDirectories: [
@@ -153,6 +161,10 @@ const config: Config = {
 
   // The test environment that will be used for testing
   testEnvironment: "jsdom",
+
+  // Optimize test file detection and execution
+  detectOpenHandles: false,
+  forceExit: false,
 
   // Options that will be passed to the testEnvironment
   // testEnvironmentOptions: {},

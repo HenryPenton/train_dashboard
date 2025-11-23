@@ -19,7 +19,7 @@ class TestLineStatus:
         result = LineStatusModel(line, logger=logger)
         assert (result.as_dict()) == {
             "name": "Victoria",
-            "status": "Good Service",
+            "statusList": ["Good Service"],
             "statusSeverity": 10,
         }
 
@@ -38,11 +38,11 @@ class TestLineStatus:
         )
         logger = DummyLogger()
         result = LineStatusModel(line, logger=logger)
-        assert (result.as_dict()) == {
-            "name": "Northern",
-            "status": "Minor Delays, Part Suspended",
-            "statusSeverity": 4,
-        }
+        expected_status_list = {"Minor Delays", "Part Suspended"}
+        actual_status_list = set(result.as_dict()["statusList"])
+        assert actual_status_list == expected_status_list
+        assert (result.as_dict()["name"]) == "Northern"
+        assert (result.as_dict()["statusSeverity"]) == 4
 
     def test_two_same_statuses(self):
         line = LineDAO(
@@ -57,11 +57,11 @@ class TestLineStatus:
         )
         logger = DummyLogger()
         result = LineStatusModel(line, logger=logger)
-        assert (result.as_dict()) == {
-            "name": "Mildmay",
-            "status": "Part Closure x2, Good Service",
-            "statusSeverity": 3,
-        }
+        expected_status_list = {"Part Closure", "Good Service"}
+        actual_status_list = set(result.as_dict()["statusList"])
+        assert actual_status_list == expected_status_list
+        assert (result.as_dict()["name"]) == "Mildmay"
+        assert (result.as_dict()["statusSeverity"]) == 3
 
     def test_empty(self):
         with pytest.raises(ValidationError):
@@ -91,7 +91,7 @@ class TestLineStatuses:
         result = LineStatusModelList(lines, logger=logger).get_line_statuses()
         assert (result[0].as_dict()) == {
             "name": "Victoria",
-            "status": "Good Service",
+            "statusList": ["Good Service"],
             "statusSeverity": 10,
         }
 
@@ -126,13 +126,17 @@ class TestLineStatuses:
         ]
         logger = DummyLogger()
         result = LineStatusModelList(lines, logger=logger).get_line_statuses()
-        assert (result[0].as_dict()) == {
-            "name": "Northern",
-            "status": "Minor Delays, Part Suspended",
-            "statusSeverity": 4,
-        }
+        # Check Northern line
+        northern_result = result[0].as_dict()
+        assert northern_result["name"] == "Northern"
+        assert northern_result["statusSeverity"] == 4
+        expected_northern_statuses = {"Minor Delays", "Part Suspended"}
+        actual_northern_statuses = set(northern_result["statusList"])
+        assert actual_northern_statuses == expected_northern_statuses
+        
+        # Check Piccadilly line
         assert (result[1].as_dict()) == {
             "name": "Piccadilly",
-            "status": "Good Service",
+            "statusList": ["Good Service"],
             "statusSeverity": 10,
         }

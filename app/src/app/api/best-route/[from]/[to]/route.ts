@@ -1,42 +1,28 @@
-// Next.js API route proxy for /api/best_route
-import { BackendResponseSchema } from "@/app/validators/api-validators/BestRouteSchema";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   _request: Request,
   { params }: { params: Promise<{ from: string; to: string }> },
 ) {
-  const { from, to } = await params;
-  if (!from || !to) {
-    return NextResponse.json(
-      { error: "Missing required path parameters: from, to" },
-      { status: 400 },
-    );
-  }
   try {
-    const res = await fetch(
-      `${process.env.SERVER_URL}/tfl/best-route/${from}/${to}`,
-    );
+    const { from, to } = await params;
+    const apiUrl = `${process.env.SERVER_URL || "http://localhost:8000"}/tfl/best-route/${from}/${to}`;
+    const res = await fetch(apiUrl);
+
     if (!res.ok) {
       return NextResponse.json(
-        { error: "Failed to fetch best route" },
-        { status: 500 },
+        { error: "Failed to fetch best route from backend." },
+        { status: res.status },
       );
     }
-    const rawData = await res.json();
-    const data = BackendResponseSchema.parse(rawData);
 
-    // Transform backend response to match frontend expectations
-    return NextResponse.json({
-      route: data.legs.map((leg) => `${leg.mode}: ${leg.instruction}`),
-      duration: data.duration,
-      arrival: data.arrival,
-      fare: data.fare,
-    });
-  } catch (e: unknown) {
-    console.error("Error fetching best route:", e);
-    const message = e instanceof Error ? e.message : "Unknown error";
-
-    return NextResponse.json({ error: message }, { status: 500 });
+    const data = await res.json();
+    return NextResponse.json(data);
+  } catch (error) {
+    console.error("Best route fetch error:", error);
+    return NextResponse.json(
+      { error: "Best route fetch failed." },
+      { status: 500 },
+    );
   }
 }

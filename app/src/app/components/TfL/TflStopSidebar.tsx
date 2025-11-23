@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from "react";
 import { useFetch } from "../../hooks/useFetch";
-import Sidebar from "../generic/lists/Sidebar";
+import Sidebar from "../common/lists/Sidebar";
 import TfLStationSidebarListItem from "./lists/TfLStationSidebarListItem";
 
 export type SidebarItem = {
@@ -41,8 +41,10 @@ export default function TflStopSidebar({
 
   const filteredSidebarItems = useMemo(
     () =>
-      sidebarItems?.filter((item) =>
-        item.CommonName.toLowerCase().includes(searchTerm.toLowerCase()),
+      sidebarItems?.filter(
+        (item) =>
+          item.CommonName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          item.naptanID.toLowerCase().includes(searchTerm.toLowerCase()),
       ) || [],
     [sidebarItems, searchTerm],
   );
@@ -66,7 +68,7 @@ export default function TflStopSidebar({
           onClick={onClick}
         />
       )}
-      title="Stations"
+      title="🚉 TfL Stations"
     />
   );
 }

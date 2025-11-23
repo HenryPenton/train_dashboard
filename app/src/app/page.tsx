@@ -2,11 +2,11 @@
 
 import { useEffect } from "react";
 import { useConfigStore } from "./providers/config";
-import LastRefreshed from "./sections/LastRefreshed";
-import TrainDepartures from "./sections/rail/TrainDepartures";
-import TflArrivals from "./sections/TfL/TflArrivals";
-import TflBestRoute from "./sections/TfL/TflBestRoute";
-import TflLineStatus from "./sections/TfL/TflLineStatus";
+import PageLayout from "./components/layout/PageLayout";
+import TrainDepartures from "./components/sections/TrainDepartures";
+import TflArrivals from "./components/sections/TflArrivals";
+import TflBestRoute from "./components/sections/TflBestRoute";
+import TflLineStatus from "./components/sections/TflLineStatus";
 import {
   BestRoute,
   DepartureConfig,
@@ -83,17 +83,11 @@ export default function Home() {
   const columnCount = sortedConfigItems.length;
 
   return (
-    <main
-      key={lastRefreshTimeStamp || ""}
-      className="w-full min-h-screen p-8 bg-[#181818] font-mono text-[#f8f8f2] relative"
+    <PageLayout
+      title="LIVE TRAIN &amp; TUBE STATUS"
+      lastRefreshTimeStamp={lastRefreshTimeStamp}
+      showNavigation={true}
     >
-      <h1
-        className="text-center text-cyan-300 text-4xl font-bold tracking-widest mb-10 drop-shadow-[0_0_2px_white,0_0_8px_#00ffe7] font-mono border-b-4 border-yellow-200 pb-4"
-        style={{ letterSpacing: "0.15em" }}
-      >
-        LIVE TRAIN &amp; TUBE STATUS
-      </h1>
-
       <div
         className={`grid w-full gap-10 box-border
           grid-cols-1
@@ -159,23 +153,6 @@ export default function Home() {
           return null;
         })}
       </div>
-      {lastRefreshTimeStamp ? (
-        <LastRefreshed dateTimeString={lastRefreshTimeStamp} />
-      ) : null}
-      <div className="w-full text-center mt-10 flex flex-col items-center gap-2">
-        <a
-          href="/settings"
-          className="text-cyan-300 hover:underline text-lg font-bold"
-        >
-          Settings
-        </a>
-        <a
-          href="/schedules"
-          className="text-yellow-300 hover:underline text-lg font-bold"
-        >
-          Schedules
-        </a>
-      </div>
-    </main>
+    </PageLayout>
   );
 }

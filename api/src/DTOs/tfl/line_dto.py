@@ -1,7 +1,8 @@
+from typing import List
 from pydantic import BaseModel
 
 
 class LineDTO(BaseModel):
     name: str
-    status: str
+    statusList: List[str]
     statusSeverity: int

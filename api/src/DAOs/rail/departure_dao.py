@@ -1,6 +1,6 @@
 from typing import List, Optional, Literal
 
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 
 
 class Location(BaseModel):
@@ -44,3 +44,14 @@ class DepartureDAO(BaseModel):
     @property
     def real_departure(self) -> Optional[str]:
         return self.realtimeDeparture
+
+
+class DeparturesDAO(BaseModel):
+    services: List[dict] = []
+
+    @field_validator("services", mode="before")
+    @classmethod
+    def handle_none_services(cls, v):
+        if v is None:
+            return []
+        return v
