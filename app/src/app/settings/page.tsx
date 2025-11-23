@@ -432,8 +432,8 @@ export default function Settings() {
             <div className="flex gap-4 justify-center">
               <Button
                 variant="primary"
-                onClick={() => {
-                  saveConfig();
+                onClick={async () => {
+                  await saveConfig();
                   router.push("/");
                 }}
               >
