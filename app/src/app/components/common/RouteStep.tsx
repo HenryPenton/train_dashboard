@@ -81,7 +81,11 @@ export default function RouteStep({ leg, stepNumber, isLast }: RouteStepProps) {
 
   return (
     <>
-      <div className="relative group/step">
+      <div 
+        className="relative group/step"
+        role="listitem"
+        aria-label={`Step ${stepNumber}: ${leg.mode.replace("-", " ")} from ${leg.departure} to ${leg.arrival}`}
+      >
         <div
           className={`relative p-3 bg-gradient-to-br ${colors.bg} rounded-xl border ${colors.border}`}
         >
@@ -89,7 +93,10 @@ export default function RouteStep({ leg, stepNumber, isLast }: RouteStepProps) {
           <div className="flex items-center mb-2">
             {/* Enhanced Step Number */}
             <div className="flex-shrink-0 relative mr-5">
-              <div className="w-10 h-10 bg-gradient-to-br from-white to-gray-200 rounded-full flex items-center justify-center text-gray-800 font-bold text-sm shadow-lg relative z-10">
+              <div 
+                className="w-10 h-10 bg-gradient-to-br from-white to-gray-200 rounded-full flex items-center justify-center text-gray-800 font-bold text-sm shadow-lg relative z-10"
+                aria-label={`Step ${stepNumber}`}
+              >
                 {stepNumber}
               </div>
             </div>
@@ -122,7 +129,10 @@ export default function RouteStep({ leg, stepNumber, isLast }: RouteStepProps) {
                 <div className="text-emerald-300 text-xs font-bold uppercase tracking-wider mb-1">
                   From
                 </div>
-                <div className="text-white font-bold text-sm">
+                <div 
+                  className="text-white font-bold text-sm"
+                  aria-label={`Departure station: ${leg.departure}`}
+                >
                   {leg.departure}
                 </div>
               </div>
@@ -131,7 +141,10 @@ export default function RouteStep({ leg, stepNumber, isLast }: RouteStepProps) {
                 <div className="text-red-300 text-xs font-bold uppercase tracking-wider mb-1">
                   To
                 </div>
-                <div className="text-white font-bold text-sm">
+                <div 
+                  className="text-white font-bold text-sm"
+                  aria-label={`Arrival station: ${leg.arrival}`}
+                >
                   {leg.arrival}
                 </div>
               </div>
