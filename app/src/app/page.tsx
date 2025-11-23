@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useConfigStore } from "./providers/config";
 import PageLayout from "./components/layout/PageLayout";
+import Loading from "./components/common/Loading";
 import TrainDepartures from "./components/sections/TrainDepartures";
 import TflArrivals from "./components/sections/TflArrivals";
 import TflBestRoute from "./components/sections/TflBestRoute";
@@ -48,8 +49,15 @@ export default function Home() {
   const { config, fetchConfig, lastRefreshTimeStamp, forceRefresh } =
     useConfigStore((state) => state);
 
+  const [configLoading, setConfigLoading] = useState(true);
   useEffect(() => {
-    fetchConfig();
+    let mounted = true;
+    fetchConfig().finally(() => {
+      if (mounted) setConfigLoading(false);
+    });
+    return () => {
+      mounted = false;
+    };
   }, [fetchConfig]);
 
   useEffect(() => {
@@ -103,6 +111,20 @@ export default function Home() {
   const columnCount = sortedConfigItems.length;
 
   // Show welcome message if config is blank
+  if (configLoading) {
+    return (
+      <PageLayout
+        title="LIVE TRAIN &amp; TUBE STATUS"
+        lastRefreshTimeStamp={lastRefreshTimeStamp}
+        showNavigation={true}
+      >
+        <div className="max-w-4xl mx-auto">
+          <Loading message="Loading configuration..." />
+        </div>
+      </PageLayout>
+    );
+  }
+
   if (isConfigBlank(config)) {
     return (
       <PageLayout
