@@ -1,15 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import PageLayout from "../components/layout/PageLayout";
+import Button from "../components/common/Button";
+import ErrorDisplay from "../components/common/ErrorDisplay";
+import InputField from "../components/common/InputField";
+import Loading from "../components/common/Loading";
 import SectionCard from "../components/common/SectionCard";
 import SectionHeading from "../components/common/SectionHeading";
-import Button from "../components/common/Button";
-import InputField from "../components/common/InputField";
-import ErrorDisplay from "../components/common/ErrorDisplay";
-import Loading from "../components/common/Loading";
-import TflStopSidebar, { SidebarItem } from "../components/tfl/TflStopSidebar";
-import PlaceDetails from "../components/tfl/PlaceDetails";
+import PageLayout from "../components/layout/PageLayout";
+import PlaceDetails from "../components/TfL/PlaceDetails";
+import TflStopSidebar, { SidebarItem } from "../components/TfL/TflStopSidebar";
 import { APP_CONSTANTS } from "../constants/app";
 import { useFetch } from "../hooks/useFetch";
 import { useMutation } from "../hooks/useMutation";

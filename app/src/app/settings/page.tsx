@@ -1,17 +1,16 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useConfigStore } from "../providers/config";
-import PageLayout from "../components/layout/PageLayout";
+import { useState } from "react";
+import Button from "../components/common/Button";
+import Checkbox from "../components/common/Checkbox";
+import InputField from "../components/common/InputField";
 import SectionCard from "../components/common/SectionCard";
 import SectionHeading from "../components/common/SectionHeading";
-import Button from "../components/common/Button";
-import InputField from "../components/common/InputField";
-import Checkbox from "../components/common/Checkbox";
-import TflStopSidebar from "../components/tfl/TflStopSidebar";
-import PlaceDetails from "../components/tfl/PlaceDetails";
-import { SidebarItem } from "../components/tfl/lists/TfLStationSidebarListItem";
+import PageLayout from "../components/layout/PageLayout";
+import PlaceDetails from "../components/TfL/PlaceDetails";
+import TflStopSidebar, { SidebarItem } from "../components/TfL/TflStopSidebar";
+import { useConfigStore } from "../providers/config";
 
 export default function Settings() {
   const {
