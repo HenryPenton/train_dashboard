@@ -10,6 +10,7 @@ import TflArrivals from "./components/sections/TflArrivals";
 import TflBestRoute from "./components/sections/TflBestRoute";
 import TflLineStatus from "./components/sections/TflLineStatus";
 import SectionCard from "./components/common/SectionCard";
+import SectionHeading from "./components/common/SectionHeading";
 import {
   BestRoute,
   DepartureConfig,
@@ -49,22 +50,24 @@ export default function Home() {
     useConfigStore((state) => state);
 
   const [configLoading, setConfigLoading] = useState(true);
-  const [screenSize, setScreenSize] = useState<'mobile' | 'tablet' | 'desktop'>('mobile');
+  const [screenSize, setScreenSize] = useState<"mobile" | "tablet" | "desktop">(
+    "mobile",
+  );
 
   useEffect(() => {
     const checkScreenSize = () => {
       if (window.innerWidth >= 1536) {
-        setScreenSize('desktop');
+        setScreenSize("desktop");
       } else if (window.innerWidth >= 1024) {
-        setScreenSize('tablet');
+        setScreenSize("tablet");
       } else {
-        setScreenSize('mobile');
+        setScreenSize("mobile");
       }
     };
 
     checkScreenSize();
-    window.addEventListener('resize', checkScreenSize);
-    return () => window.removeEventListener('resize', checkScreenSize);
+    window.addEventListener("resize", checkScreenSize);
+    return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
   useEffect(() => {
@@ -122,16 +125,20 @@ export default function Home() {
 
   const getColumnCount = () => {
     switch (screenSize) {
-      case 'desktop': return 3;
-      case 'tablet': return 2;
-      case 'mobile': return 1;
-      default: return 1;
+      case "desktop":
+        return 3;
+      case "tablet":
+        return 2;
+      case "mobile":
+        return 1;
+      default:
+        return 1;
     }
   };
 
   const numColumns = getColumnCount();
   const columns: ConfigItem[][] = Array.from({ length: numColumns }, () => []);
-  
+
   sortedConfigItems.forEach((item, index) => {
     const columnIndex = index % numColumns;
     columns[columnIndex].push(item);
@@ -210,9 +217,11 @@ export default function Home() {
       >
         <div className="flex items-center justify-center min-h-[60vh]">
           <SectionCard className="max-w-2xl text-center p-8">
-            <h2 className="text-3xl font-bold text-white mb-6">
-              Welcome to Train Dashboard!
-            </h2>
+            <SectionHeading className="mb-6 text-3xl">
+              <span className="bg-gradient-to-r from-cyan-400 via-purple-400 to-blue-400 bg-clip-text text-transparent font-bold">
+                Welcome to Train Dashboard!
+              </span>
+            </SectionHeading>
             <p className="text-gray-300 text-lg mb-8 leading-relaxed">
               To get started, you&apos;ll need to configure your train and tube
               routes, departures, and line status preferences in the settings

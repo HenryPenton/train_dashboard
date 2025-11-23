@@ -79,7 +79,7 @@ export default function TflArrivals({
 
   return (
     <SectionCard>
-      <SectionHeading>{stationName}</SectionHeading>
+      <SectionHeading fancy>{stationName}</SectionHeading>
 
       <div className="space-y-3">
         {Object.entries(arrivals.lines).map(([lineId, lineData]) => (

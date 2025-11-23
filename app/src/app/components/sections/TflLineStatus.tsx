@@ -27,7 +27,7 @@ export default function TflLineStatus() {
 
   return (
     <SectionCard>
-      <SectionHeading>TfL Line Status</SectionHeading>
+      <SectionHeading fancy>TfL Line Status</SectionHeading>
 
       <div className="space-y-3">
         {lineStatuses.map((line, i) => (

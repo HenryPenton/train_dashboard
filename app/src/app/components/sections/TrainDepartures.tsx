@@ -55,7 +55,7 @@ export default function TrainDepartures({
 
   return (
     <SectionCard>
-      <SectionHeading>
+      <SectionHeading fancy>
         <Link
           target="_blank"
           href={`https://www.realtimetrains.co.uk/search/simple/gb-nr:${fromStation.stationCode}/to/gb-nr:${toStation.stationCode}`}
