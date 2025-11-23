@@ -26,7 +26,12 @@ export default function ItemList<T>({
   const maxItems = Math.max(totalItems || 1, 1);
   const importanceOptions = Array.from({ length: maxItems }, (_, i) => {
     const value = (i + 1).toString();
-    const label = i === 0 ? `${i + 1} (Highest)` : i === maxItems - 1 ? `${i + 1} (Lowest)` : `${i + 1}`;
+    const label =
+      i === 0
+        ? `${i + 1} (Highest)`
+        : i === maxItems - 1
+          ? `${i + 1} (Lowest)`
+          : `${i + 1}`;
     return { value, label };
   });
 
@@ -37,9 +42,7 @@ export default function ItemList<T>({
           key={index}
           className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 p-3 bg-[#2a2d35] rounded"
         >
-          <div className="flex-1 min-w-0">
-            {renderItemContent(item, index)}
-          </div>
+          <div className="flex-1 min-w-0">{renderItemContent(item, index)}</div>
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
             <div className="w-full sm:w-auto">
               <Select
@@ -53,10 +56,7 @@ export default function ItemList<T>({
               />
             </div>
             <div className="w-full sm:w-auto flex justify-end">
-              <Button
-                variant="danger"
-                onClick={() => onRemoveItem(index)}
-              >
+              <Button variant="danger" onClick={() => onRemoveItem(index)}>
                 Remove
               </Button>
             </div>

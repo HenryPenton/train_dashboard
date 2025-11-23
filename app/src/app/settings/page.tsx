@@ -44,11 +44,11 @@ export default function Settings() {
 
   // Calculate total items for importance ordering
   const totalItems = Math.max(
-    (config?.tfl_best_routes?.length || 0) + 
-    (config?.rail_departures?.length || 0) + 
-    (config?.tube_departures?.length || 0) + 
-    (config?.tfl_line_status?.enabled ? 1 : 0),
-    1
+    (config?.tfl_best_routes?.length || 0) +
+      (config?.rail_departures?.length || 0) +
+      (config?.tube_departures?.length || 0) +
+      (config?.tfl_line_status?.enabled ? 1 : 0),
+    1,
   );
 
   const [partialRoute, setPartialRoute] = useState({
@@ -353,12 +353,20 @@ export default function Settings() {
                   onChange={(e) =>
                     updateTflLineStatusImportance(parseInt(e.target.value) || 1)
                   }
-                  options={Array.from({ length: Math.max(totalItems || 1, 1) }, (_, i) => {
-                    const maxItems = Math.max(totalItems || 1, 1);
-                    const value = (i + 1).toString();
-                    const label = i === 0 ? `${i + 1} (Highest)` : i === maxItems - 1 ? `${i + 1} (Lowest)` : `${i + 1}`;
-                    return { value, label };
-                  })}
+                  options={Array.from(
+                    { length: Math.max(totalItems || 1, 1) },
+                    (_, i) => {
+                      const maxItems = Math.max(totalItems || 1, 1);
+                      const value = (i + 1).toString();
+                      const label =
+                        i === 0
+                          ? `${i + 1} (Highest)`
+                          : i === maxItems - 1
+                            ? `${i + 1} (Lowest)`
+                            : `${i + 1}`;
+                      return { value, label };
+                    },
+                  )}
                 />
               )}
             </div>
