@@ -38,8 +38,7 @@ export default function TflBestRoute({ from, to }: TflBestRouteProps) {
   if (!data && !loading)
     return <ErrorDisplay message="No route data available" />;
 
-  // At this point, we know data is not null
-  if (!data) return null; // This shouldn't happen but keeps TypeScript happy
+  if (!data) return <ErrorDisplay message="No route data available" />;
 
   return (
     <SectionCard className="overflow-hidden">
