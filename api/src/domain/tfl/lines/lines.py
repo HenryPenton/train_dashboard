@@ -31,7 +31,6 @@ class LineStatusModel:
             status_list = []
             for s in line_statuses:
                 status_list.append(s.statusSeverityDescription)
-                print(s)
 
             return list(set(status_list))
         return []

@@ -45,5 +45,4 @@ class RTTClient:
                     continue
             return departures
         except Exception as e:
-            print(f"RTTClient error: {str(e)}")
             raise RTTClientError(f"RTTClient failed: {str(e)}")
