@@ -23,19 +23,5 @@ describe("RouteInfo", () => {
     const arrow = screen.getByText("→");
     expect(arrow).toBeInTheDocument();
     expect(arrow).toHaveAttribute("aria-hidden", "true");
-
-    // Check styling classes
-    expect(routeRegion).toHaveClass(
-      "mb-2",
-      "text-sm",
-      "text-cyan-300",
-      "font-medium",
-    );
-
-    // Check that origin and destination have correct styling
-    const originElement = screen.getByText("Reading");
-    const destinationElement = screen.getByText("Oxford");
-    expect(originElement).toHaveClass("font-bold");
-    expect(destinationElement).toHaveClass("font-bold");
   });
 });

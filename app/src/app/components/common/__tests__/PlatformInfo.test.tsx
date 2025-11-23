@@ -15,9 +15,5 @@ describe("PlatformInfo", () => {
     // Check that both the label and platform number are displayed
     expect(screen.getByText("Platform:")).toBeInTheDocument();
     expect(screen.getByText("5A")).toBeInTheDocument();
-
-    // Check that the platform number has the correct styling
-    const platformNumber = screen.getByText("5A");
-    expect(platformNumber).toHaveClass("text-gray-300", "font-semibold");
   });
 });

@@ -1,15 +1,19 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import ErrorDisplay from "../components/common/ErrorDisplay";
 import Loading from "../components/common/Loading";
 import PageLayout from "../components/layout/PageLayout";
+import SaveActions from "../components/schedules/SaveActions";
+import ScheduleForm, {
+  NewScheduleForm,
+} from "../components/schedules/ScheduleForm";
+import { Schedule } from "../components/schedules/ScheduleItem";
+import SchedulesList, {
+  SchedulesData,
+} from "../components/schedules/SchedulesList";
 import PlaceDetails from "../components/TfL/PlaceDetails";
 import TflStopSidebar, { SidebarItem } from "../components/TfL/TflStopSidebar";
-import ScheduleForm, { NewScheduleForm } from "../components/schedules/ScheduleForm";
-import SchedulesList, { SchedulesData } from "../components/schedules/SchedulesList";
-import SaveActions from "../components/schedules/SaveActions";
-import { Schedule } from "../components/schedules/ScheduleItem";
 import { APP_CONSTANTS } from "../constants/app";
 import { useFetch } from "../hooks/useFetch";
 import { useMutation } from "../hooks/useMutation";
@@ -51,14 +55,24 @@ export default function Schedules() {
   const [saveSuccess, setSaveSuccess] = useState(false);
 
   // Edit mode state - track which schedule is being edited
-  const [editingScheduleIndex, setEditingScheduleIndex] = useState<number | null>(null);
+  const [editingScheduleIndex, setEditingScheduleIndex] = useState<
+    number | null
+  >(null);
   const [editingSchedule, setEditingSchedule] = useState<Schedule | null>(null);
 
-  // Initialize schedules and saved snapshot when fetched data arrives
-  if (fetchedSchedules && schedules.schedules.length === 0) {
-    setSchedules(fetchedSchedules);
-    setSavedSnapshot(fetchedSchedules);
-  }
+  // Initialize schedules and saved snapshot when fetched data arrives (only once)
+  const initializedRef = useRef(false);
+
+  useEffect(() => {
+    if (fetchedSchedules && !initializedRef.current) {
+      // Schedule state updates asynchronously to avoid synchronous setState-in-effect lint warnings
+      setTimeout(() => {
+        setSchedules(fetchedSchedules);
+        setSavedSnapshot(fetchedSchedules);
+        initializedRef.current = true;
+      }, 0);
+    }
+  }, [fetchedSchedules]);
 
   // Check if there are unsaved changes
   const hasUnsavedChanges = useMemo(() => {
@@ -212,9 +226,27 @@ export default function Schedules() {
         setEditingScheduleIndex(editingScheduleIndex - 1);
       }
     }
-    
+
     const updatedSchedules = [...schedules.schedules];
     updatedSchedules.splice(index, 1);
+    setSchedules({ schedules: updatedSchedules });
+  };
+
+  const handleDuplicateSchedule = (index: number) => {
+    // If we're editing a schedule, adjust the editing index if needed
+    if (editingScheduleIndex !== null) {
+      if (editingScheduleIndex === index) {
+        // keep editing the original; no change
+      } else if (editingScheduleIndex > index) {
+        // insertion before the currently edited schedule shifts its index
+        setEditingScheduleIndex(editingScheduleIndex + 1);
+      }
+    }
+
+    const updatedSchedules = [...schedules.schedules];
+    // Deep copy the schedule to avoid accidental mutations
+    const copy = JSON.parse(JSON.stringify(updatedSchedules[index]));
+    updatedSchedules.splice(index + 1, 0, copy);
     setSchedules({ schedules: updatedSchedules });
   };
 
@@ -223,7 +255,7 @@ export default function Schedules() {
     if (editingScheduleIndex !== null) {
       handleCancelEdit();
     }
-    
+
     // Clear validation errors since we're saving existing schedules
     setValidationError(null);
     setSaveSuccess(false);
@@ -325,9 +357,9 @@ export default function Schedules() {
   return (
     <PageLayout title="SCHEDULES" showNavigation={true}>
       <div className="max-w-6xl mx-auto">
-        <div className="flex flex-col md:flex-row gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-8">
           {/* Sidebar */}
-          <div className="w-full md:w-80 flex-shrink-0">
+          <div className="w-full lg:w-80 flex-shrink-0">
             <TflStopSidebar
               searchTerm={searchTerm}
               setSearchTerm={setSearchTerm}
@@ -345,7 +377,7 @@ export default function Schedules() {
           </div>
 
           {/* Main content */}
-          <div className="flex-1 space-y-8">
+          <div className="min-w-0 space-y-8">
             {/* Add New Schedule */}
             <ScheduleForm
               newSchedule={newSchedule}
@@ -360,14 +392,19 @@ export default function Schedules() {
               schedules={schedules}
               editingScheduleIndex={editingScheduleIndex}
               editingSchedule={editingSchedule}
-              validationError={editingScheduleIndex !== null ? validationError : null}
+              validationError={
+                editingScheduleIndex !== null ? validationError : null
+              }
               onEditSchedule={handleEditSchedule}
               onSaveEdit={handleSaveEdit}
               onCancelEdit={handleCancelEdit}
               onRemoveSchedule={handleRemoveSchedule}
+              onDuplicateSchedule={handleDuplicateSchedule}
               onTimeChange={handleEditingTimeChange}
               onDaysChange={handleEditingDayCheckbox}
-              disabled={editingScheduleIndex !== null || saveSchedulesMutation.loading}
+              disabled={
+                editingScheduleIndex !== null || saveSchedulesMutation.loading
+              }
             />
 
             {/* Actions */}

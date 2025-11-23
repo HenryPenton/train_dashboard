@@ -12,7 +12,7 @@ describe("SaveActions", () => {
         hasUnsavedChanges={true}
         isLoading={false}
         onSave={onSave}
-      />
+      />,
     );
 
     expect(screen.getByText(/Success:/)).toBeInTheDocument();
@@ -27,15 +27,17 @@ describe("SaveActions", () => {
     render(
       <SaveActions
         saveSuccess={false}
-        saveError={'Network error'}
+        saveError={"Network error"}
         hasUnsavedChanges={false}
         isLoading={true}
         onSave={onSave}
-      />
+      />,
     );
 
     expect(screen.getByText(/Error:/)).toBeInTheDocument();
-    const button = screen.getByRole("button", { name: /Saving...|Save Schedules/i });
+    const button = screen.getByRole("button", {
+      name: /Saving...|Save Schedules/i,
+    });
     expect(button).toBeDisabled();
   });
 });

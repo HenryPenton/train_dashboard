@@ -29,7 +29,7 @@ describe("ScheduleForm", () => {
         onChange={onChange}
         onDaysChange={onDaysChange}
         onSubmit={onSubmit}
-      />
+      />,
     );
 
     // Form and DaySelector present

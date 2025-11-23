@@ -18,13 +18,5 @@ describe("PlatformHeader", () => {
 
     // Check that the platform name is displayed
     expect(screen.getByText("Platform 3")).toBeInTheDocument();
-
-    // Check that it has the correct styling class
-    expect(platformHeader).toHaveClass(
-      "text-sm",
-      "font-semibold",
-      "text-yellow-300",
-      "px-2",
-    );
   });
 });

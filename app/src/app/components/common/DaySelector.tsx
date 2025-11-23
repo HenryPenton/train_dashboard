@@ -36,9 +36,15 @@ export default function DaySelector({
   };
 
   return (
-    <div className={`flex flex-col gap-3 ${className}`} role="group" aria-labelledby="day-selector-label">
+    <div
+      className={`flex flex-col gap-3 ${className}`}
+      role="group"
+      aria-labelledby="day-selector-label"
+    >
       {label && (
-        <label id="day-selector-label" className="text-cyan-300 font-semibold">{label}</label>
+        <label id="day-selector-label" className="text-cyan-300 font-semibold">
+          {label}
+        </label>
       )}
       <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2">
         {daysOfWeek.map((day) => {
@@ -58,9 +64,11 @@ export default function DaySelector({
                 className="sr-only"
                 checked={isSelected}
                 onChange={(e) => handleDayCheckbox(e.target.checked, day)}
-                aria-label={`${dayCapitalized} - ${isSelected ? 'selected' : 'not selected'}`}
+                aria-label={`${dayCapitalized} - ${isSelected ? "selected" : "not selected"}`}
               />
-              <span className="text-sm font-medium" aria-hidden="true">{day}</span>
+              <span className="text-sm font-medium" aria-hidden="true">
+                {day}
+              </span>
             </label>
           );
         })}

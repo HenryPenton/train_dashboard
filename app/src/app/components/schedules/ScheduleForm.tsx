@@ -23,7 +23,9 @@ interface NewScheduleForm {
 interface ScheduleFormProps {
   newSchedule: NewScheduleForm;
   validationError: string | null;
-  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
+  onChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => void;
   onDaysChange: (days: string) => void;
   onSubmit: (e: React.FormEvent) => void;
 }

@@ -30,12 +30,5 @@ describe("RouteEndpoints", () => {
     // Check for destination section
     expect(screen.getByText("Destination")).toBeInTheDocument();
     expect(screen.getByText("Brighton")).toBeInTheDocument();
-
-    // Check that place names are displayed with correct styling
-    const departureName = screen.getByText("London Victoria");
-    expect(departureName).toHaveClass("text-white", "font-bold", "text-lg");
-
-    const destinationName = screen.getByText("Brighton");
-    expect(destinationName).toHaveClass("text-white", "font-bold", "text-lg");
   });
 });

@@ -26,7 +26,7 @@ describe("SchedulesList", () => {
         onRemoveSchedule={jest.fn()}
         onTimeChange={jest.fn()}
         onDaysChange={jest.fn()}
-      />
+      />,
     );
 
     expect(screen.getByText(/No schedules configured/i)).toBeInTheDocument();
@@ -45,9 +45,11 @@ describe("SchedulesList", () => {
         onRemoveSchedule={jest.fn()}
         onTimeChange={jest.fn()}
         onDaysChange={jest.fn()}
-      />
+      />,
     );
 
-    expect(screen.getByText(/TfL Line Status Overview|TUBE_LINE_STATUS/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/TfL Line Status Overview|TUBE_LINE_STATUS/i),
+    ).toBeInTheDocument();
   });
 });

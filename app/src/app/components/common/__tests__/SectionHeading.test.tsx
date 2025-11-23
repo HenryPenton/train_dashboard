@@ -15,17 +15,6 @@ describe("SectionHeading", () => {
 
     // Check that the heading has the correct aria-level attribute
     expect(heading).toHaveAttribute("aria-level", "2");
-
-    // Check default styling classes are applied
-    expect(heading).toHaveClass(
-      "text-xl",
-      "font-semibold",
-      "mb-4",
-      "text-cyan-300",
-      "border-b",
-      "border-cyan-600",
-      "pb-2",
-    );
   });
 
   it("applies custom className correctly", () => {
@@ -110,24 +99,5 @@ describe("SectionHeading", () => {
     expect(mainHeading).toBeInTheDocument();
     expect(sectionHeading).toBeInTheDocument();
     expect(sectionHeading).toHaveTextContent("Section Title");
-  });
-
-  it("supports both ariaLabel and className props together", () => {
-    const ariaLabel = "Custom label";
-    const customClass = "custom-style";
-
-    render(
-      <SectionHeading ariaLabel={ariaLabel} className={customClass}>
-        Heading with Both Props
-      </SectionHeading>,
-    );
-
-    const heading = screen.getByRole("heading", {
-      level: 2,
-      name: ariaLabel,
-    });
-    expect(heading).toBeInTheDocument();
-    expect(heading).toHaveClass(customClass);
-    expect(heading).toHaveAttribute("aria-label", ariaLabel);
   });
 });

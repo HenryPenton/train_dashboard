@@ -33,6 +33,7 @@ interface ScheduleItemProps {
   onSaveEdit: () => void;
   onCancelEdit: () => void;
   onRemove: () => void;
+  onDuplicate?: () => void;
   onTimeChange: (time: string) => void;
   onDaysChange: (days: string) => void;
   disabled?: boolean;
@@ -46,6 +47,7 @@ export default function ScheduleItem({
   onSaveEdit,
   onCancelEdit,
   onRemove,
+  onDuplicate,
   onTimeChange,
   onDaysChange,
   disabled = false,
@@ -109,7 +111,9 @@ export default function ScheduleItem({
           />
 
           {/* Station/Place info (read-only) */}
-          <div className="text-gray-300">{getScheduleDescription(schedule)}</div>
+          <div className="text-gray-300">
+            {getScheduleDescription(schedule)}
+          </div>
 
           {/* Edit mode buttons */}
           <div className="flex gap-2">
@@ -128,25 +132,27 @@ export default function ScheduleItem({
   // View mode
   return (
     <div className="p-4 bg-[#2a2d35] rounded border-l-4 border-cyan-500">
-      <div className="flex items-center justify-between">
-        <div className="flex-1">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-lg">{getScheduleIcon(schedule.type)}</span>
-            <span className="font-semibold text-cyan-200">
-              {schedule.type.replace("_", " ").toUpperCase()}
-            </span>
-            <span className="text-yellow-300">
-              {schedule.day_of_week
-                ? parseDays(schedule.day_of_week).join(", ")
-                : "No days selected"}{" "}
-              at {schedule.time}
-            </span>
-          </div>
-          <div className="text-gray-300">{getScheduleDescription(schedule)}</div>
+      <div className="flex flex-col items-start gap-3">
+        <div className="flex items-center gap-2">
+          <span className="text-lg">{getScheduleIcon(schedule.type)}</span>
+          <span className="font-semibold text-cyan-200">
+            {schedule.type.replace("_", " ").toUpperCase()}
+          </span>
+          <span className="text-yellow-300">
+            {schedule.day_of_week
+              ? parseDays(schedule.day_of_week).join(", ")
+              : "No days selected"}{" "}
+            at {schedule.time}
+          </span>
         </div>
+        <div className="text-gray-300">{getScheduleDescription(schedule)}</div>
+
         <div className="flex gap-2">
           <Button variant="secondary" onClick={onEdit} disabled={disabled}>
             Edit
+          </Button>
+          <Button variant="secondary" onClick={onDuplicate} disabled={disabled}>
+            Duplicate
           </Button>
           <Button variant="danger" onClick={onRemove} disabled={disabled}>
             Remove

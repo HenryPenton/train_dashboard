@@ -25,7 +25,7 @@ describe("ScheduleItem", () => {
         onRemove={mock}
         onTimeChange={mock}
         onDaysChange={mock}
-      />
+      />,
     );
 
     expect(screen.getByText(/MON, TUE|mon, tue/i)).toBeInTheDocument();
@@ -52,13 +52,15 @@ describe("ScheduleItem", () => {
         onRemove={jest.fn()}
         onTimeChange={onTimeChange}
         onDaysChange={onDaysChange}
-      />
+      />,
     );
 
     const timeInput = screen.getByDisplayValue("09:15");
     expect(timeInput).toBeInTheDocument();
 
-    const confirmButton = screen.getByRole("button", { name: /Confirm Changes/i });
+    const confirmButton = screen.getByRole("button", {
+      name: /Confirm Changes/i,
+    });
     fireEvent.click(confirmButton);
     expect(onSaveEdit).toHaveBeenCalled();
   });

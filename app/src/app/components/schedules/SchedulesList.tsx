@@ -16,6 +16,7 @@ interface SchedulesListProps {
   onSaveEdit: () => void;
   onCancelEdit: () => void;
   onRemoveSchedule: (index: number) => void;
+  onDuplicateSchedule?: (index: number) => void;
   onTimeChange: (time: string) => void;
   onDaysChange: (days: string) => void;
   disabled?: boolean;
@@ -30,6 +31,7 @@ export default function SchedulesList({
   onSaveEdit,
   onCancelEdit,
   onRemoveSchedule,
+  onDuplicateSchedule,
   onTimeChange,
   onDaysChange,
   disabled = false,
@@ -57,6 +59,9 @@ export default function SchedulesList({
               onSaveEdit={onSaveEdit}
               onCancelEdit={onCancelEdit}
               onRemove={() => onRemoveSchedule(index)}
+              onDuplicate={() =>
+                onDuplicateSchedule && onDuplicateSchedule(index)
+              }
               onTimeChange={onTimeChange}
               onDaysChange={onDaysChange}
               disabled={disabled}
