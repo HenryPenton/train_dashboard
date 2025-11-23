@@ -55,9 +55,11 @@ export default function DepartureCard({ departure }: DepartureCardProps) {
                 <PlatformInfo platform={departure.platform} />
               )}
 
-              {typeof departure.delay === "number" && (
-                <DelayInfo delay={departure.delay} />
-              )}
+              {typeof departure.delay === "number" &&
+                departure.status &&
+                String(departure.status).toLowerCase() !== "cancelled" && (
+                  <DelayInfo delay={departure.delay} />
+                )}
             </div>
           </div>
         </div>
