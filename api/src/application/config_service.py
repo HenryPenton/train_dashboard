@@ -23,6 +23,8 @@ class ConfigService:
         config = ConfigDAO(**new_config.model_dump())
         self.logger.debug("Setting new config: %s", config)
         self.logger.info("Writing new config to file.")
+        # Ensure parent directory exists
+        self.config_path.parent.mkdir(parents=True, exist_ok=True)
         self.writer.write_json(config.model_dump())
         return True
 
@@ -32,6 +34,8 @@ class ConfigService:
                 "Config file not found, creating default config at %s",
                 self.config_path,
             )
+            # Ensure parent directory exists
+            self.config_path.parent.mkdir(parents=True, exist_ok=True)
             self.writer.write_json(ConfigDAO().model_dump())
         config = ConfigDTO(**self.reader.read_json())
         self.logger.debug("Loaded config: %s", config)

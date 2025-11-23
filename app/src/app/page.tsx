@@ -1,17 +1,20 @@
 "use client";
 
 import { useEffect } from "react";
+import Link from "next/link";
 import { useConfigStore } from "./providers/config";
 import PageLayout from "./components/layout/PageLayout";
 import TrainDepartures from "./components/sections/TrainDepartures";
 import TflArrivals from "./components/sections/TflArrivals";
 import TflBestRoute from "./components/sections/TflBestRoute";
 import TflLineStatus from "./components/sections/TflLineStatus";
+import SectionCard from "./components/common/SectionCard";
 import {
   BestRoute,
   DepartureConfig,
   TflLineStatusConfig,
   TubeDeparture,
+  ConfigType,
 } from "./stores/config";
 
 type ConfigItem =
@@ -23,6 +26,23 @@ type ConfigItem =
       item: TflLineStatusConfig;
       importance: number;
     };
+
+// Helper function to check if config is effectively blank
+const isConfigBlank = (config: ConfigType | null) => {
+  if (!config) return true;
+
+  const hasRailDepartures = config.rail_departures?.length > 0;
+  const hasTflRoutes = config.tfl_best_routes?.length > 0;
+  const hasTubeDepartures = config.tube_departures?.length > 0;
+  const hasTflLineStatus = config.tfl_line_status?.enabled;
+
+  return (
+    !hasRailDepartures &&
+    !hasTflRoutes &&
+    !hasTubeDepartures &&
+    !hasTflLineStatus
+  );
+};
 
 export default function Home() {
   const { config, fetchConfig, lastRefreshTimeStamp, forceRefresh } =
@@ -81,6 +101,40 @@ export default function Home() {
   });
 
   const columnCount = sortedConfigItems.length;
+
+  // Show welcome message if config is blank
+  if (isConfigBlank(config)) {
+    return (
+      <PageLayout
+        title="LIVE TRAIN &amp; TUBE STATUS"
+        lastRefreshTimeStamp={lastRefreshTimeStamp}
+        showNavigation={true}
+      >
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <SectionCard className="max-w-2xl text-center p-8">
+            <h2 className="text-3xl font-bold text-white mb-6">
+              Welcome to Train Dashboard!
+            </h2>
+            <p className="text-gray-300 text-lg mb-8 leading-relaxed">
+              To get started, you&apos;ll need to configure your train and tube
+              routes, departures, and line status preferences in the settings
+              page.
+            </p>
+            <Link
+              href="/settings"
+              className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors duration-200 text-lg"
+            >
+              Go to Settings
+            </Link>
+            <p className="text-gray-400 text-sm mt-6">
+              You can access settings anytime by clicking the link in the
+              navigation footer.
+            </p>
+          </SectionCard>
+        </div>
+      </PageLayout>
+    );
+  }
 
   return (
     <PageLayout

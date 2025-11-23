@@ -7,9 +7,16 @@ from src.test.utils.dummy_logger import DummyLogger
 class MockPath:
     def __init__(self, exists=True):
         self._exists = exists
+        self.parent = MockParentPath()
 
     def exists(self):
         return self._exists
+
+
+class MockParentPath:
+    def mkdir(self, parents=True, exist_ok=True):
+        # Mock implementation - just return without doing anything
+        pass
 
 
 # In-memory mock file writer/reader

@@ -25,7 +25,7 @@ class TubeDeparture(BaseModel):
 
 
 class TflLineStatus(BaseModel):
-    enabled: bool = True
+    enabled: bool = False
     importance: int = 1
 
 
