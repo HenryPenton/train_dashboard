@@ -25,7 +25,11 @@ export default function DepartureCard({ departure }: DepartureCardProps) {
 
   return (
     <CardWrapper {...cardProps}>
-      <div className="group bg-gradient-to-r from-[#2a2d35] to-[#323741] rounded-xl border border-cyan-500/30 shadow-lg overflow-hidden">
+      <div
+        className="group bg-gradient-to-r from-[#2a2d35] to-[#323741] rounded-xl border border-cyan-500/30 shadow-lg overflow-hidden"
+        role="article"
+        aria-label={`Train departure: service departing at ${departure.scheduledDepartureTime}, status: ${departure.status}`}
+      >
         <StatusBar
           backgroundColor={getDepartureStatusBarColor(departure.status)}
         />
@@ -46,8 +50,6 @@ export default function DepartureCard({ departure }: DepartureCardProps) {
                 estimatedTime={departure.estimatedDepartureTime}
                 actualTime={departure.actual}
               />
-
-              <div className="text-sm text-gray-300">{departure.operator}</div>
 
               {departure.platform && (
                 <PlatformInfo platform={departure.platform} />

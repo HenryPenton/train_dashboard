@@ -17,7 +17,6 @@ export interface Departure {
   actualDepartureTime?: string;
   status: DepartureStatus;
   platform?: string;
-  operator: string;
   serviceId: string;
   url?: string;
   origin?: string;

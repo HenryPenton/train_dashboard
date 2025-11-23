@@ -8,6 +8,7 @@ interface ButtonProps {
   className?: string;
   disabled?: boolean;
   icon?: React.ReactNode;
+  "aria-label"?: string;
 }
 
 export default function Button({
@@ -18,6 +19,7 @@ export default function Button({
   className = "",
   disabled = false,
   icon,
+  "aria-label": ariaLabel,
 }: ButtonProps) {
   const baseStyles =
     "px-4 py-2 rounded font-semibold transition-colors flex items-center gap-2";
@@ -39,6 +41,7 @@ export default function Button({
       type={type}
       onClick={onClick}
       disabled={disabled}
+      aria-label={ariaLabel}
       className={`${baseStyles} ${variantStyles[variant]} ${disabled ? disabledStyles : ""} ${className}`}
     >
       {icon}

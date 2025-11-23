@@ -15,7 +15,7 @@ export default function DepartureTime({
   actualTime,
 }: DepartureTimeProps) {
   return (
-    <div className="text-lg font-bold text-cyan-200">
+    <div className="text-lg font-bold text-cyan-200" role="time" aria-label={`Departure time: ${status === "Cancelled" ? "Cancelled" : actualTime || scheduledTime}`}>
       <span className="text-gray-400 font-normal">Departs: </span>
       {status === "Cancelled" ? (
         <span className="text-red-400 line-through">CANCELLED</span>

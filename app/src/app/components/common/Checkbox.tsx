@@ -25,9 +25,10 @@ export default function Checkbox({
         type="checkbox"
         checked={checked}
         onChange={onChange}
+        aria-describedby={`${id}-label`}
         className="accent-cyan-600 w-4 h-4"
       />
-      <span className="text-cyan-200">{label}</span>
+      <span id={`${id}-label`} className="text-cyan-200">{label}</span>
     </label>
   );
 }
