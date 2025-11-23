@@ -1,63 +1,18 @@
 "use client";
 
-import { useState } from "react";
-import Button from "../components/common/Button";
+import { useState, useMemo } from "react";
 import ErrorDisplay from "../components/common/ErrorDisplay";
-import InputField from "../components/common/InputField";
 import Loading from "../components/common/Loading";
-import SectionCard from "../components/common/SectionCard";
-import SectionHeading from "../components/common/SectionHeading";
 import PageLayout from "../components/layout/PageLayout";
 import PlaceDetails from "../components/TfL/PlaceDetails";
 import TflStopSidebar, { SidebarItem } from "../components/TfL/TflStopSidebar";
+import ScheduleForm, { NewScheduleForm } from "../components/schedules/ScheduleForm";
+import SchedulesList, { SchedulesData } from "../components/schedules/SchedulesList";
+import SaveActions from "../components/schedules/SaveActions";
+import { Schedule } from "../components/schedules/ScheduleItem";
 import { APP_CONSTANTS } from "../constants/app";
 import { useFetch } from "../hooks/useFetch";
 import { useMutation } from "../hooks/useMutation";
-
-type ScheduleBase = {
-  day_of_week: string;
-  time: string;
-};
-
-type RailDepartureSchedule = ScheduleBase & {
-  type: "rail_departure";
-  from_station_code: string;
-  to_station_code: string;
-  from_station_name: string;
-  to_station_name: string;
-};
-
-type TubeLineStatusSchedule = ScheduleBase & {
-  type: "tube_line_status";
-};
-
-type BestRouteSchedule = ScheduleBase & {
-  type: "best_route";
-  from_code: string;
-  to_code: string;
-  from_name: string;
-  to_name: string;
-};
-
-type Schedule =
-  | RailDepartureSchedule
-  | TubeLineStatusSchedule
-  | BestRouteSchedule;
-
-type SchedulesData = {
-  schedules: Schedule[];
-};
-
-const daysOfWeek = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
-
-// Utility functions for handling multiple days
-function parseDays(days: string): string[] {
-  return days ? days.split(",") : [];
-}
-
-function joinDays(days: string[]): string {
-  return days.join(",");
-}
 
 export default function Schedules() {
   // Use useFetch hook for loading schedules
@@ -71,27 +26,48 @@ export default function Schedules() {
   const saveSchedulesMutation = useMutation<{ status: string }, SchedulesData>(
     APP_CONSTANTS.API_ENDPOINTS.SCHEDULES,
     {
-      onSuccess: () => {
+      onSuccess: (data) => {
+        console.log("Schedules saved successfully:", data);
         setSaveSuccess(true);
+        // Update the saved snapshot to current schedules
+        setSavedSnapshot(schedules);
         // Clear success message after 3 seconds
         setTimeout(() => setSaveSuccess(false), 3000);
+      },
+      onError: (error) => {
+        console.error("Failed to save schedules:", error);
       },
     },
   );
 
   // Local state for form and UI
-  const [localSchedules, setLocalSchedules] = useState<SchedulesData>({
+  const [schedules, setSchedules] = useState<SchedulesData>({
+    schedules: [],
+  });
+  const [savedSnapshot, setSavedSnapshot] = useState<SchedulesData>({
     schedules: [],
   });
   const [validationError, setValidationError] = useState<string | null>(null);
   const [saveSuccess, setSaveSuccess] = useState(false);
 
-  // Use fetched schedules or local schedules (preference for fetched data)
-  const schedules = fetchedSchedules || localSchedules;
-  const setSchedules = setLocalSchedules;
+  // Edit mode state - track which schedule is being edited
+  const [editingScheduleIndex, setEditingScheduleIndex] = useState<number | null>(null);
+  const [editingSchedule, setEditingSchedule] = useState<Schedule | null>(null);
 
-  const [newSchedule, setNewSchedule] = useState({
-    type: "rail_departure" as Schedule["type"],
+  // Initialize schedules and saved snapshot when fetched data arrives
+  if (fetchedSchedules && schedules.schedules.length === 0) {
+    setSchedules(fetchedSchedules);
+    setSavedSnapshot(fetchedSchedules);
+  }
+
+  // Check if there are unsaved changes
+  const hasUnsavedChanges = useMemo(() => {
+    // Compare current schedules with saved snapshot (what was last saved successfully)
+    return JSON.stringify(schedules) !== JSON.stringify(savedSnapshot);
+  }, [schedules, savedSnapshot]);
+
+  const [newSchedule, setNewSchedule] = useState<NewScheduleForm>({
+    type: "rail_departure",
     day_of_week: "",
     time: "",
     from_station_name: "",
@@ -226,18 +202,36 @@ export default function Schedules() {
   };
 
   const handleRemoveSchedule = (index: number) => {
+    // If we're editing a schedule, cancel the edit first
+    if (editingScheduleIndex !== null) {
+      if (editingScheduleIndex === index) {
+        // Removing the schedule we're editing
+        handleCancelEdit();
+      } else if (editingScheduleIndex > index) {
+        // Adjust the editing index if we're removing a schedule before the one being edited
+        setEditingScheduleIndex(editingScheduleIndex - 1);
+      }
+    }
+    
     const updatedSchedules = [...schedules.schedules];
     updatedSchedules.splice(index, 1);
     setSchedules({ schedules: updatedSchedules });
   };
 
   const handleSave = async () => {
+    // Cancel any ongoing edits
+    if (editingScheduleIndex !== null) {
+      handleCancelEdit();
+    }
+    
     // Clear validation errors since we're saving existing schedules
     setValidationError(null);
     setSaveSuccess(false);
 
+    console.log("Attempting to save schedules:", schedules);
+
     try {
-      // Use current schedules (which could be fetched or local)
+      // Use current schedules
       await saveSchedulesMutation.mutate(schedules);
     } catch (err) {
       // Error handling is done by the useMutation hook
@@ -245,20 +239,73 @@ export default function Schedules() {
     }
   };
 
-  const handleDayCheckbox = (checked: boolean, day: string) => {
+  const handleDayCheckbox = (days: string) => {
+    // Clear validation error when user selects days
+    if (validationError) {
+      setValidationError(null);
+    }
+    setNewSchedule({ ...newSchedule, day_of_week: days });
+  };
+
+  // Edit mode functions
+  const handleEditSchedule = (index: number) => {
+    setEditingScheduleIndex(index);
+    setEditingSchedule({ ...schedules.schedules[index] });
+    setValidationError(null);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingScheduleIndex(null);
+    setEditingSchedule(null);
+    setValidationError(null);
+  };
+
+  const handleEditingTimeChange = (time: string) => {
+    if (editingSchedule) {
+      setEditingSchedule({ ...editingSchedule, time });
+    }
+  };
+
+  const handleEditingDayCheckbox = (days: string) => {
+    if (!editingSchedule) return;
+
     // Clear validation error when user selects days
     if (validationError) {
       setValidationError(null);
     }
 
-    const currentDays = parseDays(newSchedule.day_of_week);
-    let newDays;
-    if (checked) {
-      newDays = [...currentDays, day].filter((v, i, a) => a.indexOf(v) === i);
-    } else {
-      newDays = currentDays.filter((d) => d !== day);
+    setEditingSchedule({ ...editingSchedule, day_of_week: days });
+  };
+
+  const handleSaveEdit = () => {
+    if (!editingSchedule || editingScheduleIndex === null) return;
+
+    // Clear any previous validation errors
+    setValidationError(null);
+
+    // Validate time format (HH:MM)
+    const timeRegex = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/;
+    if (editingSchedule.time && !timeRegex.test(editingSchedule.time)) {
+      setValidationError(
+        "Please enter time in valid 24-hour format (HH:MM, e.g., 08:30 or 14:15)",
+      );
+      return;
     }
-    setNewSchedule({ ...newSchedule, day_of_week: joinDays(newDays) });
+
+    // Validate at least one day is selected
+    if (!editingSchedule.day_of_week) {
+      setValidationError("Please select at least one day of the week");
+      return;
+    }
+
+    // Update the schedule in the list
+    const updatedSchedules = [...schedules.schedules];
+    updatedSchedules[editingScheduleIndex] = editingSchedule;
+    setSchedules({ schedules: updatedSchedules });
+
+    // Clear edit state
+    setEditingScheduleIndex(null);
+    setEditingSchedule(null);
   };
 
   if (loading)
@@ -300,251 +347,37 @@ export default function Schedules() {
           {/* Main content */}
           <div className="flex-1 space-y-8">
             {/* Add New Schedule */}
-            <SectionCard>
-              <SectionHeading>📅 Add New Schedule</SectionHeading>
-              {validationError && (
-                <div className="mb-4 p-3 bg-red-900/50 border border-red-600 rounded text-red-200">
-                  <span className="font-semibold">Validation Error: </span>
-                  {validationError}
-                </div>
-              )}
-              <form onSubmit={handleAddSchedule} className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="flex flex-col gap-1">
-                    <label className="text-cyan-300 font-semibold">
-                      Schedule Type
-                    </label>
-                    <select
-                      name="type"
-                      value={newSchedule.type}
-                      onChange={handleInputChange}
-                      className="bg-[#2a2d35] border border-gray-600 rounded px-3 py-2 text-white focus:border-cyan-500 focus:outline-none"
-                    >
-                      <option value="rail_departure">🚂 Rail Departure</option>
-                      <option value="tube_line_status">
-                        🚇 Tube Line Status
-                      </option>
-                      <option value="best_route">⭐ Best Route</option>
-                    </select>
-                  </div>
-
-                  <div className="flex flex-col gap-1">
-                    <label className="text-cyan-300 font-semibold">
-                      Time (24-hour format)
-                      <span className="text-red-400 ml-1">*</span>
-                    </label>
-                    <input
-                      type="time"
-                      name="time"
-                      value={newSchedule.time}
-                      onChange={handleInputChange}
-                      required
-                      className="bg-[#2a2d35] border border-gray-600 rounded px-3 py-2 text-white focus:border-cyan-500 focus:outline-none"
-                    />
-                  </div>
-                </div>
-
-                {/* Days of Week Selection */}
-                <div className="flex flex-col gap-3">
-                  <label className="text-cyan-300 font-semibold">
-                    Days of Week (select one or more)
-                  </label>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2">
-                    {daysOfWeek.map((day) => {
-                      const isSelected = parseDays(
-                        newSchedule.day_of_week,
-                      ).includes(day);
-                      return (
-                        <label
-                          key={day}
-                          className={`cursor-pointer flex items-center justify-center px-3 py-2 rounded border transition-colors ${
-                            isSelected
-                              ? "bg-cyan-600 border-cyan-400 text-white"
-                              : "bg-[#2a2d35] border-gray-600 text-gray-300 hover:bg-[#3a3d45] hover:border-cyan-500"
-                          }`}
-                        >
-                          <input
-                            type="checkbox"
-                            className="sr-only"
-                            checked={isSelected}
-                            onChange={(e) =>
-                              handleDayCheckbox(e.target.checked, day)
-                            }
-                          />
-                          <span className="text-sm font-medium">{day}</span>
-                        </label>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Conditional fields based on schedule type */}
-                {newSchedule.type === "rail_departure" && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <InputField
-                      label="From Station Name"
-                      name="from_station_name"
-                      value={newSchedule.from_station_name}
-                      onChange={handleInputChange}
-                      placeholder="e.g., London Paddington"
-                      required
-                    />
-                    <InputField
-                      label="From Station Code"
-                      name="from_station_code"
-                      value={newSchedule.from_station_code}
-                      onChange={handleInputChange}
-                      placeholder="e.g., PAD"
-                      required
-                    />
-                    <InputField
-                      label="To Station Name"
-                      name="to_station_name"
-                      value={newSchedule.to_station_name}
-                      onChange={handleInputChange}
-                      placeholder="e.g., Reading"
-                      required
-                    />
-                    <InputField
-                      label="To Station Code"
-                      name="to_station_code"
-                      value={newSchedule.to_station_code}
-                      onChange={handleInputChange}
-                      placeholder="e.g., RDG"
-                      required
-                    />
-                  </div>
-                )}
-
-                {newSchedule.type === "best_route" && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <InputField
-                      label="From Place Name"
-                      name="from_name"
-                      value={newSchedule.from_name}
-                      onChange={handleInputChange}
-                      placeholder="e.g., King's Cross"
-                      required
-                    />
-                    <InputField
-                      label="From Code"
-                      name="from_code"
-                      value={newSchedule.from_code}
-                      onChange={handleInputChange}
-                      placeholder="e.g., 490G00000570"
-                      required
-                    />
-                    <InputField
-                      label="To Place Name"
-                      name="to_name"
-                      value={newSchedule.to_name}
-                      onChange={handleInputChange}
-                      placeholder="e.g., London Bridge"
-                      required
-                    />
-                    <InputField
-                      label="To Code"
-                      name="to_code"
-                      value={newSchedule.to_code}
-                      onChange={handleInputChange}
-                      placeholder="e.g., 490G00000558"
-                      required
-                    />
-                  </div>
-                )}
-
-                <Button type="submit" variant="success">
-                  Add Schedule
-                </Button>
-              </form>
-            </SectionCard>
+            <ScheduleForm
+              newSchedule={newSchedule}
+              validationError={!editingScheduleIndex ? validationError : null}
+              onChange={handleInputChange}
+              onDaysChange={handleDayCheckbox}
+              onSubmit={handleAddSchedule}
+            />
 
             {/* Current Schedules */}
-            <SectionCard>
-              <SectionHeading>📋 Current Schedules</SectionHeading>
-              {schedules.schedules.length === 0 ? (
-                <div className="text-gray-400">No schedules configured.</div>
-              ) : (
-                <div className="space-y-3">
-                  {schedules.schedules.map((schedule, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center justify-between p-4 bg-[#2a2d35] rounded border-l-4 border-cyan-500"
-                    >
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
-                          <span className="text-lg">
-                            {schedule.type === "rail_departure"
-                              ? "🚂"
-                              : schedule.type === "tube_line_status"
-                                ? "🚇"
-                                : "⭐"}
-                          </span>
-                          <span className="font-semibold text-cyan-200">
-                            {schedule.type.replace("_", " ").toUpperCase()}
-                          </span>
-                          <span className="text-yellow-300">
-                            {schedule.day_of_week
-                              ? parseDays(schedule.day_of_week).join(", ")
-                              : "No days selected"}{" "}
-                            at {schedule.time}
-                          </span>
-                        </div>
-                        <div className="text-gray-300">
-                          {schedule.type === "rail_departure" && (
-                            <>
-                              From {schedule.from_station_name} to{" "}
-                              {schedule.to_station_name}
-                            </>
-                          )}
-                          {schedule.type === "best_route" && (
-                            <>
-                              From {schedule.from_name} to {schedule.to_name}
-                            </>
-                          )}
-                          {schedule.type === "tube_line_status" && (
-                            <>TfL Line Status Overview</>
-                          )}
-                        </div>
-                      </div>
-                      <Button
-                        variant="danger"
-                        onClick={() => handleRemoveSchedule(index)}
-                      >
-                        Remove
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </SectionCard>
+            <SchedulesList
+              schedules={schedules}
+              editingScheduleIndex={editingScheduleIndex}
+              editingSchedule={editingSchedule}
+              validationError={editingScheduleIndex !== null ? validationError : null}
+              onEditSchedule={handleEditSchedule}
+              onSaveEdit={handleSaveEdit}
+              onCancelEdit={handleCancelEdit}
+              onRemoveSchedule={handleRemoveSchedule}
+              onTimeChange={handleEditingTimeChange}
+              onDaysChange={handleEditingDayCheckbox}
+              disabled={editingScheduleIndex !== null || saveSchedulesMutation.loading}
+            />
 
             {/* Actions */}
-            <SectionCard>
-              <div className="flex flex-col items-center gap-4">
-                {saveSuccess && (
-                  <div className="p-3 bg-green-900/50 border border-green-600 rounded text-green-200">
-                    <span className="font-semibold">✅ Success: </span>
-                    Schedules saved successfully!
-                  </div>
-                )}
-                {saveSchedulesMutation.error && (
-                  <div className="p-3 bg-red-900/50 border border-red-600 rounded text-red-200">
-                    <span className="font-semibold">❌ Error: </span>
-                    {saveSchedulesMutation.error}
-                  </div>
-                )}
-                <Button
-                  variant="primary"
-                  onClick={handleSave}
-                  disabled={saveSchedulesMutation.loading}
-                >
-                  {saveSchedulesMutation.loading
-                    ? "Saving..."
-                    : "Save Schedules"}
-                </Button>
-              </div>
-            </SectionCard>
+            <SaveActions
+              saveSuccess={saveSuccess}
+              saveError={saveSchedulesMutation.error}
+              hasUnsavedChanges={hasUnsavedChanges}
+              isLoading={saveSchedulesMutation.loading}
+              onSave={handleSave}
+            />
           </div>
         </div>
       </div>
