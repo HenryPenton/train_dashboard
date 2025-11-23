@@ -6,7 +6,7 @@ type StatusBarProps = {
 
 export default function StatusBar({ backgroundColor }: StatusBarProps) {
   return (
-    <div 
+    <div
       className={`h-1 w-full relative overflow-hidden ${backgroundColor}`}
       role="status"
       aria-label="Status indicator"

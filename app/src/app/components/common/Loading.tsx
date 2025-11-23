@@ -6,12 +6,12 @@ interface LoadingProps {
 
 export default function Loading({ message = "Loading..." }: LoadingProps) {
   return (
-    <div 
+    <div
       className="text-cyan-300 animate-pulse flex items-center gap-2"
       role="status"
       aria-label={message}
     >
-      <div 
+      <div
         className="w-4 h-4 border-2 border-cyan-300 border-t-transparent rounded-full animate-spin"
         aria-hidden="true"
       ></div>

@@ -81,7 +81,7 @@ export default function RouteStep({ leg, stepNumber, isLast }: RouteStepProps) {
 
   return (
     <>
-      <div 
+      <div
         className="relative group/step"
         role="listitem"
         aria-label={`Step ${stepNumber}: ${leg.mode.replace("-", " ")} from ${leg.departure} to ${leg.arrival}`}
@@ -93,7 +93,7 @@ export default function RouteStep({ leg, stepNumber, isLast }: RouteStepProps) {
           <div className="flex items-center mb-2">
             {/* Enhanced Step Number */}
             <div className="flex-shrink-0 relative mr-5">
-              <div 
+              <div
                 className="w-10 h-10 bg-gradient-to-br from-white to-gray-200 rounded-full flex items-center justify-center text-gray-800 font-bold text-sm shadow-lg relative z-10"
                 aria-label={`Step ${stepNumber}`}
               >
@@ -129,7 +129,7 @@ export default function RouteStep({ leg, stepNumber, isLast }: RouteStepProps) {
                 <div className="text-emerald-300 text-xs font-bold uppercase tracking-wider mb-1">
                   From
                 </div>
-                <div 
+                <div
                   className="text-white font-bold text-sm"
                   aria-label={`Departure station: ${leg.departure}`}
                 >
@@ -141,7 +141,7 @@ export default function RouteStep({ leg, stepNumber, isLast }: RouteStepProps) {
                 <div className="text-red-300 text-xs font-bold uppercase tracking-wider mb-1">
                   To
                 </div>
-                <div 
+                <div
                   className="text-white font-bold text-sm"
                   aria-label={`Arrival station: ${leg.arrival}`}
                 >

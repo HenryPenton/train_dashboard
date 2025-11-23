@@ -26,7 +26,7 @@ describe("TflArrivalCard", () => {
       <TflArrivalCard
         arrival={mockArrival}
         formatTimeToStation={mockFormatTimeToStation}
-      />
+      />,
     );
 
     // Check main container with aria-label
@@ -52,31 +52,36 @@ describe("TflArrivalCard", () => {
   });
 
   it("renders arrival card without current location when not provided", () => {
-    const arrivalWithoutLocation = { ...mockArrival, currentLocation: undefined };
-    
+    const arrivalWithoutLocation = {
+      ...mockArrival,
+      currentLocation: undefined,
+    };
+
     render(
       <TflArrivalCard
         arrival={arrivalWithoutLocation}
         formatTimeToStation={mockFormatTimeToStation}
-      />
+      />,
     );
 
     // Should not find current location element
     expect(screen.queryByLabelText("Current location")).not.toBeInTheDocument();
-    
+
     // But should still have destination and arrival time
-    expect(screen.getByLabelText("Destination")).toHaveTextContent("to Ealing Broadway");
+    expect(screen.getByLabelText("Destination")).toHaveTextContent(
+      "to Ealing Broadway",
+    );
     expect(screen.getByLabelText("Arrival time")).toHaveTextContent("3 min");
   });
 
   it("displays 'Due' for arrivals under 60 seconds", () => {
     const dueArrival = { ...mockArrival, timeToStation: 30 };
-    
+
     render(
       <TflArrivalCard
         arrival={dueArrival}
         formatTimeToStation={mockFormatTimeToStation}
-      />
+      />,
     );
 
     expect(screen.getByLabelText("Arrival time")).toHaveTextContent("Due");

@@ -12,7 +12,11 @@ export default function DelayInfo({ delay }: DelayInfoProps) {
   };
 
   return (
-    <div className="text-sm" role="status" aria-label={`Train delay information: ${delay === 0 ? "On time" : `${delay} minutes delayed`}`}>
+    <div
+      className="text-sm"
+      role="status"
+      aria-label={`Train delay information: ${delay === 0 ? "On time" : `${delay} minutes delayed`}`}
+    >
       <span className="text-gray-400">Delay: </span>
       <span className={`font-semibold ${getDelayColor()}`}>
         {delay === 0 ? "On time" : `${delay} min`}

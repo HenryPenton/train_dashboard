@@ -5,12 +5,12 @@ import SectionCard from "../SectionCard";
 describe("SectionCard", () => {
   it("renders section card with proper accessibility attributes and content", () => {
     const testContent = "This is test content for the section card";
-    
+
     render(
       <SectionCard>
         <h2>Test Section</h2>
         <p>{testContent}</p>
-      </SectionCard>
+      </SectionCard>,
     );
 
     // Check for the main region role
@@ -28,25 +28,25 @@ describe("SectionCard", () => {
     // Check default styling classes are applied
     expect(sectionRegion).toHaveClass(
       "bg-[#23262f]",
-      "rounded-[12px]", 
+      "rounded-[12px]",
       "p-6",
       "text-[#f1f1f1]",
-      "shadow-[0_2px_12px_0_rgba(0,0,0,0.25)]"
+      "shadow-[0_2px_12px_0_rgba(0,0,0,0.25)]",
     );
   });
 
   it("applies custom className correctly", () => {
     const customClass = "custom-test-class another-class";
-    
+
     render(
       <SectionCard className={customClass}>
         <div>Content with custom classes</div>
-      </SectionCard>
+      </SectionCard>,
     );
 
     const sectionRegion = screen.getByRole("region");
     expect(sectionRegion).toHaveClass("custom-test-class", "another-class");
-    
+
     // Should still have default classes
     expect(sectionRegion).toHaveClass("bg-[#23262f]", "p-6");
   });
@@ -62,11 +62,11 @@ describe("SectionCard", () => {
           </ul>
           <button>Action Button</button>
         </div>
-      </SectionCard>
+      </SectionCard>,
     );
 
     const sectionRegion = screen.getByRole("region");
-    
+
     // Check that all nested content is contained within the region
     expect(sectionRegion).toContainElement(screen.getByText("Nested Heading"));
     expect(sectionRegion).toContainElement(screen.getByText("Item 1"));
@@ -90,11 +90,11 @@ describe("SectionCard", () => {
     render(
       <SectionCard>
         <p>Default styling test</p>
-      </SectionCard>
+      </SectionCard>,
     );
 
     const sectionRegion = screen.getByRole("region");
-    
+
     // Should have default classes but not throw errors
     expect(sectionRegion).toHaveClass("bg-[#23262f]", "p-6");
     expect(sectionRegion).not.toHaveClass("undefined", "null");

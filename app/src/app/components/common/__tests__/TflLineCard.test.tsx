@@ -7,7 +7,7 @@ describe("TflLineCard", () => {
       <TflLineCard lineName="Central Line">
         <div>Mock arrival 1</div>
         <div>Mock arrival 2</div>
-      </TflLineCard>
+      </TflLineCard>,
     );
 
     // Check region with proper aria-labelledby
@@ -36,22 +36,25 @@ describe("TflLineCard", () => {
     render(
       <TflLineCard lineName="Northern Line">
         <div>Test content</div>
-      </TflLineCard>
+      </TflLineCard>,
     );
 
     const heading = screen.getByRole("heading", { level: 2 });
     expect(heading).toHaveAttribute("id", "line-northern-line-heading");
-    
+
     // Check region is properly labeled by the heading
     const region = screen.getByRole("region", { name: "Northern Line" });
-    expect(region).toHaveAttribute("aria-labelledby", "line-northern-line-heading");
+    expect(region).toHaveAttribute(
+      "aria-labelledby",
+      "line-northern-line-heading",
+    );
   });
 
   it("handles complex line names with multiple spaces correctly", () => {
     render(
       <TflLineCard lineName="District Line East">
         <div>Test content</div>
-      </TflLineCard>
+      </TflLineCard>,
     );
 
     const heading = screen.getByRole("heading", { level: 2 });
@@ -60,11 +63,7 @@ describe("TflLineCard", () => {
   });
 
   it("renders empty arrivals list when no children provided", () => {
-    render(
-      <TflLineCard lineName="Piccadilly Line">
-        {null}
-      </TflLineCard>
-    );
+    render(<TflLineCard lineName="Piccadilly Line">{null}</TflLineCard>);
 
     const arrivalsList = screen.getByRole("list", {
       name: "Piccadilly Line arrivals",

@@ -7,7 +7,7 @@ describe("InputField", () => {
     const testLabel = "Test Label";
     const testValue = "test value";
     const testPlaceholder = "Enter text here";
-    
+
     render(
       <InputField
         label={testLabel}
@@ -15,7 +15,7 @@ describe("InputField", () => {
         onChange={mockOnChange}
         placeholder={testPlaceholder}
         required={true}
-      />
+      />,
     );
 
     // Check that the input is properly labeled and accessible
@@ -25,15 +25,15 @@ describe("InputField", () => {
     expect(input).toHaveAttribute("placeholder", testPlaceholder);
     expect(input).toHaveAttribute("aria-required", "true");
     expect(input).toBeRequired();
-    
+
     // Check that the label is properly associated
     const label = screen.getByText(testLabel);
     expect(label).toBeInTheDocument();
-    
+
     // Check required indicator
     const requiredIndicator = screen.getByLabelText("required");
     expect(requiredIndicator).toBeInTheDocument();
-    
+
     // Test onChange functionality
     fireEvent.change(input, { target: { value: "new value" } });
     expect(mockOnChange).toHaveBeenCalled();

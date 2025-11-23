@@ -5,7 +5,7 @@ import SectionHeading from "../SectionHeading";
 describe("SectionHeading", () => {
   it("renders section heading with proper accessibility attributes and content", () => {
     const headingText = "Test Section Heading";
-    
+
     render(<SectionHeading>{headingText}</SectionHeading>);
 
     // Check for heading with proper role and level
@@ -24,38 +24,36 @@ describe("SectionHeading", () => {
       "text-cyan-300",
       "border-b",
       "border-cyan-600",
-      "pb-2"
+      "pb-2",
     );
   });
 
   it("applies custom className correctly", () => {
     const customClass = "custom-heading-class text-2xl";
-    
+
     render(
       <SectionHeading className={customClass}>
         Custom Styled Heading
-      </SectionHeading>
+      </SectionHeading>,
     );
 
     const heading = screen.getByRole("heading", { level: 2 });
     expect(heading).toHaveClass("custom-heading-class", "text-2xl");
-    
+
     // Should still have default classes
     expect(heading).toHaveClass("text-xl", "font-semibold", "mb-4");
   });
 
   it("renders with custom aria-label when provided", () => {
     const customAriaLabel = "Custom accessibility label";
-    
+
     render(
-      <SectionHeading ariaLabel={customAriaLabel}>
-        Heading Text
-      </SectionHeading>
+      <SectionHeading ariaLabel={customAriaLabel}>Heading Text</SectionHeading>,
     );
 
-    const heading = screen.getByRole("heading", { 
+    const heading = screen.getByRole("heading", {
       level: 2,
-      name: customAriaLabel 
+      name: customAriaLabel,
     });
     expect(heading).toBeInTheDocument();
     expect(heading).toHaveAttribute("aria-label", customAriaLabel);
@@ -72,17 +70,17 @@ describe("SectionHeading", () => {
     render(
       <SectionHeading>
         <span>Complex</span> <strong>Heading</strong> Content
-      </SectionHeading>
+      </SectionHeading>,
     );
 
     const heading = screen.getByRole("heading", { level: 2 });
     expect(heading).toBeInTheDocument();
-    
+
     // Check that complex content is rendered
     expect(screen.getByText("Complex")).toBeInTheDocument();
     expect(screen.getByText("Heading")).toBeInTheDocument();
     expect(screen.getByText("Content")).toBeInTheDocument();
-    
+
     // Check that the strong element is present
     const strongElement = heading.querySelector("strong");
     expect(strongElement).toBeInTheDocument();
@@ -90,11 +88,7 @@ describe("SectionHeading", () => {
   });
 
   it("handles empty className prop gracefully", () => {
-    render(
-      <SectionHeading className="">
-        Default Classes Only
-      </SectionHeading>
-    );
+    render(<SectionHeading className="">Default Classes Only</SectionHeading>);
 
     const heading = screen.getByRole("heading", { level: 2 });
     expect(heading).toHaveClass("text-xl", "font-semibold");
@@ -106,13 +100,13 @@ describe("SectionHeading", () => {
       <div>
         <h1>Main Page Title</h1>
         <SectionHeading>Section Title</SectionHeading>
-      </div>
+      </div>,
     );
 
     // Ensure the section heading is properly nested as h2 after h1
     const mainHeading = screen.getByRole("heading", { level: 1 });
     const sectionHeading = screen.getByRole("heading", { level: 2 });
-    
+
     expect(mainHeading).toBeInTheDocument();
     expect(sectionHeading).toBeInTheDocument();
     expect(sectionHeading).toHaveTextContent("Section Title");
@@ -121,16 +115,16 @@ describe("SectionHeading", () => {
   it("supports both ariaLabel and className props together", () => {
     const ariaLabel = "Custom label";
     const customClass = "custom-style";
-    
+
     render(
       <SectionHeading ariaLabel={ariaLabel} className={customClass}>
         Heading with Both Props
-      </SectionHeading>
+      </SectionHeading>,
     );
 
-    const heading = screen.getByRole("heading", { 
+    const heading = screen.getByRole("heading", {
       level: 2,
-      name: ariaLabel 
+      name: ariaLabel,
     });
     expect(heading).toBeInTheDocument();
     expect(heading).toHaveClass(customClass);

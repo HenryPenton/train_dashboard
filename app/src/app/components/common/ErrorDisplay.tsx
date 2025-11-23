@@ -15,7 +15,9 @@ export default function ErrorDisplay({
       role="alert"
       aria-label={`Error message: ${message}`}
     >
-      <span className="mr-2" aria-hidden="true">⚠️</span>
+      <span className="mr-2" aria-hidden="true">
+        ⚠️
+      </span>
       Error: {message}
     </div>
   );

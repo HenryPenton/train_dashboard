@@ -22,14 +22,24 @@ export default function LineStatusCard({
       <div
         className={`bg-gradient-to-r from-[#2a2d35] to-[#323741] rounded-xl border ${getSeverityBorderColor(severity)}/30 shadow-lg overflow-hidden`}
         role="article"
-        aria-label={`${name} line status: ${statusList && statusList.length > 0 ? statusList.join(', ') : 'Unknown'}`}
+        aria-label={`${name} line status: ${statusList && statusList.length > 0 ? statusList.join(", ") : "Unknown"}`}
       >
         <StatusBar backgroundColor={getSeverityStatusBarColor(severity)} />
 
         <div className="p-4">
           <div className="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-start">
-            <div className="text-lg font-bold text-cyan-200" role="heading" aria-level={3}>{name}</div>
-            <div className="flex flex-col text-center gap-2" role="list" aria-label="Status list">
+            <div
+              className="text-lg font-bold text-cyan-200"
+              role="heading"
+              aria-level={3}
+            >
+              {name}
+            </div>
+            <div
+              className="flex flex-col text-center gap-2"
+              role="list"
+              aria-label="Status list"
+            >
               {statusList && statusList.length > 0 ? (
                 statusList.map((status, index) => (
                   <StatusBadge

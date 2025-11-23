@@ -11,7 +11,7 @@ type StatusBadgeProps = {
 
 export default function StatusBadge({ status, severity }: StatusBadgeProps) {
   const statusText = status || "Unknown";
-  
+
   return (
     <div
       className={`text-sm font-semibold px-3 py-1 rounded-full border ${getSeverityBorderColor(severity)}/50 ${getSeverityTextColor(severity)}`}

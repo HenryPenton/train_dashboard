@@ -39,12 +39,16 @@ describe("RouteStep", () => {
     expect(screen.getByText("Central Line")).toBeInTheDocument();
 
     // Check for departure station with ARIA label
-    const departureStation = screen.getByLabelText("Departure station: Oxford Circus");
+    const departureStation = screen.getByLabelText(
+      "Departure station: Oxford Circus",
+    );
     expect(departureStation).toBeInTheDocument();
     expect(departureStation).toHaveTextContent("Oxford Circus");
 
     // Check for arrival station with ARIA label
-    const arrivalStation = screen.getByLabelText("Arrival station: Liverpool Street");
+    const arrivalStation = screen.getByLabelText(
+      "Arrival station: Liverpool Street",
+    );
     expect(arrivalStation).toBeInTheDocument();
     expect(arrivalStation).toHaveTextContent("Liverpool Street");
 
@@ -55,7 +59,7 @@ describe("RouteStep", () => {
 
   it("renders connection line when not the last step", () => {
     const { container } = render(
-      <RouteStep leg={mockRouteLeg} stepNumber={1} isLast={false} />
+      <RouteStep leg={mockRouteLeg} stepNumber={1} isLast={false} />,
     );
 
     // Check that connection line is present (gradient div)
@@ -65,7 +69,7 @@ describe("RouteStep", () => {
 
   it("does not render connection line when it is the last step", () => {
     const { container } = render(
-      <RouteStep leg={mockRouteLeg} stepNumber={1} isLast={true} />
+      <RouteStep leg={mockRouteLeg} stepNumber={1} isLast={true} />,
     );
 
     // Check that connection line is not present

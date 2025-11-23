@@ -8,7 +8,7 @@ type RouteEndpointsProps = {
 
 export default function RouteEndpoints({ from, to }: RouteEndpointsProps) {
   return (
-    <div 
+    <div
       className="flex items-center justify-between mb-4"
       role="region"
       aria-label="Journey route information"

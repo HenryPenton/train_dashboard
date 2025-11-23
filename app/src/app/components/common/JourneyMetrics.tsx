@@ -26,7 +26,11 @@ export default function JourneyMetrics({
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4" role="group" aria-label="Journey metrics">
+    <div
+      className="grid grid-cols-1 md:grid-cols-3 gap-4"
+      role="group"
+      aria-label="Journey metrics"
+    >
       <div className="group/metric">
         <div className="p-4 bg-gradient-to-br from-emerald-500/10 to-green-500/10 rounded-xl border border-emerald-400/20">
           <div className="flex items-center gap-3">
@@ -52,7 +56,7 @@ export default function JourneyMetrics({
               <div className="text-cyan-300 text-xs font-medium uppercase tracking-wider">
                 Arrival
               </div>
-              <div 
+              <div
                 className="text-white font-bold text-xl"
                 aria-label={`Arrival time: ${formatArrivalTime(arrival)}`}
               >
@@ -71,7 +75,7 @@ export default function JourneyMetrics({
                 <div className="text-yellow-300 text-xs font-medium uppercase tracking-wider">
                   Fare
                 </div>
-                <div 
+                <div
                   className="text-white font-bold text-xl"
                   aria-label={`Journey fare: £${(fare / 100).toFixed(2)}`}
                 >

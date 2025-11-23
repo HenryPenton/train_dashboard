@@ -9,7 +9,7 @@ type RouteStepsProps = {
 export default function RouteSteps({ legs }: RouteStepsProps) {
   return (
     <div className="relative group">
-      <div 
+      <div
         className="relative p-4 bg-gradient-to-br from-[#2a2d35]/95 via-[#1e2128]/95 to-[#2a2d35]/95 rounded-2xl border border-purple-400/20"
         role="region"
         aria-label="Journey steps breakdown"
@@ -17,9 +17,11 @@ export default function RouteSteps({ legs }: RouteStepsProps) {
         <div className="flex items-center gap-4 mb-4">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-gradient-to-r from-purple-500/20 to-cyan-500/20 rounded-lg">
-              <span className="text-2xl" aria-hidden="true">🗺️</span>
+              <span className="text-2xl" aria-hidden="true">
+                🗺️
+              </span>
             </div>
-            <h3 
+            <h3
               className="text-white font-bold text-lg"
               role="heading"
               aria-level={3}
@@ -35,7 +37,11 @@ export default function RouteSteps({ legs }: RouteStepsProps) {
           </div>
         </div>
 
-        <div className="space-y-3" role="list" aria-label={`Journey with ${legs.length} steps`}>
+        <div
+          className="space-y-3"
+          role="list"
+          aria-label={`Journey with ${legs.length} steps`}
+        >
           {legs.map((leg, i) => (
             <RouteStep
               key={i}

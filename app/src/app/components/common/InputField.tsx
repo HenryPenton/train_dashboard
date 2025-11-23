@@ -19,16 +19,17 @@ export default function InputField({
   className = "",
   name,
 }: InputFieldProps) {
-  const inputId = name || `input-${label.toLowerCase().replace(/\s+/g, '-')}`;
-  
+  const inputId = name || `input-${label.toLowerCase().replace(/\s+/g, "-")}`;
+
   return (
     <div className={`flex flex-col gap-1 ${className}`}>
-      <label 
-        htmlFor={inputId}
-        className="text-cyan-300 font-semibold"
-      >
+      <label htmlFor={inputId} className="text-cyan-300 font-semibold">
         {label}
-        {required && <span className="text-red-400 ml-1" aria-label="required">*</span>}
+        {required && (
+          <span className="text-red-400 ml-1" aria-label="required">
+            *
+          </span>
+        )}
       </label>
       <input
         id={inputId}
