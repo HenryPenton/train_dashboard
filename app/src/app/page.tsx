@@ -28,7 +28,6 @@ type ConfigItem =
       importance: number;
     };
 
-// Helper function to check if config is effectively blank
 const isConfigBlank = (config: ConfigType | null) => {
   if (!config) return true;
 
@@ -50,6 +49,24 @@ export default function Home() {
     useConfigStore((state) => state);
 
   const [configLoading, setConfigLoading] = useState(true);
+  const [screenSize, setScreenSize] = useState<'mobile' | 'tablet' | 'desktop'>('mobile');
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      if (window.innerWidth >= 1536) {
+        setScreenSize('desktop');
+      } else if (window.innerWidth >= 1024) {
+        setScreenSize('tablet');
+      } else {
+        setScreenSize('mobile');
+      }
+    };
+
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
+
   useEffect(() => {
     let mounted = true;
     fetchConfig().finally(() => {
@@ -68,7 +85,6 @@ export default function Home() {
     return () => clearInterval(interval);
   }, [config?.refresh_timer, forceRefresh]);
 
-  // Create a unified array of all config items with their types and importance
   const allConfigItems: ConfigItem[] = config
     ? [
         ...config.rail_departures.map((item) => ({
@@ -89,7 +105,6 @@ export default function Home() {
       ]
     : [];
 
-  // Add TfL line status if enabled
   if (config?.tfl_line_status?.enabled) {
     allConfigItems.push({
       type: "tfl_line_status",
@@ -98,19 +113,80 @@ export default function Home() {
     });
   }
 
-  // Sort all items globally by importance
   const sortedConfigItems = allConfigItems.sort((a, b) => {
-    // Items with importance come first, sorted by importance (1 = highest priority)
-    // Items without importance come last
     if (a.importance && b.importance) return a.importance - b.importance;
     if (a.importance && !b.importance) return -1;
     if (!a.importance && b.importance) return 1;
-    return 0; // Both have no importance, maintain original order
+    return 0;
   });
 
-  const columnCount = sortedConfigItems.length;
+  const getColumnCount = () => {
+    switch (screenSize) {
+      case 'desktop': return 3;
+      case 'tablet': return 2;
+      case 'mobile': return 1;
+      default: return 1;
+    }
+  };
 
-  // Show welcome message if config is blank
+  const numColumns = getColumnCount();
+  const columns: ConfigItem[][] = Array.from({ length: numColumns }, () => []);
+  
+  sortedConfigItems.forEach((item, index) => {
+    const columnIndex = index % numColumns;
+    columns[columnIndex].push(item);
+  });
+
+  const renderConfigItem = (configItem: ConfigItem, key: string) => {
+    if (configItem.type === "rail_departure") {
+      return (
+        <TrainDepartures
+          key={key}
+          toStation={{
+            stationCode: configItem.item.destinationCode,
+            stationName: configItem.item.destination,
+          }}
+          fromStation={{
+            stationCode: configItem.item.originCode,
+            stationName: configItem.item.origin,
+          }}
+        />
+      );
+    }
+
+    if (configItem.type === "tfl_best_route") {
+      return (
+        <TflBestRoute
+          key={key}
+          to={{
+            placeName: configItem.item.destination,
+            naptanOrAtco: configItem.item.destinationNaPTANOrATCO,
+          }}
+          from={{
+            placeName: configItem.item.origin,
+            naptanOrAtco: configItem.item.originNaPTANOrATCO,
+          }}
+        />
+      );
+    }
+
+    if (configItem.type === "tube_departure") {
+      return (
+        <TflArrivals
+          key={key}
+          stationId={configItem.item.stationId}
+          stationName={configItem.item.stationName}
+        />
+      );
+    }
+
+    if (configItem.type === "tfl_line_status") {
+      return <TflLineStatus key={key} />;
+    }
+
+    return null;
+  };
+
   if (configLoading) {
     return (
       <PageLayout
@@ -164,70 +240,18 @@ export default function Home() {
       lastRefreshTimeStamp={lastRefreshTimeStamp}
       showNavigation={true}
     >
-      <div
-        className={`grid w-full gap-10 box-border
-          grid-cols-1
-          ${columnCount >= 3 ? "2xl:grid-cols-3" : ""}
-          ${columnCount >= 2 ? "lg:grid-cols-2" : ""}
-          justify-items-center
-          `}
-      >
-        {sortedConfigItems.map((configItem, i) => {
-          if (configItem.type === "rail_departure") {
-            return (
-              <div key={`rail-${i}`} className="mb-8 last:mb-0">
-                <TrainDepartures
-                  toStation={{
-                    stationCode: configItem.item.destinationCode,
-                    stationName: configItem.item.destination,
-                  }}
-                  fromStation={{
-                    stationCode: configItem.item.originCode,
-                    stationName: configItem.item.origin,
-                  }}
-                />
-              </div>
-            );
-          }
-
-          if (configItem.type === "tfl_best_route") {
-            return (
-              <div key={`tfl-route-${i}`} className="mb-8 last:mb-0">
-                <TflBestRoute
-                  to={{
-                    placeName: configItem.item.destination,
-                    naptanOrAtco: configItem.item.destinationNaPTANOrATCO,
-                  }}
-                  from={{
-                    placeName: configItem.item.origin,
-                    naptanOrAtco: configItem.item.originNaPTANOrATCO,
-                  }}
-                />
-              </div>
-            );
-          }
-
-          if (configItem.type === "tube_departure") {
-            return (
-              <div key={`tube-${i}`} className="mb-8 last:mb-0">
-                <TflArrivals
-                  stationId={configItem.item.stationId}
-                  stationName={configItem.item.stationName}
-                />
-              </div>
-            );
-          }
-
-          if (configItem.type === "tfl_line_status") {
-            return (
-              <div key={`tfl-lines-${i}`} className="mb-8 last:mb-0">
-                <TflLineStatus />
-              </div>
-            );
-          }
-
-          return null;
-        })}
+      <div className="flex gap-10 w-full justify-evenly">
+        {columns.map((column, columnIndex) => (
+          <div
+            key={`column-${columnIndex}`}
+            className="flex flex-col gap-8 flex-1 max-w-md"
+          >
+            {column.map((configItem, itemIndex) => {
+              const key = `col-${columnIndex}-item-${itemIndex}`;
+              return renderConfigItem(configItem, key);
+            })}
+          </div>
+        ))}
       </div>
     </PageLayout>
   );
