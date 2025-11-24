@@ -26,7 +26,7 @@ class BestRoute(BaseModel):
 
 class TubeLineStatus(BaseModel):
     name: str
-    status: str
+    statusList: List[str]
 
 
 class SchedulesResponse(BaseModel):
