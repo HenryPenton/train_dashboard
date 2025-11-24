@@ -26,10 +26,10 @@ export default function Settings() {
     removeRoute,
     removeTubeDeparture,
     saveConfig,
-    updateRouteImportance,
-    updateDepartureImportance,
-    updateTubeDepartureImportance,
-    updateTflLineStatusImportance,
+    updateRouteColumnPositions,
+    updateDepartureColumnPositions,
+    updateTubeDepartureColumnPositions,
+    updateTflLineStatusColumnPositions,
     setTflLineStatusEnabled,
   } = useConfigStore((state) => state);
 
@@ -42,14 +42,7 @@ export default function Settings() {
     });
   }, [fetchConfig]);
 
-  // Calculate total items for importance ordering
-  const totalItems = Math.max(
-    (config?.tfl_best_routes?.length || 0) +
-      (config?.rail_departures?.length || 0) +
-      (config?.tube_departures?.length || 0) +
-      (config?.tfl_line_status?.enabled ? 1 : 0),
-    1,
-  );
+
 
   const [partialRoute, setPartialRoute] = useState({
     origin: "",
@@ -227,10 +220,9 @@ export default function Settings() {
                   {route.origin} → {route.destination}
                 </span>
               )}
-              onUpdateImportance={updateRouteImportance}
+              onUpdateColumnPositions={(index, col2, col3) => updateRouteColumnPositions(index, col2, col3)}
               onRemoveItem={removeRoute}
-              getImportance={(route) => route.importance}
-              totalItems={totalItems}
+              getColumnPositions={(route) => ({ col_2_position: route.col_2_position, col_3_position: route.col_3_position })}
             />
           </SectionCard>
 
@@ -289,10 +281,9 @@ export default function Settings() {
                   </span>
                 </div>
               )}
-              onUpdateImportance={updateDepartureImportance}
+              onUpdateColumnPositions={(index, col2, col3) => updateDepartureColumnPositions(index, col2, col3)}
               onRemoveItem={removeDeparture}
-              getImportance={(departure) => departure.importance}
-              totalItems={totalItems}
+              getColumnPositions={(departure) => ({ col_2_position: departure.col_2_position, col_3_position: departure.col_3_position })}
             />
           </SectionCard>
 
@@ -330,10 +321,9 @@ export default function Settings() {
                   <span className="font-semibold">{departure.stationName}</span>
                 </div>
               )}
-              onUpdateImportance={updateTubeDepartureImportance}
+              onUpdateColumnPositions={(index, col2, col3) => updateTubeDepartureColumnPositions(index, col2, col3)}
               onRemoveItem={removeTubeDeparture}
-              getImportance={(departure) => departure.importance}
-              totalItems={totalItems}
+              getColumnPositions={(departure) => ({ col_2_position: departure.col_2_position, col_3_position: departure.col_3_position })}
             />
           </SectionCard>
 
@@ -347,27 +337,33 @@ export default function Settings() {
                 label="Enable TfL Line Status"
               />
               {config?.tfl_line_status?.enabled && (
-                <Select
-                  label="Importance (1 = highest priority)"
-                  value={config.tfl_line_status.importance?.toString() || "1"}
-                  onChange={(e) =>
-                    updateTflLineStatusImportance(parseInt(e.target.value) || 1)
-                  }
-                  options={Array.from(
-                    { length: Math.max(totalItems || 1, 1) },
-                    (_, i) => {
-                      const maxItems = Math.max(totalItems || 1, 1);
-                      const value = (i + 1).toString();
-                      const label =
-                        i === 0
-                          ? `${i + 1} (Highest)`
-                          : i === maxItems - 1
-                            ? `${i + 1} (Lowest)`
-                            : `${i + 1}`;
-                      return { value, label };
-                    },
-                  )}
-                />
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <Select
+                    label="Col 2 Position"
+                    value={config.tfl_line_status.col_2_position?.toString() || "1"}
+                    onChange={(e) => {
+                      const col2 = parseInt(e.target.value) || 1;
+                      updateTflLineStatusColumnPositions(col2, config.tfl_line_status.col_3_position);
+                    }}
+                    options={[
+                      { value: "1", label: "1" },
+                      { value: "2", label: "2" },
+                    ]}
+                  />
+                  <Select
+                    label="Col 3 Position"
+                    value={config.tfl_line_status.col_3_position?.toString() || "1"}
+                    onChange={(e) => {
+                      const col3 = parseInt(e.target.value) || 1;
+                      updateTflLineStatusColumnPositions(config.tfl_line_status.col_2_position, col3);
+                    }}
+                    options={[
+                      { value: "1", label: "1" },
+                      { value: "2", label: "2" },
+                      { value: "3", label: "3" },
+                    ]}
+                  />
+                </div>
               )}
             </div>
           </SectionCard>

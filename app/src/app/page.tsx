@@ -20,13 +20,14 @@ import {
 } from "./stores/config";
 
 type ConfigItem =
-  | { type: "rail_departure"; item: DepartureConfig; importance: number }
-  | { type: "tfl_best_route"; item: BestRoute; importance: number }
-  | { type: "tube_departure"; item: TubeDeparture; importance: number }
+  | { type: "rail_departure"; item: DepartureConfig; col_2_position: number; col_3_position: number }
+  | { type: "tfl_best_route"; item: BestRoute; col_2_position: number; col_3_position: number }
+  | { type: "tube_departure"; item: TubeDeparture; col_2_position: number; col_3_position: number }
   | {
       type: "tfl_line_status";
       item: TflLineStatusConfig;
-      importance: number;
+      col_2_position: number;
+      col_3_position: number;
     };
 
 const isConfigBlank = (config: ConfigType | null) => {
@@ -93,17 +94,20 @@ export default function Home() {
         ...config.rail_departures.map((item) => ({
           type: "rail_departure" as const,
           item,
-          importance: item.importance,
+          col_2_position: item.col_2_position,
+          col_3_position: item.col_3_position,
         })),
         ...config.tfl_best_routes.map((item) => ({
           type: "tfl_best_route" as const,
           item,
-          importance: item.importance,
+          col_2_position: item.col_2_position,
+          col_3_position: item.col_3_position,
         })),
         ...config.tube_departures.map((item) => ({
           type: "tube_departure" as const,
           item,
-          importance: item.importance,
+          col_2_position: item.col_2_position,
+          col_3_position: item.col_3_position,
         })),
       ]
     : [];
@@ -112,16 +116,10 @@ export default function Home() {
     allConfigItems.push({
       type: "tfl_line_status",
       item: config.tfl_line_status,
-      importance: config.tfl_line_status.importance,
+      col_2_position: config.tfl_line_status.col_2_position,
+      col_3_position: config.tfl_line_status.col_3_position,
     });
   }
-
-  const sortedConfigItems = allConfigItems.sort((a, b) => {
-    if (a.importance && b.importance) return a.importance - b.importance;
-    if (a.importance && !b.importance) return -1;
-    if (!a.importance && b.importance) return 1;
-    return 0;
-  });
 
   const getColumnCount = () => {
     switch (screenSize) {
@@ -139,8 +137,14 @@ export default function Home() {
   const numColumns = getColumnCount();
   const columns: ConfigItem[][] = Array.from({ length: numColumns }, () => []);
 
-  sortedConfigItems.forEach((item, index) => {
-    const columnIndex = index % numColumns;
+  // Organize items by column positions based on screen size
+  allConfigItems.forEach((item) => {
+    let columnIndex = 0;
+    if (numColumns === 2) {
+      columnIndex = Math.min(item.col_2_position - 1, 1);
+    } else if (numColumns === 3) {
+      columnIndex = Math.min(item.col_3_position - 1, 2);
+    }
     columns[columnIndex].push(item);
   });
 
