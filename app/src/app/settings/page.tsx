@@ -361,7 +361,7 @@ export default function Settings() {
               {config?.tfl_line_status?.enabled && (
                 <div className="flex flex-col sm:flex-row gap-4">
                   <Select
-                    label="Col 2"
+                    label="Col 2 Position"
                     value={config.tfl_line_status.col_2_position?.toString() || "1"}
                     onChange={(e) => {
                       const col2 = parseInt(e.target.value) || 1;
@@ -373,7 +373,7 @@ export default function Settings() {
                     ]}
                   />
                   <Select
-                    label="Col 3"
+                    label="Col 3 Position"
                     value={config.tfl_line_status.col_3_position?.toString() || "1"}
                     onChange={(e) => {
                       const col3 = parseInt(e.target.value) || 1;
