@@ -106,6 +106,8 @@ NTFY_SERVER=
    docker compose up -d
    ```
 
+   Optional: If you want to remain on the old frontend experience, update your `docker-compose.yaml` to use the `stable-beta` tag for all services before bringing containers up.
+
 5. **Verify startup:**
 
    ```sh
@@ -163,6 +165,34 @@ environment:
 2. **Configure your preferences:**
    - Add frequently used stations
    - Set up scheduled journeys
+
+### Column & Importance Settings
+
+- **Fields on configurable items:**
+   - `col_2_position` (int): column index for 2-column layout (allowed values: `1` or `2`).
+   - `col_3_position` (int): column index for 3-column layout (allowed values: `1`, `2`, or `3`).
+   - `importance` (int): ordering within the column (1 = highest priority).
+
+- **Layout behavior:**
+   - **Mobile (1 column):** everything appears in one column and is ordered by `importance`.
+   - **Tablet (2 columns):** items assigned by `col_2_position`, then ordered within each column by `importance`.
+   - **Desktop (3 columns):** items assigned by `col_3_position`, then ordered within each column by `importance`.
+
+- **Defaults & UI:** The Settings page exposes three dropdowns per item (Col 2, Col 3, Importance). New items default to `col_2_position: 1`, `col_3_position: 1`, and `importance: 1`.
+
+- **API models / files:** Look for the DTOs/DAOs at `api/src/DTOs/config/config_dto.py` and `api/src/DAOs/config/config_dao.py`.
+
+- **Example JSON:**
+
+```json
+{
+   "stationName": "Paddington",
+   "stationId": "940GZZLUPAD",
+   "col_2_position": 1,
+   "col_3_position": 2,
+   "importance": 1
+}
+```
 
 ---
 

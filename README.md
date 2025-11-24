@@ -119,6 +119,34 @@ python src/main.py
 - **Comprehensive Type Safety**: Full TypeScript/Python type annotations throughout the codebase
 - **Enhanced Configuration**: Dynamic config management with partial updates and component ordering
 
+**Column & Importance Settings**
+
+- **What they are:** Each configurable dashboard item has two column-position settings and an importance value:
+  - `col_2_position`: which column the item appears in when a 2-column layout is used (allowed values: `1` or `2`).
+  - `col_3_position`: which column the item appears in when a 3-column layout is used (allowed values: `1`, `2`, or `3`).
+  - `importance`: numeric priority used to order items within a column (1 = highest priority).
+
+- **Behavior:**
+  - Mobile (1 column): all items appear in a single column and are ordered by `importance`.
+  - Tablet (2 columns): items are placed by `col_2_position` and then ordered within each column by `importance`.
+  - Desktop (3 columns): items are placed by `col_3_position` and then ordered within each column by `importance`.
+
+- **Defaults:** All three fields default to `1` so new items appear in the first column/top by default.
+
+- **Where to change:** Settings are available in the frontend Settings page for each item (two dropdowns for column positions and one dropdown for importance). The API models and DAOs are defined in `api/src/DTOs/config/config_dto.py` and `api/src/DAOs/config/config_dao.py`.
+
+- **Example item (JSON):**
+
+```json
+{
+  "stationName": "Paddington",
+  "stationId": "940GZZLUPAD",
+  "col_2_position": 1,
+  "col_3_position": 2,
+  "importance": 1
+}
+```
+
 ### Frontend Routes
 
 - `/`: Main dashboard with live departures and arrivals
