@@ -9,6 +9,7 @@ class TubeRouteDTO(BaseModel):
     destinationNaPTANOrATCO: str
     col_2_position: int = 1
     col_3_position: int = 1
+    importance: int = 1
 
 
 class RailDepartureDTO(BaseModel):
@@ -18,6 +19,7 @@ class RailDepartureDTO(BaseModel):
     destinationCode: str
     col_2_position: int = 1
     col_3_position: int = 1
+    importance: int = 1
 
 
 class TubeDepartureDTO(BaseModel):
@@ -25,12 +27,14 @@ class TubeDepartureDTO(BaseModel):
     stationId: str
     col_2_position: int = 1
     col_3_position: int = 1
+    importance: int = 1
 
 
 class TflLineStatusDTO(BaseModel):
     enabled: bool = False
     col_2_position: int = 1
     col_3_position: int = 1
+    importance: int = 1
 
 
 class ConfigDTO(BaseModel):

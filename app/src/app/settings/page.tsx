@@ -30,6 +30,10 @@ export default function Settings() {
     updateDepartureColumnPositions,
     updateTubeDepartureColumnPositions,
     updateTflLineStatusColumnPositions,
+    updateRouteImportance,
+    updateDepartureImportance,
+    updateTubeDepartureImportance,
+    updateTflLineStatusImportance,
     setTflLineStatusEnabled,
   } = useConfigStore((state) => state);
 
@@ -41,6 +45,15 @@ export default function Settings() {
       /* errors are handled in store */
     });
   }, [fetchConfig]);
+
+  // Calculate total items for importance ordering
+  const totalItems = Math.max(
+    (config?.tfl_best_routes?.length || 0) +
+      (config?.rail_departures?.length || 0) +
+      (config?.tube_departures?.length || 0) +
+      (config?.tfl_line_status?.enabled ? 1 : 0),
+    1,
+  );
 
 
 
@@ -221,8 +234,11 @@ export default function Settings() {
                 </span>
               )}
               onUpdateColumnPositions={(index, col2, col3) => updateRouteColumnPositions(index, col2, col3)}
+              onUpdateImportance={updateRouteImportance}
               onRemoveItem={removeRoute}
               getColumnPositions={(route) => ({ col_2_position: route.col_2_position, col_3_position: route.col_3_position })}
+              getImportance={(route) => route.importance}
+              totalItems={totalItems}
             />
           </SectionCard>
 
@@ -282,8 +298,11 @@ export default function Settings() {
                 </div>
               )}
               onUpdateColumnPositions={(index, col2, col3) => updateDepartureColumnPositions(index, col2, col3)}
+              onUpdateImportance={updateDepartureImportance}
               onRemoveItem={removeDeparture}
               getColumnPositions={(departure) => ({ col_2_position: departure.col_2_position, col_3_position: departure.col_3_position })}
+              getImportance={(departure) => departure.importance}
+              totalItems={totalItems}
             />
           </SectionCard>
 
@@ -322,8 +341,11 @@ export default function Settings() {
                 </div>
               )}
               onUpdateColumnPositions={(index, col2, col3) => updateTubeDepartureColumnPositions(index, col2, col3)}
+              onUpdateImportance={updateTubeDepartureImportance}
               onRemoveItem={removeTubeDeparture}
               getColumnPositions={(departure) => ({ col_2_position: departure.col_2_position, col_3_position: departure.col_3_position })}
+              getImportance={(departure) => departure.importance}
+              totalItems={totalItems}
             />
           </SectionCard>
 
@@ -339,7 +361,7 @@ export default function Settings() {
               {config?.tfl_line_status?.enabled && (
                 <div className="flex flex-col sm:flex-row gap-4">
                   <Select
-                    label="Col 2 Position"
+                    label="Col 2"
                     value={config.tfl_line_status.col_2_position?.toString() || "1"}
                     onChange={(e) => {
                       const col2 = parseInt(e.target.value) || 1;
@@ -351,7 +373,7 @@ export default function Settings() {
                     ]}
                   />
                   <Select
-                    label="Col 3 Position"
+                    label="Col 3"
                     value={config.tfl_line_status.col_3_position?.toString() || "1"}
                     onChange={(e) => {
                       const col3 = parseInt(e.target.value) || 1;
@@ -362,6 +384,27 @@ export default function Settings() {
                       { value: "2", label: "2" },
                       { value: "3", label: "3" },
                     ]}
+                  />
+                  <Select
+                    label="Importance"
+                    value={config.tfl_line_status.importance?.toString() || "1"}
+                    onChange={(e) =>
+                      updateTflLineStatusImportance(parseInt(e.target.value) || 1)
+                    }
+                    options={Array.from(
+                      { length: Math.max(totalItems || 1, 1) },
+                      (_, i) => {
+                        const maxItems = Math.max(totalItems || 1, 1);
+                        const value = (i + 1).toString();
+                        const label =
+                          i === 0
+                            ? `${i + 1} (Highest)`
+                            : i === maxItems - 1
+                              ? `${i + 1} (Lowest)`
+                              : `${i + 1}`;
+                        return { value, label };
+                      },
+                    )}
                   />
                 </div>
               )}

@@ -38,7 +38,7 @@ def test_get_config_success(test_app):
         "refresh_timer": 300,
         "tfl_best_routes": [],
         "tube_departures": [],
-        "tfl_line_status": {"enabled": False, "importance": 1},
+        "tfl_line_status": {"enabled": False, "col_2_position": 1, "col_3_position": 1, "importance": 1},
     }
 
 

@@ -114,6 +114,8 @@ def test_get_config_happy():
                 "origin": "A",
                 "originNaPTANOrATCO": "naptanA",
                 "destination": "B",
+                "col_2_position": 1,
+                "col_3_position": 1,
                 "importance": 1,
                 "destinationNaPTANOrATCO": "naptanB",
             }
@@ -122,6 +124,8 @@ def test_get_config_happy():
             {
                 "origin": "C",
                 "originCode": "codeC",
+                "col_2_position": 1,
+                "col_3_position": 1,
                 "importance": 1,
                 "destination": "D",
                 "destinationCode": "codeD",
@@ -130,12 +134,16 @@ def test_get_config_happy():
         "tube_departures": [
             {
                 "stationName": "Paddington",
-                "importance": 1,
                 "stationId": "940GZZLUPAD",
+                "col_2_position": 1,
+                "col_3_position": 1,
+                "importance": 1,
             }
         ],
         "tfl_line_status": {
             "enabled": True,
+            "col_2_position": 1,
+            "col_3_position": 1,
             "importance": 1,
         },
         "refresh_timer": 65,

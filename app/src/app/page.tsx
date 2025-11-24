@@ -20,14 +20,15 @@ import {
 } from "./stores/config";
 
 type ConfigItem =
-  | { type: "rail_departure"; item: DepartureConfig; col_2_position: number; col_3_position: number }
-  | { type: "tfl_best_route"; item: BestRoute; col_2_position: number; col_3_position: number }
-  | { type: "tube_departure"; item: TubeDeparture; col_2_position: number; col_3_position: number }
+  | { type: "rail_departure"; item: DepartureConfig; col_2_position: number; col_3_position: number; importance: number }
+  | { type: "tfl_best_route"; item: BestRoute; col_2_position: number; col_3_position: number; importance: number }
+  | { type: "tube_departure"; item: TubeDeparture; col_2_position: number; col_3_position: number; importance: number }
   | {
       type: "tfl_line_status";
       item: TflLineStatusConfig;
       col_2_position: number;
       col_3_position: number;
+      importance: number;
     };
 
 const isConfigBlank = (config: ConfigType | null) => {
@@ -96,18 +97,21 @@ export default function Home() {
           item,
           col_2_position: item.col_2_position,
           col_3_position: item.col_3_position,
+          importance: item.importance,
         })),
         ...config.tfl_best_routes.map((item) => ({
           type: "tfl_best_route" as const,
           item,
           col_2_position: item.col_2_position,
           col_3_position: item.col_3_position,
+          importance: item.importance,
         })),
         ...config.tube_departures.map((item) => ({
           type: "tube_departure" as const,
           item,
           col_2_position: item.col_2_position,
           col_3_position: item.col_3_position,
+          importance: item.importance,
         })),
       ]
     : [];
@@ -118,6 +122,7 @@ export default function Home() {
       item: config.tfl_line_status,
       col_2_position: config.tfl_line_status.col_2_position,
       col_3_position: config.tfl_line_status.col_3_position,
+      importance: config.tfl_line_status.importance,
     });
   }
 
@@ -146,6 +151,11 @@ export default function Home() {
       columnIndex = Math.min(item.col_3_position - 1, 2);
     }
     columns[columnIndex].push(item);
+  });
+
+  // Sort items within each column by importance
+  columns.forEach(column => {
+    column.sort((a, b) => a.importance - b.importance);
   });
 
   const renderConfigItem = (configItem: ConfigItem, key: string) => {

@@ -8,6 +8,7 @@ export type BestRoute = {
   destinationNaPTANOrATCO: string;
   col_2_position: number;
   col_3_position: number;
+  importance: number;
 };
 
 export type DepartureConfig = {
@@ -17,6 +18,7 @@ export type DepartureConfig = {
   destinationCode: string;
   col_2_position: number;
   col_3_position: number;
+  importance: number;
 };
 
 export type TubeDeparture = {
@@ -24,12 +26,14 @@ export type TubeDeparture = {
   stationId: string;
   col_2_position: number;
   col_3_position: number;
+  importance: number;
 };
 
 export type TflLineStatusConfig = {
   enabled: boolean;
   col_2_position: number;
   col_3_position: number;
+  importance: number;
 };
 
 export type ConfigType = {
@@ -48,9 +52,9 @@ export type ConfigState = {
 export type ConfigActions = {
   fetchConfig: () => Promise<void>;
   forceRefresh: () => void;
-  addRoute: (route: Omit<BestRoute, "col_2_position" | "col_3_position">) => void;
-  addDeparture: (departure: Omit<DepartureConfig, "col_2_position" | "col_3_position">) => void;
-  addTubeDeparture: (departure: Omit<TubeDeparture, "col_2_position" | "col_3_position">) => void;
+  addRoute: (route: Omit<BestRoute, "col_2_position" | "col_3_position" | "importance">) => void;
+  addDeparture: (departure: Omit<DepartureConfig, "col_2_position" | "col_3_position" | "importance">) => void;
+  addTubeDeparture: (departure: Omit<TubeDeparture, "col_2_position" | "col_3_position" | "importance">) => void;
   removeRoute: (index: number) => void;
   removeDeparture: (index: number) => void;
   removeTubeDeparture: (index: number) => void;
@@ -58,6 +62,10 @@ export type ConfigActions = {
   updateDepartureColumnPositions: (index: number, col2: number, col3: number) => void;
   updateTubeDepartureColumnPositions: (index: number, col2: number, col3: number) => void;
   updateTflLineStatusColumnPositions: (col2: number, col3: number) => void;
+  updateRouteImportance: (index: number, importance: number) => void;
+  updateDepartureImportance: (index: number, importance: number) => void;
+  updateTubeDepartureImportance: (index: number, importance: number) => void;
+  updateTflLineStatusImportance: (importance: number) => void;
   setTflLineStatusEnabled: (enabled: boolean) => void;
   setRefreshTimer: (timer: number) => void;
   saveConfig: () => Promise<void>;
@@ -71,7 +79,7 @@ export const initConfigStore = (): ConfigState => {
       tfl_best_routes: [],
       rail_departures: [],
       tube_departures: [],
-      tfl_line_status: { enabled: false, col_2_position: 1, col_3_position: 1 },
+      tfl_line_status: { enabled: false, col_2_position: 1, col_3_position: 1, importance: 1 },
       refresh_timer: APP_CONSTANTS.DEFAULT_REFRESH_TIMER,
     },
     lastRefreshTimeStamp: "",
@@ -83,7 +91,7 @@ export const defaultInitState: ConfigState = {
     tfl_best_routes: [],
     rail_departures: [],
     tube_departures: [],
-    tfl_line_status: { enabled: false, col_2_position: 1, col_3_position: 1 },
+    tfl_line_status: { enabled: false, col_2_position: 1, col_3_position: 1, importance: 1 },
     refresh_timer: APP_CONSTANTS.DEFAULT_REFRESH_TIMER,
   },
   lastRefreshTimeStamp: "",
@@ -113,7 +121,7 @@ export const createConfigStore = (
     },
     addRoute: (route) => {
       const state = get();
-      const newRoute = { ...route, col_2_position: 1, col_3_position: 1 };
+      const newRoute = { ...route, col_2_position: 1, col_3_position: 1, importance: 1 };
       set({
         config: {
           ...state.config,
@@ -123,7 +131,7 @@ export const createConfigStore = (
     },
     addDeparture: (departure) => {
       const state = get();
-      const newDeparture = { ...departure, col_2_position: 1, col_3_position: 1 };
+      const newDeparture = { ...departure, col_2_position: 1, col_3_position: 1, importance: 1 };
       set({
         config: {
           ...state.config,
@@ -133,7 +141,7 @@ export const createConfigStore = (
     },
     addTubeDeparture: (departure) => {
       const state = get();
-      const newDeparture = { ...departure, col_2_position: 1, col_3_position: 1 };
+      const newDeparture = { ...departure, col_2_position: 1, col_3_position: 1, importance: 1 };
       set({
         config: {
           ...state.config,
@@ -213,6 +221,48 @@ export const createConfigStore = (
         config: {
           ...state.config,
           tfl_line_status: { ...state.config.tfl_line_status, col_2_position: col2, col_3_position: col3 },
+        },
+      });
+    },
+    updateRouteImportance: (index, importance) => {
+      const state = get();
+      const routes = [...state.config.tfl_best_routes];
+      routes[index] = { ...routes[index], importance };
+      set({
+        config: {
+          ...state.config,
+          tfl_best_routes: routes,
+        },
+      });
+    },
+    updateDepartureImportance: (index, importance) => {
+      const state = get();
+      const departures = [...state.config.rail_departures];
+      departures[index] = { ...departures[index], importance };
+      set({
+        config: {
+          ...state.config,
+          rail_departures: departures,
+        },
+      });
+    },
+    updateTubeDepartureImportance: (index, importance) => {
+      const state = get();
+      const departures = [...state.config.tube_departures];
+      departures[index] = { ...departures[index], importance };
+      set({
+        config: {
+          ...state.config,
+          tube_departures: departures,
+        },
+      });
+    },
+    updateTflLineStatusImportance: (importance) => {
+      const state = get();
+      set({
+        config: {
+          ...state.config,
+          tfl_line_status: { ...state.config.tfl_line_status, importance },
         },
       });
     },
