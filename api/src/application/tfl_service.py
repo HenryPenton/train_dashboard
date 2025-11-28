@@ -1,7 +1,11 @@
 from src.adapters.clients.tflclient import TFLClient
+from src.domain.tfl.arrivals.arrivals import ArrivalsList
 from src.domain.tfl.lines.lines import LineStatusModel, LineStatusModelList
 from src.domain.tfl.routes.routes import Route, RoutesList
-from src.domain.tfl.arrivals.arrivals import ArrivalsList
+from src.shared.models.preference_types import (
+    AccessibilityPreference,
+    JourneyPreference,
+)
 
 
 class TFLService:
@@ -9,11 +13,20 @@ class TFLService:
         self.client = client
         self.logger = logger
 
-    async def get_best_route(self, from_station: str, to_station: str) -> Route:
-        self.logger.info(f"Requesting best route from {from_station} to {to_station}")
-        route_DAOs = await self.client.get_possible_route_journeys(
-            from_station, to_station
+    async def get_best_route(
+        self,
+        from_station: str,
+        to_station: str,
+        accessibility_preference: AccessibilityPreference = None,
+        journey_preference: JourneyPreference = None,
+    ) -> Route:
+        self.logger.info(
+            f"Requesting best route from {from_station} to {to_station} with accessibility preference: {accessibility_preference} and journey preference: {journey_preference}"
         )
+        route_DAOs = await self.client.get_possible_route_journeys(
+            from_station, to_station, accessibility_preference, journey_preference
+        )
+
         self.logger.debug(f"Received {len(route_DAOs)} possible journeys")
         route_models = RoutesList(route_DAOs, logger=self.logger)
         best = route_models.get_best_route()
@@ -24,7 +37,9 @@ class TFLService:
         self.logger.info("Requesting all TfL line statuses")
         status_DAOs = await self.client.get_all_lines_status()
         self.logger.debug(f"Received {len(status_DAOs)} line status DAOs")
-        model_list = LineStatusModelList(status_DAOs, logger=self.logger).get_line_statuses()
+        model_list = LineStatusModelList(
+            status_DAOs, logger=self.logger
+        ).get_line_statuses()
         self.logger.info("Returning line statuses")
         return model_list
 

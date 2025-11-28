@@ -11,7 +11,7 @@ class DummyTflClient:
     def __init__(self):
         pass
 
-    async def get_possible_route_journeys(self, from_station, to_station):
+    async def get_possible_route_journeys(self, from_station, to_station, accessibility_preference=None, journey_preference=None):
         return [
             JourneyDAO(
                 **{
@@ -32,7 +32,7 @@ class DummyTflClient:
         ]
 
     async def get_all_lines_status(self):
-        # Return a list of line dicts as expected by LineDAO
+
         return [
             LineDAO(
                 **{
@@ -71,7 +71,7 @@ class FailingTflClient:
     async def get_all_lines_status(self):
         raise Exception("TFL API error")
 
-    async def get_possible_route_journeys(self, from_station, to_station):
+    async def get_possible_route_journeys(self, from_station, to_station, accessibility_preference=None, journey_preference=None):
         raise Exception("TFL route error")
 
     async def get_arrivals_at_station(self, station_id):
@@ -81,7 +81,7 @@ class FailingTflClient:
 def test_get_line_status():
     logger = DummyLogger()
     service = TFLService(DummyTflClient(), logger=logger)
-    # get_line_status is async, so we need to run it in an event loop
+
     result = asyncio.run(service.get_line_statuses())
     assert (result[0].as_dict()) == {
         "name": "Central",
@@ -103,6 +103,7 @@ def test_get_line_status_error():
 def test_get_best_route():
     logger = DummyLogger()
     service = TFLService(DummyTflClient(), logger=logger)
+
     result = asyncio.run(service.get_best_route("Oxford Circus", "Liverpool Street"))
     assert result.as_dict() == {
         "duration": 15,
@@ -118,13 +119,15 @@ def test_get_best_route():
             }
         ],
     }
+    result2 = asyncio.run(service.get_best_route("Oxford Circus", "Liverpool Street", accessibility_preference=None, journey_preference=None))
+    assert result2.as_dict()["duration"] == 15
 
 
 def test_get_best_route_error():
     logger = DummyLogger()
     service = TFLService(FailingTflClient(), logger=logger)
     try:
-        asyncio.run(service.get_best_route("Oxford Circus", "Liverpool Street"))
+        asyncio.run(service.get_best_route("Oxford Circus", "Liverpool Street", accessibility_preference=None, journey_preference=None))
         assert False, "Expected Exception"
     except Exception as e:
         assert str(e) == "TFL route error"

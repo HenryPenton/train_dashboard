@@ -1,11 +1,22 @@
+import httpx
+from src.DAOs.tfl.arrival_dao import ArrivalDAO
 from src.DAOs.tfl.line_dao import LineDAO
 from src.DAOs.tfl.route_dao import JourneyDAO
-from src.DAOs.tfl.arrival_dao import ArrivalDAO
-import httpx
+from src.shared.models.preference_types import (
+    AccessibilityPreference,
+    JourneyPreference,
+)
 
 
 class TFLClientError(Exception):
     pass
+
+
+def build_query_params(params: dict) -> str:
+    query_parts = []
+    for key, value in params.items():
+        query_parts.append(f"{key}={value}")
+    return "&".join(query_parts)
 
 
 class TFLClient:
@@ -14,10 +25,26 @@ class TFLClient:
         self.api_root = "https://api.tfl.gov.uk"
 
     async def get_possible_route_journeys(
-        self, from_station: str, to_station: str
+        self,
+        from_station: str,
+        to_station: str,
+        accessibility_preference: AccessibilityPreference = None,
+        journey_preference: JourneyPreference = None,
     ) -> list[JourneyDAO]:
-        url = f"{self.api_root}/Journey/JourneyResults/{from_station}/to/{to_station}"
+        base_url = (
+            f"{self.api_root}/Journey/JourneyResults/{from_station}/to/{to_station}"
+        )
+
+        params = {}
+        if accessibility_preference:
+            params["accessibilityPreference"] = accessibility_preference.value
+        if journey_preference:
+            params["journeyPreference"] = journey_preference.value
+
+        query = build_query_params(params)
+        url = f"{base_url}?{query}" if query else base_url
         try:
+            print(f"Requesting URL: {url}")
             response = await self.client.get(url)
             response.raise_for_status()
             data = response.json().get("journeys", [])

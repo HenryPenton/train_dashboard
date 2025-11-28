@@ -4,7 +4,7 @@ from src.adapters.routers import tfl_handlers_router as tfl_handler
 
 
 class DummyTFLService:
-    async def get_best_route(self, from_station, to_station):
+    async def get_best_route(self, from_station, to_station, accessibility_preference=None, journey_preference=None):
         class DummyRoute:
             def as_dict(self):
                 return {
@@ -95,9 +95,10 @@ def test_get_line_status():
     ]
 
 
+
 def test_get_best_route_error():
     class FailingTFLService:
-        async def get_best_route(self, from_station, to_station):
+        async def get_best_route(self, from_station, to_station, accessibility_preference=None, journey_preference=None):
             raise Exception("fail")
 
         async def get_line_statuses(self):
@@ -114,7 +115,7 @@ def test_get_best_route_error():
 
 def test_get_line_status_error():
     class FailingTFLService:
-        async def get_best_route(self, from_station, to_station):
+        async def get_best_route(self, from_station, to_station, accessibility_preference=None, journey_preference=None):
             return {}
 
         async def get_line_statuses(self):
@@ -164,7 +165,7 @@ def test_get_station_arrivals():
 
 def test_get_station_arrivals_error():
     class FailingTFLService:
-        async def get_best_route(self, from_station, to_station):
+        async def get_best_route(self, from_station, to_station, accessibility_preference=None, journey_preference=None):
             return {}
 
         async def get_line_statuses(self):
