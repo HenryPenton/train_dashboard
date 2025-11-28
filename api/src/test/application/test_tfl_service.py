@@ -11,7 +11,13 @@ class DummyTflClient:
     def __init__(self):
         pass
 
-    async def get_possible_route_journeys(self, from_station, to_station, accessibility_preference=None, journey_preference=None):
+    async def get_possible_route_journeys(
+        self,
+        from_station,
+        to_station,
+        accessibility_preference=None,
+        journey_preference=None,
+    ):
         return [
             JourneyDAO(
                 **{
@@ -32,7 +38,6 @@ class DummyTflClient:
         ]
 
     async def get_all_lines_status(self):
-
         return [
             LineDAO(
                 **{
@@ -71,7 +76,13 @@ class FailingTflClient:
     async def get_all_lines_status(self):
         raise Exception("TFL API error")
 
-    async def get_possible_route_journeys(self, from_station, to_station, accessibility_preference=None, journey_preference=None):
+    async def get_possible_route_journeys(
+        self,
+        from_station,
+        to_station,
+        accessibility_preference=None,
+        journey_preference=None,
+    ):
         raise Exception("TFL route error")
 
     async def get_arrivals_at_station(self, station_id):
@@ -119,7 +130,14 @@ def test_get_best_route():
             }
         ],
     }
-    result2 = asyncio.run(service.get_best_route("Oxford Circus", "Liverpool Street", accessibility_preference=None, journey_preference=None))
+    result2 = asyncio.run(
+        service.get_best_route(
+            "Oxford Circus",
+            "Liverpool Street",
+            accessibility_preference=None,
+            journey_preference=None,
+        )
+    )
     assert result2.as_dict()["duration"] == 15
 
 
@@ -127,7 +145,14 @@ def test_get_best_route_error():
     logger = DummyLogger()
     service = TFLService(FailingTflClient(), logger=logger)
     try:
-        asyncio.run(service.get_best_route("Oxford Circus", "Liverpool Street", accessibility_preference=None, journey_preference=None))
+        asyncio.run(
+            service.get_best_route(
+                "Oxford Circus",
+                "Liverpool Street",
+                accessibility_preference=None,
+                journey_preference=None,
+            )
+        )
         assert False, "Expected Exception"
     except Exception as e:
         assert str(e) == "TFL route error"
