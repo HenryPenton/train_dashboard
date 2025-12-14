@@ -3,8 +3,8 @@ annotated-types==0.7.0
 anyio==4.12.0
 certifi==2025.11.12
 click==8.3.1
-coverage==7.12.0
-fastapi==0.124.0
+coverage==7.13.0
+fastapi==0.124.4
 fastapi-cli==0.0.16
 h11==0.16.0
 httpcore==1.0.9
