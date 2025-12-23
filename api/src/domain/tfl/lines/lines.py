@@ -1,15 +1,32 @@
-from typing import List
-from src.DAOs.tfl.line_dao import LineDAO, LineStatusDAO
+from typing import List, Optional
+
+from src.DAOs.tfl.line_dao import LineDAO
+
+
+class StatusItem:
+    """Represents a single status with its optional reason."""
+
+    def __init__(self, status: str, reason: Optional[str] = None):
+        self.status = status
+        self.reason = reason
+
+    def as_dict(self) -> dict:
+        return {
+            "status": self.status,
+            "reason": self.reason,
+        }
 
 
 class LineStatusModel:
     def __init__(self, line: LineDAO, logger):
         self.logger = logger
-        self.statusList = self._get_status_list(line)
+        self.statuses = self._get_statuses(line)
         self.name = self._get_name(line)
         self.statusSeverity = self._get_status_severity(line)
         self.logger.debug(
-            f"LineStatusModel created for {self.name}: status={self.statusList}, severity={self.statusSeverity}"
+            f"LineStatusModel created for {self.name}: statuses={
+                [s.as_dict() for s in self.statuses]
+            }, severity={self.statusSeverity}"
         )
 
     @staticmethod
@@ -25,21 +42,27 @@ class LineStatusModel:
             )
 
     @staticmethod
-    def _get_status_list(line: List[LineStatusDAO]) -> list[str]:
+    def _get_statuses(line: LineDAO) -> List[StatusItem]:
+        """Extract statuses with their reasons from line statuses."""
         line_statuses = line.line_statuses
         if line_statuses:
-            status_list = []
+            # Dedupe by (status_description, reason) tuple to keep separate entries
+            # for same status with different reasons
+            seen = set()
+            result = []
             for s in line_statuses:
-                status_list.append(s.statusSeverityDescription)
-
-            return list(set(status_list))
+                key = (s.statusSeverityDescription, s.reason)
+                if key not in seen:
+                    seen.add(key)
+                    result.append(StatusItem(s.statusSeverityDescription, s.reason))
+            return result
         return []
 
     def as_dict(self) -> dict:
         self.logger.debug(f"Converting LineStatusModel for {self.name} to dict")
         return {
             "name": self.name,
-            "statusList": self.statusList,
+            "statuses": [s.as_dict() for s in self.statuses],
             "statusSeverity": self.statusSeverity,
         }
 

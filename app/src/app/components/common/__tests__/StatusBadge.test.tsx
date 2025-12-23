@@ -1,5 +1,4 @@
-import React from "react";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import StatusBadge from "../StatusBadge";
 
 // Mock the color mapping utilities
@@ -140,5 +139,386 @@ describe("StatusBadge", () => {
 
     // Should still render with fallback styling
     expect(statusBadge).toHaveClass("text-gray-500", "border-gray-500/50");
+  });
+
+  it("displays modal trigger when reason is provided", () => {
+    const status = "Minor Delays";
+    const severity = 6;
+    const reason =
+      "Central Line: Minor delays due to an earlier signal failure.";
+
+    render(<StatusBadge status={status} severity={severity} reason={reason} />);
+
+    const statusBadge = screen.getByRole("status");
+    expect(statusBadge).toBeInTheDocument();
+
+    // Check that aria-label indicates tap for details
+    expect(statusBadge).toHaveAttribute(
+      "aria-label",
+      `Service status: ${status}, severity level ${severity}. Tap for details`,
+    );
+
+    // Check that title attribute is set for native tooltip
+    expect(statusBadge).toHaveAttribute("title", reason);
+
+    // Check that cursor-pointer class is applied when reason exists (for modal)
+    expect(statusBadge).toHaveClass("cursor-pointer");
+
+    // Check that badge is keyboard focusable when reason exists
+    expect(statusBadge).toHaveAttribute("tabIndex", "0");
+  });
+
+  it("does not display modal trigger when reason is not provided", () => {
+    const status = "Good Service";
+    const severity = 10;
+
+    render(<StatusBadge status={status} severity={severity} />);
+
+    const statusBadge = screen.getByRole("status");
+    expect(statusBadge).toBeInTheDocument();
+
+    // Check that reason is NOT in aria-label
+    expect(statusBadge).toHaveAttribute(
+      "aria-label",
+      `Service status: ${status}, severity level ${severity}`,
+    );
+
+    // Check that title attribute is not set
+    expect(statusBadge).not.toHaveAttribute("title");
+
+    // Check that cursor-pointer class is NOT applied
+    expect(statusBadge).not.toHaveClass("cursor-pointer");
+
+    // Check that badge is NOT keyboard focusable when no reason
+    expect(statusBadge).not.toHaveAttribute("tabIndex");
+  });
+
+  it("does not display modal trigger when reason is empty string", () => {
+    const status = "Good Service";
+    const severity = 10;
+
+    render(<StatusBadge status={status} severity={severity} reason="" />);
+
+    const statusBadge = screen.getByRole("status");
+    expect(statusBadge).not.toHaveAttribute("title");
+    expect(statusBadge).not.toHaveClass("cursor-pointer");
+  });
+
+  it("does not display modal trigger when reason is null", () => {
+    const status = "Good Service";
+    const severity = 10;
+
+    render(<StatusBadge status={status} severity={severity} reason={null} />);
+
+    const statusBadge = screen.getByRole("status");
+    expect(statusBadge).not.toHaveAttribute("title");
+    expect(statusBadge).not.toHaveClass("cursor-pointer");
+  });
+
+  describe("Modal interactions", () => {
+    const status = "Minor Delays";
+    const severity = 6;
+    const reason =
+      "Central Line: Minor delays due to an earlier signal failure.";
+
+    it("opens modal when badge is clicked", () => {
+      render(
+        <StatusBadge status={status} severity={severity} reason={reason} />,
+      );
+
+      const statusBadge = screen.getByRole("status");
+      fireEvent.click(statusBadge);
+
+      // Modal should be visible
+      const modal = screen.getByRole("dialog");
+      expect(modal).toBeInTheDocument();
+      expect(modal).toHaveAttribute("aria-modal", "true");
+    });
+
+    it("displays the correct reason text in modal content", () => {
+      render(
+        <StatusBadge status={status} severity={severity} reason={reason} />,
+      );
+
+      const statusBadge = screen.getByRole("status");
+      fireEvent.click(statusBadge);
+
+      // Check modal title displays the status
+      const modalTitle = screen.getByRole("heading", { name: status });
+      expect(modalTitle).toBeInTheDocument();
+
+      // Check reason text is displayed in the modal
+      expect(screen.getByText(reason)).toBeInTheDocument();
+    });
+
+    it("closes modal when clicking the backdrop", () => {
+      render(
+        <StatusBadge status={status} severity={severity} reason={reason} />,
+      );
+
+      const statusBadge = screen.getByRole("status");
+      fireEvent.click(statusBadge);
+
+      // Modal should be open
+      const modal = screen.getByRole("dialog");
+      expect(modal).toBeInTheDocument();
+
+      // Click the backdrop (the dialog element itself)
+      fireEvent.click(modal);
+
+      // Modal should be closed
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    });
+
+    it("closes modal when clicking the X close button", () => {
+      render(
+        <StatusBadge status={status} severity={severity} reason={reason} />,
+      );
+
+      const statusBadge = screen.getByRole("status");
+      fireEvent.click(statusBadge);
+
+      // Modal should be open
+      expect(screen.getByRole("dialog")).toBeInTheDocument();
+
+      // Click the X close button (first button with name "Close" - has aria-label)
+      const closeButtons = screen.getAllByRole("button", { name: "Close" });
+      const xCloseButton = closeButtons[0];
+      fireEvent.click(xCloseButton);
+
+      // Modal should be closed
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    });
+
+    it("closes modal when clicking the bottom Close button", () => {
+      render(
+        <StatusBadge status={status} severity={severity} reason={reason} />,
+      );
+
+      const statusBadge = screen.getByRole("status");
+      fireEvent.click(statusBadge);
+
+      // Modal should be open
+      expect(screen.getByRole("dialog")).toBeInTheDocument();
+
+      // Find the bottom "Close" button (text content)
+      const closeButtons = screen.getAllByRole("button", { name: "Close" });
+      // The second close button is the bottom one with text
+      const bottomCloseButton = closeButtons[1];
+      fireEvent.click(bottomCloseButton);
+
+      // Modal should be closed
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    });
+
+    it("does not close modal when clicking inside the modal content", () => {
+      render(
+        <StatusBadge status={status} severity={severity} reason={reason} />,
+      );
+
+      const statusBadge = screen.getByRole("status");
+      fireEvent.click(statusBadge);
+
+      // Modal should be open
+      expect(screen.getByRole("dialog")).toBeInTheDocument();
+
+      // Click on the reason text (inside the modal content)
+      const reasonText = screen.getByText(reason);
+      fireEvent.click(reasonText);
+
+      // Modal should still be open
+      expect(screen.getByRole("dialog")).toBeInTheDocument();
+    });
+
+    it("does not open modal when badge without reason is clicked", () => {
+      render(<StatusBadge status={status} severity={severity} />);
+
+      const statusBadge = screen.getByRole("status");
+      fireEvent.click(statusBadge);
+
+      // Modal should not be visible
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    });
+
+    it("opens modal when Enter key is pressed on badge", () => {
+      render(
+        <StatusBadge status={status} severity={severity} reason={reason} />,
+      );
+
+      const statusBadge = screen.getByRole("status");
+      fireEvent.keyDown(statusBadge, { key: "Enter" });
+
+      // Modal should be visible
+      const modal = screen.getByRole("dialog");
+      expect(modal).toBeInTheDocument();
+    });
+
+    it("opens modal when Space key is pressed on badge", () => {
+      render(
+        <StatusBadge status={status} severity={severity} reason={reason} />,
+      );
+
+      const statusBadge = screen.getByRole("status");
+      fireEvent.keyDown(statusBadge, { key: " " });
+
+      // Modal should be visible
+      const modal = screen.getByRole("dialog");
+      expect(modal).toBeInTheDocument();
+    });
+
+    it("does not open modal when other keys are pressed on badge", () => {
+      render(
+        <StatusBadge status={status} severity={severity} reason={reason} />,
+      );
+
+      const statusBadge = screen.getByRole("status");
+      fireEvent.keyDown(statusBadge, { key: "Tab" });
+
+      // Modal should not be visible
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    });
+
+    it("closes modal when Escape key is pressed", () => {
+      render(
+        <StatusBadge status={status} severity={severity} reason={reason} />,
+      );
+
+      const statusBadge = screen.getByRole("status");
+      fireEvent.click(statusBadge);
+
+      // Modal should be open
+      expect(screen.getByRole("dialog")).toBeInTheDocument();
+
+      // Press Escape key
+      fireEvent.keyDown(document, { key: "Escape" });
+
+      // Modal should be closed
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    });
+
+    it("locks body scroll when modal is open", () => {
+      render(
+        <StatusBadge status={status} severity={severity} reason={reason} />,
+      );
+
+      // Body should not have overflow hidden initially
+      expect(document.body.style.overflow).not.toBe("hidden");
+
+      const statusBadge = screen.getByRole("status");
+      fireEvent.click(statusBadge);
+
+      // Body should have overflow hidden when modal is open
+      expect(document.body.style.overflow).toBe("hidden");
+    });
+
+    it("restores body scroll when modal is closed", () => {
+      render(
+        <StatusBadge status={status} severity={severity} reason={reason} />,
+      );
+
+      const statusBadge = screen.getByRole("status");
+      fireEvent.click(statusBadge);
+
+      // Modal should be open
+      expect(screen.getByRole("dialog")).toBeInTheDocument();
+      expect(document.body.style.overflow).toBe("hidden");
+
+      // Close the modal
+      const closeButtons = screen.getAllByRole("button", { name: "Close" });
+      fireEvent.click(closeButtons[0]);
+
+      // Body scroll should be restored
+      expect(document.body.style.overflow).not.toBe("hidden");
+    });
+
+    it("has type='button' on both close buttons", () => {
+      render(
+        <StatusBadge status={status} severity={severity} reason={reason} />,
+      );
+
+      const statusBadge = screen.getByRole("status");
+      fireEvent.click(statusBadge);
+
+      const closeButtons = screen.getAllByRole("button", { name: "Close" });
+
+      // Both close buttons should have type="button"
+      expect(closeButtons[0]).toHaveAttribute("type", "button");
+      expect(closeButtons[1]).toHaveAttribute("type", "button");
+    });
+
+    it("moves focus to close button when modal opens", () => {
+      render(
+        <StatusBadge status={status} severity={severity} reason={reason} />,
+      );
+
+      const statusBadge = screen.getByRole("status");
+      fireEvent.click(statusBadge);
+
+      // Focus should be on the X close button (first close button)
+      const closeButtons = screen.getAllByRole("button", { name: "Close" });
+      expect(closeButtons[0]).toHaveFocus();
+    });
+
+    it("returns focus to badge when modal closes", () => {
+      render(
+        <StatusBadge status={status} severity={severity} reason={reason} />,
+      );
+
+      const statusBadge = screen.getByRole("status");
+      fireEvent.click(statusBadge);
+
+      // Modal should be open
+      expect(screen.getByRole("dialog")).toBeInTheDocument();
+
+      // Close the modal
+      const closeButtons = screen.getAllByRole("button", { name: "Close" });
+      fireEvent.click(closeButtons[0]);
+
+      // Focus should return to the badge
+      expect(statusBadge).toHaveFocus();
+    });
+
+    it("traps focus within modal - Tab from last element goes to first", () => {
+      render(
+        <StatusBadge status={status} severity={severity} reason={reason} />,
+      );
+
+      const statusBadge = screen.getByRole("status");
+      fireEvent.click(statusBadge);
+
+      // Get all close buttons (X button and bottom Close button)
+      const closeButtons = screen.getAllByRole("button", { name: "Close" });
+      const bottomCloseButton = closeButtons[1];
+
+      // Focus the last focusable element (bottom Close button)
+      bottomCloseButton.focus();
+      expect(bottomCloseButton).toHaveFocus();
+
+      // Press Tab - should wrap to first element (X close button)
+      fireEvent.keyDown(document, { key: "Tab" });
+
+      expect(closeButtons[0]).toHaveFocus();
+    });
+
+    it("traps focus within modal - Shift+Tab from first element goes to last", () => {
+      render(
+        <StatusBadge status={status} severity={severity} reason={reason} />,
+      );
+
+      const statusBadge = screen.getByRole("status");
+      fireEvent.click(statusBadge);
+
+      // Get all close buttons (X button and bottom Close button)
+      const closeButtons = screen.getAllByRole("button", { name: "Close" });
+      const xCloseButton = closeButtons[0];
+
+      // Focus should already be on X close button (first element)
+      expect(xCloseButton).toHaveFocus();
+
+      // Press Shift+Tab - should wrap to last element (bottom Close button)
+      fireEvent.keyDown(document, { key: "Tab", shiftKey: true });
+
+      expect(closeButtons[1]).toHaveFocus();
+    });
   });
 });

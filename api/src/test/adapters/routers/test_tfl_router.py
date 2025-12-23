@@ -29,7 +29,7 @@ class DummyTFLService:
             def as_dict(self):
                 return {
                     "name": "Central",
-                    "statusList": ["Good Service"],
+                    "statuses": [{"status": "Good Service", "reason": None}],
                     "statusSeverity": 10,
                 }
 
@@ -91,7 +91,7 @@ def test_get_line_status():
     response = client.get("/tfl/line-status")
     assert response.status_code == 200
     assert response.json() == [
-        {"name": "Central", "statusList": ["Good Service"], "statusSeverity": 10}
+        {"name": "Central", "statuses": [{"status": "Good Service", "reason": None}], "statusSeverity": 10}
     ]
 
 
