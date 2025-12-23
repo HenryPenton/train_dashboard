@@ -43,16 +43,19 @@ class LineStatusModel:
 
     @staticmethod
     def _get_statuses(line: LineDAO) -> List[StatusItem]:
-        """Extract unique statuses with their reasons from line statuses."""
+        """Extract statuses with their reasons from line statuses."""
         line_statuses = line.line_statuses
         if line_statuses:
-            # Use dict to dedupe by status description while keeping first reason
-            seen_statuses = {}
+            # Dedupe by (status_description, reason) tuple to keep separate entries
+            # for same status with different reasons
+            seen = set()
+            result = []
             for s in line_statuses:
-                status_desc = s.statusSeverityDescription
-                if status_desc not in seen_statuses:
-                    seen_statuses[status_desc] = StatusItem(status_desc, s.reason)
-            return list(seen_statuses.values())
+                key = (s.statusSeverityDescription, s.reason)
+                if key not in seen:
+                    seen.add(key)
+                    result.append(StatusItem(s.statusSeverityDescription, s.reason))
+            return result
         return []
 
     def as_dict(self) -> dict:

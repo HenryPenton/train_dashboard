@@ -99,7 +99,9 @@ class TestLineStatus:
             == "Northern Line: Part suspended between Moorgate and Kennington due to planned engineering work."
         )
 
-    def test_two_same_statuses(self):
+    def test_two_same_statuses_without_reasons_deduped(self):
+        """When multiple statuses have the same description and no reasons,
+        they should be deduplicated."""
         line = LineDAO(
             **{
                 "name": "Mildmay",
@@ -113,10 +115,76 @@ class TestLineStatus:
         logger = DummyLogger()
         result = LineStatusModel(line, logger=logger)
         statuses = result.as_dict()["statuses"]
-        status_names = {s["status"] for s in statuses}
-        assert status_names == {"Part Closure", "Good Service"}
+        status_names = [s["status"] for s in statuses]
+        # Should dedupe to just one Part Closure and one Good Service
+        assert status_names.count("Part Closure") == 1
+        assert status_names.count("Good Service") == 1
         assert (result.as_dict()["name"]) == "Mildmay"
         assert (result.as_dict()["statusSeverity"]) == 3
+
+    def test_two_same_statuses_with_different_reasons_kept_separate(self):
+        """When multiple statuses have the same description but different reasons,
+        they should be kept as separate entries to show different reasons."""
+        line = LineDAO(
+            **{
+                "name": "District",
+                "lineStatuses": [
+                    {
+                        "statusSeverityDescription": "Severe Delays",
+                        "statusSeverity": 2,
+                        "reason": "District Line: Severe delays between Earl's Court and Wimbledon due to signal failure.",
+                    },
+                    {
+                        "statusSeverityDescription": "Severe Delays",
+                        "statusSeverity": 2,
+                        "reason": "District Line: Severe delays between Tower Hill and Upminster due to a person ill on a train.",
+                    },
+                ],
+            }
+        )
+        logger = DummyLogger()
+        result = LineStatusModel(line, logger=logger)
+        statuses = result.as_dict()["statuses"]
+        # Should keep both Severe Delays entries as they have different reasons
+        assert len(statuses) == 2
+        assert statuses[0]["status"] == "Severe Delays"
+        assert statuses[1]["status"] == "Severe Delays"
+        reasons = {s["reason"] for s in statuses}
+        assert reasons == {
+            "District Line: Severe delays between Earl's Court and Wimbledon due to signal failure.",
+            "District Line: Severe delays between Tower Hill and Upminster due to a person ill on a train.",
+        }
+
+    def test_same_statuses_with_same_reasons_deduped(self):
+        """When multiple statuses have the same description AND the same reason,
+        they should be deduplicated."""
+        line = LineDAO(
+            **{
+                "name": "Jubilee",
+                "lineStatuses": [
+                    {
+                        "statusSeverityDescription": "Minor Delays",
+                        "statusSeverity": 6,
+                        "reason": "Jubilee Line: Minor delays due to an earlier signal failure.",
+                    },
+                    {
+                        "statusSeverityDescription": "Minor Delays",
+                        "statusSeverity": 6,
+                        "reason": "Jubilee Line: Minor delays due to an earlier signal failure.",
+                    },
+                ],
+            }
+        )
+        logger = DummyLogger()
+        result = LineStatusModel(line, logger=logger)
+        statuses = result.as_dict()["statuses"]
+        # Should dedupe to just one entry since both status and reason are identical
+        assert len(statuses) == 1
+        assert statuses[0]["status"] == "Minor Delays"
+        assert (
+            statuses[0]["reason"]
+            == "Jubilee Line: Minor delays due to an earlier signal failure."
+        )
 
     def test_empty(self):
         with pytest.raises(ValidationError):
