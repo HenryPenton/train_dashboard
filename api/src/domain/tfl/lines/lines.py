@@ -24,9 +24,9 @@ class LineStatusModel:
         self.name = self._get_name(line)
         self.statusSeverity = self._get_status_severity(line)
         self.logger.debug(
-            f"LineStatusModel created for {self.name}: "
-            f"statuses={[s.as_dict() for s in self.statuses]}, "
-            f"severity={self.statusSeverity}"
+            f"LineStatusModel created for {self.name}: statuses={
+                [s.as_dict() for s in self.statuses]
+            }, severity={self.statusSeverity}"
         )
 
     @staticmethod
