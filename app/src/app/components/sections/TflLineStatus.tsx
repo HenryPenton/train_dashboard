@@ -1,15 +1,19 @@
-import React from "react";
-import { useFetch } from "../../hooks/useFetch";
 import { APP_CONSTANTS } from "../../constants/app";
-import SectionHeading from "../common/SectionHeading";
-import SectionCard from "../common/SectionCard";
-import Loading from "../common/Loading";
+import { useFetch } from "../../hooks/useFetch";
 import ErrorDisplay from "../common/ErrorDisplay";
 import LineStatusCard from "../common/LineStatusCard";
+import Loading from "../common/Loading";
+import SectionCard from "../common/SectionCard";
+import SectionHeading from "../common/SectionHeading";
+
+type StatusItem = {
+  status: string;
+  reason?: string | null;
+};
 
 type TflLineStatusType = {
   name: string;
-  statusList: string[];
+  statuses: StatusItem[];
   statusSeverity: number;
 };
 
@@ -34,7 +38,7 @@ export default function TflLineStatus() {
           <LineStatusCard
             key={i}
             name={line.name}
-            statusList={line.statusList}
+            statuses={line.statuses}
             severity={line.statusSeverity}
           />
         ))}

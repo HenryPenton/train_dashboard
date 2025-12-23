@@ -1,28 +1,32 @@
-import React from "react";
-import StatusBar from "./StatusBar";
-import StatusBadge from "./StatusBadge";
 import {
-  getSeverityStatusBarColor,
   getSeverityBorderColor,
+  getSeverityStatusBarColor,
 } from "../../utils/colorMappings";
+import StatusBadge from "./StatusBadge";
+import StatusBar from "./StatusBar";
+
+type StatusItem = {
+  status: string;
+  reason?: string | null;
+};
 
 type LineStatusCardProps = {
   name: string;
-  statusList: string[];
+  statuses: StatusItem[];
   severity: number;
 };
 
 export default function LineStatusCard({
   name,
-  statusList,
+  statuses,
   severity,
 }: LineStatusCardProps) {
   return (
     <div className="group">
       <div
-        className={`bg-gradient-to-r from-[#2a2d35] to-[#323741] rounded-xl border ${getSeverityBorderColor(severity)}/30 shadow-lg overflow-hidden`}
+        className={`bg-gradient-to-r from-[#2a2d35] to-[#323741] rounded-xl border ${getSeverityBorderColor(severity)}/30 shadow-lg`}
         role="article"
-        aria-label={`${name} line status: ${statusList && statusList.length > 0 ? statusList.join(", ") : "Unknown"}`}
+        aria-label={`${name} line status: ${statuses && statuses.length > 0 ? statuses.map((s) => s.status).join(", ") : "Unknown"}`}
       >
         <StatusBar backgroundColor={getSeverityStatusBarColor(severity)} />
 
@@ -40,12 +44,13 @@ export default function LineStatusCard({
               role="list"
               aria-label="Status list"
             >
-              {statusList && statusList.length > 0 ? (
-                statusList.map((status, index) => (
+              {statuses && statuses.length > 0 ? (
+                statuses.map((item, index) => (
                   <StatusBadge
                     key={index}
-                    status={status}
+                    status={item.status}
                     severity={severity}
+                    reason={item.reason}
                   />
                 ))
               ) : (

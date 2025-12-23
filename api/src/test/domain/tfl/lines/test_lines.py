@@ -19,8 +19,34 @@ class TestLineStatus:
         result = LineStatusModel(line, logger=logger)
         assert (result.as_dict()) == {
             "name": "Victoria",
-            "statusList": ["Good Service"],
+            "statuses": [{"status": "Good Service", "reason": None}],
             "statusSeverity": 10,
+        }
+
+    def test_status_with_reason(self):
+        line = LineDAO(
+            **{
+                "name": "Central",
+                "lineStatuses": [
+                    {
+                        "statusSeverityDescription": "Minor Delays",
+                        "statusSeverity": 6,
+                        "reason": "Central Line: Minor delays due to an earlier signal failure at Liverpool Street.",
+                    }
+                ],
+            }
+        )
+        logger = DummyLogger()
+        result = LineStatusModel(line, logger=logger)
+        assert (result.as_dict()) == {
+            "name": "Central",
+            "statuses": [
+                {
+                    "status": "Minor Delays",
+                    "reason": "Central Line: Minor delays due to an earlier signal failure at Liverpool Street.",
+                }
+            ],
+            "statusSeverity": 6,
         }
 
     def test_two_statuses(self):
@@ -38,11 +64,40 @@ class TestLineStatus:
         )
         logger = DummyLogger()
         result = LineStatusModel(line, logger=logger)
-        expected_status_list = {"Minor Delays", "Part Suspended"}
-        actual_status_list = set(result.as_dict()["statusList"])
-        assert actual_status_list == expected_status_list
+        statuses = result.as_dict()["statuses"]
+        status_names = {s["status"] for s in statuses}
+        assert status_names == {"Minor Delays", "Part Suspended"}
         assert (result.as_dict()["name"]) == "Northern"
         assert (result.as_dict()["statusSeverity"]) == 4
+
+    def test_two_statuses_with_reason(self):
+        line = LineDAO(
+            **{
+                "name": "Northern",
+                "lineStatuses": [
+                    {"statusSeverityDescription": "Minor Delays", "statusSeverity": 6},
+                    {
+                        "statusSeverityDescription": "Part Suspended",
+                        "statusSeverity": 4,
+                        "reason": "Northern Line: Part suspended between Moorgate and Kennington due to planned "
+                        "engineering work.",
+                    },
+                ],
+            }
+        )
+        logger = DummyLogger()
+        result = LineStatusModel(line, logger=logger)
+        statuses = result.as_dict()["statuses"]
+        status_names = {s["status"] for s in statuses}
+        assert status_names == {"Minor Delays", "Part Suspended"}
+        assert (result.as_dict()["name"]) == "Northern"
+        assert (result.as_dict()["statusSeverity"]) == 4
+        # Find the Part Suspended status and check its reason
+        part_suspended = next(s for s in statuses if s["status"] == "Part Suspended")
+        assert (
+            part_suspended["reason"]
+            == "Northern Line: Part suspended between Moorgate and Kennington due to planned engineering work."
+        )
 
     def test_two_same_statuses(self):
         line = LineDAO(
@@ -57,9 +112,9 @@ class TestLineStatus:
         )
         logger = DummyLogger()
         result = LineStatusModel(line, logger=logger)
-        expected_status_list = {"Part Closure", "Good Service"}
-        actual_status_list = set(result.as_dict()["statusList"])
-        assert actual_status_list == expected_status_list
+        statuses = result.as_dict()["statuses"]
+        status_names = {s["status"] for s in statuses}
+        assert status_names == {"Part Closure", "Good Service"}
         assert (result.as_dict()["name"]) == "Mildmay"
         assert (result.as_dict()["statusSeverity"]) == 3
 
@@ -91,7 +146,7 @@ class TestLineStatuses:
         result = LineStatusModelList(lines, logger=logger).get_line_statuses()
         assert (result[0].as_dict()) == {
             "name": "Victoria",
-            "statusList": ["Good Service"],
+            "statuses": [{"status": "Good Service", "reason": None}],
             "statusSeverity": 10,
         }
 
@@ -130,13 +185,12 @@ class TestLineStatuses:
         northern_result = result[0].as_dict()
         assert northern_result["name"] == "Northern"
         assert northern_result["statusSeverity"] == 4
-        expected_northern_statuses = {"Minor Delays", "Part Suspended"}
-        actual_northern_statuses = set(northern_result["statusList"])
-        assert actual_northern_statuses == expected_northern_statuses
-        
+        northern_statuses = {s["status"] for s in northern_result["statuses"]}
+        assert northern_statuses == {"Minor Delays", "Part Suspended"}
+
         # Check Piccadilly line
         assert (result[1].as_dict()) == {
             "name": "Piccadilly",
-            "statusList": ["Good Service"],
+            "statuses": [{"status": "Good Service", "reason": None}],
             "statusSeverity": 10,
         }

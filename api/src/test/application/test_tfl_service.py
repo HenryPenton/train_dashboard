@@ -85,7 +85,7 @@ def test_get_line_status():
     result = asyncio.run(service.get_line_statuses())
     assert (result[0].as_dict()) == {
         "name": "Central",
-        "statusList": ["Good Service"],
+        "statuses": [{"status": "Good Service", "reason": None}],
         "statusSeverity": 10,
     }
 

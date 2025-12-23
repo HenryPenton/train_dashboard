@@ -141,4 +141,71 @@ describe("StatusBadge", () => {
     // Should still render with fallback styling
     expect(statusBadge).toHaveClass("text-gray-500", "border-gray-500/50");
   });
+
+  it("displays modal trigger when reason is provided", () => {
+    const status = "Minor Delays";
+    const severity = 6;
+    const reason = "Central Line: Minor delays due to an earlier signal failure.";
+
+    render(<StatusBadge status={status} severity={severity} reason={reason} />);
+
+    const statusBadge = screen.getByRole("status");
+    expect(statusBadge).toBeInTheDocument();
+
+    // Check that aria-label indicates tap for details
+    expect(statusBadge).toHaveAttribute(
+      "aria-label",
+      `Service status: ${status}, severity level ${severity}. Tap for details`,
+    );
+
+    // Check that title attribute is set for native tooltip
+    expect(statusBadge).toHaveAttribute("title", reason);
+
+    // Check that cursor-pointer class is applied when reason exists (for modal)
+    expect(statusBadge).toHaveClass("cursor-pointer");
+  });
+
+  it("does not display modal trigger when reason is not provided", () => {
+    const status = "Good Service";
+    const severity = 10;
+
+    render(<StatusBadge status={status} severity={severity} />);
+
+    const statusBadge = screen.getByRole("status");
+    expect(statusBadge).toBeInTheDocument();
+
+    // Check that reason is NOT in aria-label
+    expect(statusBadge).toHaveAttribute(
+      "aria-label",
+      `Service status: ${status}, severity level ${severity}`,
+    );
+
+    // Check that title attribute is not set
+    expect(statusBadge).not.toHaveAttribute("title");
+
+    // Check that cursor-pointer class is NOT applied
+    expect(statusBadge).not.toHaveClass("cursor-pointer");
+  });
+
+  it("does not display modal trigger when reason is empty string", () => {
+    const status = "Good Service";
+    const severity = 10;
+
+    render(<StatusBadge status={status} severity={severity} reason="" />);
+
+    const statusBadge = screen.getByRole("status");
+    expect(statusBadge).not.toHaveAttribute("title");
+    expect(statusBadge).not.toHaveClass("cursor-pointer");
+  });
+
+  it("does not display modal trigger when reason is null", () => {
+    const status = "Good Service";
+    const severity = 10;
+
+    render(<StatusBadge status={status} severity={severity} reason={null} />);
+
+    const statusBadge = screen.getByRole("status");
+    expect(statusBadge).not.toHaveAttribute("title");
+    expect(statusBadge).not.toHaveClass("cursor-pointer");
+  });
 });
