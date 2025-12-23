@@ -445,5 +445,80 @@ describe("StatusBadge", () => {
       expect(closeButtons[0]).toHaveAttribute("type", "button");
       expect(closeButtons[1]).toHaveAttribute("type", "button");
     });
+
+    it("moves focus to close button when modal opens", () => {
+      render(
+        <StatusBadge status={status} severity={severity} reason={reason} />,
+      );
+
+      const statusBadge = screen.getByRole("status");
+      fireEvent.click(statusBadge);
+
+      // Focus should be on the X close button (first close button)
+      const closeButtons = screen.getAllByRole("button", { name: "Close" });
+      expect(closeButtons[0]).toHaveFocus();
+    });
+
+    it("returns focus to badge when modal closes", () => {
+      render(
+        <StatusBadge status={status} severity={severity} reason={reason} />,
+      );
+
+      const statusBadge = screen.getByRole("status");
+      fireEvent.click(statusBadge);
+
+      // Modal should be open
+      expect(screen.getByRole("dialog")).toBeInTheDocument();
+
+      // Close the modal
+      const closeButtons = screen.getAllByRole("button", { name: "Close" });
+      fireEvent.click(closeButtons[0]);
+
+      // Focus should return to the badge
+      expect(statusBadge).toHaveFocus();
+    });
+
+    it("traps focus within modal - Tab from last element goes to first", () => {
+      render(
+        <StatusBadge status={status} severity={severity} reason={reason} />,
+      );
+
+      const statusBadge = screen.getByRole("status");
+      fireEvent.click(statusBadge);
+
+      // Get all close buttons (X button and bottom Close button)
+      const closeButtons = screen.getAllByRole("button", { name: "Close" });
+      const bottomCloseButton = closeButtons[1];
+
+      // Focus the last focusable element (bottom Close button)
+      bottomCloseButton.focus();
+      expect(bottomCloseButton).toHaveFocus();
+
+      // Press Tab - should wrap to first element (X close button)
+      fireEvent.keyDown(document, { key: "Tab" });
+
+      expect(closeButtons[0]).toHaveFocus();
+    });
+
+    it("traps focus within modal - Shift+Tab from first element goes to last", () => {
+      render(
+        <StatusBadge status={status} severity={severity} reason={reason} />,
+      );
+
+      const statusBadge = screen.getByRole("status");
+      fireEvent.click(statusBadge);
+
+      // Get all close buttons (X button and bottom Close button)
+      const closeButtons = screen.getAllByRole("button", { name: "Close" });
+      const xCloseButton = closeButtons[0];
+
+      // Focus should already be on X close button (first element)
+      expect(xCloseButton).toHaveFocus();
+
+      // Press Shift+Tab - should wrap to last element (bottom Close button)
+      fireEvent.keyDown(document, { key: "Tab", shiftKey: true });
+
+      expect(closeButtons[1]).toHaveFocus();
+    });
   });
 });
