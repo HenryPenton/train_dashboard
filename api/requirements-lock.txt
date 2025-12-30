@@ -3,8 +3,8 @@ annotated-types==0.7.0
 anyio==4.12.0
 certifi==2025.11.12
 click==8.3.1
-coverage==7.13.0
-fastapi==0.127.0
+coverage==7.13.1
+fastapi==0.128.0
 fastapi-cli==0.0.20
 h11==0.16.0
 httpcore==1.0.9
@@ -29,7 +29,7 @@ rich==14.2.0
 rich-toolkit==0.17.1
 shellingham==1.5.4
 starlette==0.50.0
-typer==0.20.1
+typer==0.21.0
 typing-inspection==0.4.2
 typing_extensions==4.15.0
 uvicorn==0.40.0
