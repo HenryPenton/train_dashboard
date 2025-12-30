@@ -65,7 +65,7 @@ def test_fetch_tube_line_statuses():
     ):
         mock_resp = MagicMock()
         mock_resp.json.return_value = [
-            {"name": "Central", "statusList": ["Good Service"]}
+            {"name": "Central", "statuses": [{"status": "Good Service", "reason": None}], "statusSeverity": 10}
         ]
         mock_resp.raise_for_status.return_value = None
         mock_get.return_value = mock_resp
@@ -76,4 +76,5 @@ def test_fetch_tube_line_statuses():
         mock_resp.raise_for_status.assert_called_once()
         assert len(result) == 1
         assert result[0].name == "Central"
-        assert result[0].statusList == ["Good Service"]
+        assert result[0].statuses[0].status == "Good Service"
+        assert result[0].statusSeverity == 10

@@ -1,11 +1,11 @@
 from src.formatters.line_status import format_line_status_markdown
-from src.models.models import TubeLineStatus
+from src.models.models import StatusItem, TubeLineStatus
 
 
 def test_format_line_status_markdown_basic():
     statuses = [
-        TubeLineStatus(name="Central", statusList=["Good Service"], statusSeverity=1),
-        TubeLineStatus(name="Piccadilly", statusList=["Severe Delays"], statusSeverity=10),
+        TubeLineStatus(name="Central", statuses=[StatusItem(status="Good Service")], statusSeverity=10),
+        TubeLineStatus(name="Piccadilly", statuses=[StatusItem(status="Severe Delays")], statusSeverity=1),
     ]
     result = format_line_status_markdown(statuses)
     expected = (
@@ -23,7 +23,7 @@ def test_format_line_status_markdown_empty():
 
 def test_format_line_status_markdown_multiple_statuses():
     statuses = [
-        TubeLineStatus(name="Northern", statusList=["Minor Delays", "Part Closure"], statusSeverity=7),
+        TubeLineStatus(name="Northern", statuses=[StatusItem(status="Minor Delays"), StatusItem(status="Part Closure")], statusSeverity=7),
     ]
     result = format_line_status_markdown(statuses)
     expected = (

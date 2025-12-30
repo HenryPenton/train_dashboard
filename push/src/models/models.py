@@ -24,9 +24,15 @@ class BestRoute(BaseModel):
     legs: List[RouteInstruction]
 
 
+class StatusItem(BaseModel):
+    status: str
+    reason: str | None = None
+
+
 class TubeLineStatus(BaseModel):
     name: str
-    statusList: List[str]
+    statuses: List[StatusItem]
+    statusSeverity: int
 
 
 class SchedulesResponse(BaseModel):
