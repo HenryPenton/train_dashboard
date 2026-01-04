@@ -4,9 +4,9 @@ A comprehensive full-stack application for live train and tube status, route pla
 
 ---
 
-![Dashboard Screenshot](Dashboard.png)
+![Dashboard](Dashboard.png)
 
-![Tube lines Screenshot](TubeLines.png)
+_Screenshot is zoomed out to fit everything in._
 
 ## Overview
 
