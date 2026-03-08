@@ -270,7 +270,7 @@ export default function Home() {
             className="flex flex-col gap-8 flex-1 max-w-md"
           >
             {column.map((configItem, itemIndex) => {
-              const key = `col-${columnIndex}-item-${itemIndex}`;
+              const key = `col-${columnIndex}-item-${itemIndex}-${lastRefreshTimeStamp}`;
               return renderConfigItem(configItem, key);
             })}
           </div>
