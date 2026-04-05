@@ -37,9 +37,8 @@
 Copy `.env.template` to `.env` and configure the following required variables:
 
 ```env
-# Required: Real Time Trains API credentials
-RTT_API_USER=your_rtt_username
-RTT_API_PASS=your_rtt_password
+# Required: Real Time Trains API v2 bearer token
+RTT_API_BEARER_TOKEN=your_rtt_bearer_token
 
 # Configured for Docker
 SERVER_URL=http://train_dashboard_api:8000
@@ -69,7 +68,7 @@ NTFY_SERVER=
 
 > **Security Note:** Use random, unguessable topic names when using the public ntfy.sh service to prevent unauthorized access to your notifications.
 
-> **Get API Keys:** Real Time Trains API keys are free at [https://www.realtimetrains.co.uk/about/developer/](https://www.realtimetrains.co.uk/about/developer/)
+> **Get API Credentials:** Sign up for a Real Time Trains API account at [https://www.realtimetrains.co.uk/about/developer/](https://www.realtimetrains.co.uk/about/developer/). Once logged in, generate a bearer token from your account dashboard and set it as `RTT_API_BEARER_TOKEN`.
 
 ## 3. Quick Start with Docker
 
@@ -202,7 +201,7 @@ environment:
 
 **API Connection Issues:**
 
-- Verify Real Time Trains API credentials in `.env`
+- Verify `RTT_API_BEARER_TOKEN` is set correctly in `.env`
 - Check API status at [https://www.realtimetrains.co.uk/about/developer/](https://www.realtimetrains.co.uk/about/developer/)
 - View API logs: `docker compose logs api`
 

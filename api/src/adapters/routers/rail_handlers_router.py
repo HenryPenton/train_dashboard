@@ -1,15 +1,15 @@
 import httpx
 from fastapi import APIRouter, HTTPException, Depends
-from src.adapters.clients.rttclient import RTTClient
+from src.adapters.clients.rttclient_v2 import RTTClientV2
 from src.application.rail_service import RailService
 from src.DTOs.rail.departure_dto import DepartureDTO
 
 
-def get_rtt_client() -> RTTClient:
-    return RTTClient(httpx.AsyncClient())
+def get_rtt_client() -> RTTClientV2:
+    return RTTClientV2(httpx.AsyncClient())
 
 
-def get_rail_service(rtt_client: RTTClient = Depends(get_rtt_client)) -> RailService:
+def get_rail_service(rtt_client: RTTClientV2 = Depends(get_rtt_client)) -> RailService:
     return RailService(rtt_client)
 
 

@@ -1,9 +1,9 @@
-from src.adapters.clients.rttclient import RTTClient
+from src.adapters.clients.rttclient_v2 import RTTClientV2
 from src.domain.rail.departures.rail_departures import RailDepartures
 
 
 class RailService:
-    def __init__(self, client: RTTClient):
+    def __init__(self, client: RTTClientV2):
         self.client = client
 
     async def get_departures(

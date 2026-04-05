@@ -59,7 +59,7 @@ def test_get_departures_error():
 
 def test_get_rtt_client():
     client = rail_handler.get_rtt_client()
-    assert isinstance(client, rail_handler.RTTClient)
+    assert isinstance(client, rail_handler.RTTClientV2)
     assert client.client is not None
 
 
