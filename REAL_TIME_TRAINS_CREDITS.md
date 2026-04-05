@@ -3,7 +3,7 @@
 This project uses the Real Time Trains API for live train departure and arrival data.
 
 - Real Time Trains: https://www.realtimetrains.co.uk/
-- Real Time Trains API: https://api.rtt.io/
+- Real Time Trains API: https://data.rtt.io/
 
 All data and services provided by Real Time Trains are subject to their terms of use.
 

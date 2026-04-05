@@ -88,9 +88,9 @@ NTFY_SERVER=
    # Download the environment template
    curl -O https://raw.githubusercontent.com/HenryPenton/train_dashboard/main/.env.template
 
-   # Copy and edit with your API credentials
+   # Copy and edit with your bearer token
    cp .env.template .env
-   # Edit .env with your Real Time Trains API credentials
+   # Edit .env with your Real Time Trains API bearer token
    ```
 
 3. **Create config directory:**
