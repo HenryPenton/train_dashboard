@@ -2,7 +2,8 @@ import os
 from typing import List
 
 import httpx
-from src.DAOs.rail.departure_dao import DepartureDAO, DeparturesDAO
+from src.adapters.clients.rtt_mapper import RTTMapper
+from src.DAOs.rail.departure_dao import DepartureDAO
 
 
 class RTTClientError(Exception):
@@ -24,25 +25,6 @@ class RTTClient:
                 url, auth=(REALTIME_TRAINS_API_USER, REALTIME_TRAINS_API_PASS)
             )
             response.raise_for_status()
-            data = DeparturesDAO(**response.json())
-            departures = []
-            for service in data.services:
-                serviceType = service.get("serviceType", "")
-
-                # Skip non-train services
-                if serviceType != "train":
-                    continue
-
-                locationDetail = service.get("locationDetail", {})
-                serviceUid = service.get("serviceUid", "")
-                runDate = service.get("runDate", "")
-                try:
-                    departure_dao = DepartureDAO(
-                        **locationDetail, serviceUid=serviceUid, runDate=runDate
-                    )
-                    departures.append(departure_dao)
-                except Exception:
-                    continue
-            return departures
+            return RTTMapper.to_departure_dao_list(response.json())
         except Exception as e:
             raise RTTClientError(f"RTTClient failed: {str(e)}")
