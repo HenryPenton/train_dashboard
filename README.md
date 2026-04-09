@@ -1,5 +1,8 @@
 # Travel Dashboard
 
+> [!IMPORTANT]
+> **RTT API Update:** This project has migrated to the new RTT API (v2). You now need a **Bearer token** instead of the previous username/password credentials. See [SETUP.md](SETUP.md) for configuration details.
+
 A comprehensive full-stack application for live train and tube status, route planning, and arrivals, built with Next.js (frontend), FastAPI (backend), and a Python push server for notifications and background jobs.
 
 ---
