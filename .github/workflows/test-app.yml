@@ -17,14 +17,14 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Use Node.js 24
         uses: actions/setup-node@v6
         with:
           node-version: 24
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v5
         with:
           version: latest
 
@@ -36,7 +36,7 @@ jobs:
 
       - name: Restore cached npm dependencies
         id: cache_dependencies
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           path: |
             **/node_modules
@@ -49,7 +49,7 @@ jobs:
 
       - name: Cache npm dependencies
         if: steps.cache_dependencies.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v5
         with:
           path: |
             **/node_modules
