@@ -37,7 +37,7 @@
 Copy `.env.template` to `.env` and configure the following required variables:
 
 ```env
-# Required: Real Time Trains API v2 bearer token
+# Required: Real Time Trains API v2 bearer token - these usually start with the letters ey, it isn't the guid that shows on first logging into the portal, clicking on that guid will take you to another screen which shows your bearer token.
 RTT_API_BEARER_TOKEN=your_rtt_bearer_token
 
 # Configured for Docker
