@@ -3,7 +3,7 @@
 ## Prerequisites
 
 - **Docker** and **Docker Compose** installed on your system
-- **Real Time Trains API credentials** (free at [https://www.realtimetrains.co.uk/about/developer/](https://www.realtimetrains.co.uk/about/developer/))
+- **Real Time Trains API credentials** (free at [https://api-portal.rtt.io/](https://api-portal.rtt.io/))
 - Ports **3000** (frontend) and **8000** (API) available on your system
 
 ## 1. Choose Between Docker Volume and Bind Mount
@@ -68,7 +68,7 @@ NTFY_SERVER=
 
 > **Security Note:** Use random, unguessable topic names when using the public ntfy.sh service to prevent unauthorized access to your notifications.
 
-> **Get API Credentials:** Sign up for a Real Time Trains API account at [https://www.realtimetrains.co.uk/about/developer/](https://www.realtimetrains.co.uk/about/developer/). Once logged in, generate a bearer token from your account dashboard and set it as `RTT_API_BEARER_TOKEN`.
+> **Get API Credentials:** Sign up for a Real Time Trains API account at [https://api-portal.rtt.io/](https://api-portal.rtt.io/). Once logged in, generate a bearer token from your account dashboard and set it as `RTT_API_BEARER_TOKEN`.
 
 ## 3. Quick Start with Docker
 
