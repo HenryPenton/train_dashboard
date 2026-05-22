@@ -3,17 +3,19 @@
 FROM node:24-alpine AS deps
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN npm install -g pnpm \
     && pnpm install --frozen-lockfile
 
 # ---- Build Environment ----
 FROM node:24-alpine AS builder
 WORKDIR /app
+ENV CI=true
 RUN npm install -g pnpm 
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/package.json ./
 COPY --from=deps /app/pnpm-lock.yaml ./
+COPY --from=deps /app/pnpm-workspace.yaml ./
 COPY . .
 
 RUN pnpm build

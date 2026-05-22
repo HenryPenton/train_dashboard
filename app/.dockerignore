@@ -3,3 +3,6 @@
 .gitignore
 readme.md
 venv
+node_modules
+.next
+coverage
