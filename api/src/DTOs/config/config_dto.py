@@ -44,3 +44,4 @@ class ConfigDTO(BaseModel):
     tfl_line_status: TflLineStatusDTO = TflLineStatusDTO()
     refresh_timer: int = 300
     theme: Literal["dark", "light", "retro"] = "dark"
+    time_display: Literal["departure", "arrival"] = "departure"

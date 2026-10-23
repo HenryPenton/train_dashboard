@@ -8,21 +8,19 @@ import Loading from "../common/Loading";
 import NoTrainsCard from "../common/NoTrainsCard";
 import SectionCard from "../common/SectionCard";
 import SectionHeading from "../common/SectionHeading";
+import { DEFAULT_TIME_DISPLAY, type TimeDisplay } from "../../stores/config";
 
 export type DepartureStatus = "Early" | "On time" | "Late" | "Cancelled";
 
 export interface Departure {
-  scheduledDepartureTime: string;
-  estimatedDepartureTime: string;
-  actualDepartureTime?: string;
   status: DepartureStatus;
   platform?: string;
-  serviceId: string;
   url?: string;
   origin?: string;
   destination?: string;
   delay?: number;
-  actual?: string;
+  actual: string;
+  arrival?: string | null;
 }
 
 export interface Station {
@@ -33,11 +31,13 @@ export interface Station {
 type TrainDepartureProps = {
   fromStation: Station;
   toStation: Station;
+  timeDisplay?: TimeDisplay;
 };
 
 export default function TrainDepartures({
   fromStation,
   toStation,
+  timeDisplay = DEFAULT_TIME_DISPLAY,
 }: TrainDepartureProps) {
   const url = useMemo(
     () =>
@@ -71,7 +71,11 @@ export default function TrainDepartures({
           departures
             .slice(0, APP_CONSTANTS.MAX_DEPARTURES)
             .map((departure, i) => (
-              <DepartureCard key={i} departure={departure} />
+              <DepartureCard
+                key={i}
+                departure={departure}
+                timeDisplay={timeDisplay}
+              />
             ))
         )}
       </div>

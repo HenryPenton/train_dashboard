@@ -46,6 +46,7 @@ class TestMultipleDepartures:
 
         assert results[0].as_dict() == {
             "actual": "0935",
+            "arrival": None,
             "delay": 5,
             "destination": "Glasgow",
             "origin": "Edinburgh",
@@ -56,6 +57,7 @@ class TestMultipleDepartures:
 
         assert results[1].as_dict() == {
             "actual": "1015",
+            "arrival": None,
             "delay": 0,
             "destination": "Manchester",
             "origin": "Oxford",
@@ -66,6 +68,7 @@ class TestMultipleDepartures:
 
         assert results[2].as_dict() == {
             "actual": "1058",
+            "arrival": None,
             "delay": -2,
             "destination": "Cardiff",
             "origin": "Bristol",

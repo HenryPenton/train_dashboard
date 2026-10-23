@@ -24,14 +24,14 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Use Node.js 24
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: 24
 
-      - uses: pnpm/action-setup@v5
+      - uses: pnpm/action-setup@v6
         with:
           version: latest
 
@@ -43,7 +43,7 @@ jobs:
 
       - name: Restore cached npm dependencies
         id: cache_dependencies
-        uses: actions/cache/restore@v5
+        uses: actions/cache/restore@v6
         with:
           path: |
             **/node_modules
@@ -56,7 +56,7 @@ jobs:
 
       - name: Cache npm dependencies
         if: steps.cache_dependencies.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v5
+        uses: actions/cache/save@v6
         with:
           path: |
             **/node_modules
@@ -72,7 +72,7 @@ jobs:
     needs: test-app
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4

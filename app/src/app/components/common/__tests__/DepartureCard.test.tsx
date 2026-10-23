@@ -9,26 +9,25 @@ jest.mock("../../../utils/colorMappings", () => ({
 
 describe("DepartureCard", () => {
   const mockDeparture: Departure = {
-    scheduledDepartureTime: "14:30",
-    estimatedDepartureTime: "14:32",
+    actual: "14:32",
     status: "Late" as const,
     platform: "3",
-    serviceId: "GW123",
     origin: "London Paddington",
     destination: "Bristol Temple Meads",
     delay: 2,
+    arrival: "14:28",
   };
 
   it("renders departure card with correct information and accessibility attributes", () => {
     render(<DepartureCard departure={mockDeparture} />);
 
     const departureCard = screen.getByRole("article", {
-      name: "Train departure: service departing at 14:30, status: Late",
+      name: "Train departure: service departing at 14:32, status: Late",
     });
     expect(departureCard).toBeInTheDocument();
 
     const departureTime = screen.getByRole("time", {
-      name: "Departure time: 14:30",
+      name: "Departure time: 14:32",
     });
     expect(departureTime).toBeInTheDocument();
 
@@ -39,5 +38,42 @@ describe("DepartureCard", () => {
 
     const platformInfo = screen.getByLabelText("Departing from platform 3");
     expect(platformInfo).toBeInTheDocument();
+  });
+
+  it("shows the arrival time in arrival mode", () => {
+    render(
+      <DepartureCard
+        departure={{ ...mockDeparture, arrival: "15:10" }}
+        timeDisplay="arrival"
+      />,
+    );
+
+    expect(
+      screen.getByRole("time", { name: "Arrival time: 15:10" }),
+    ).toHaveTextContent("Arrives: 15:10");
+    expect(screen.getByLabelText("Arriving at platform 3")).toBeInTheDocument();
+  });
+
+  it("does not show a starts here badge when the train arrives", () => {
+    render(<DepartureCard departure={mockDeparture} />);
+
+    expect(screen.queryByLabelText("Starts here")).not.toBeInTheDocument();
+  });
+
+  it("shows a starts here badge and the departure time in arrival mode when the train has no arrival", () => {
+    render(
+      <DepartureCard
+        departure={{ ...mockDeparture, arrival: null }}
+        timeDisplay="arrival"
+      />,
+    );
+
+    expect(screen.getByLabelText("Starts here")).toBeInTheDocument();
+    expect(
+      screen.getByRole("time", { name: "Departure time: 14:32" }),
+    ).toHaveTextContent("Departs: 14:32");
+    expect(
+      screen.getByLabelText("Departing from platform 3"),
+    ).toBeInTheDocument();
   });
 });

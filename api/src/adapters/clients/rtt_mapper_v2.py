@@ -26,6 +26,12 @@ class RTTMapperV2:
         except (IndexError, ValueError):
             return None
 
+    @classmethod
+    def _extract_realtime(cls, temporal: dict) -> Optional[str]:
+        return cls._extract_time(
+            temporal.get("realtimeActual") or temporal.get("realtimeForecast")
+        )
+
     @staticmethod
     def _extract_platform(location_metadata: dict) -> Optional[str]:
         platform_data = location_metadata.get("platform", {})
@@ -65,10 +71,13 @@ class RTTMapperV2:
         schedule = service.get("scheduleMetadata", {})
         temporal = service.get("temporalData", {})
         departure_temporal = temporal.get("departure", {})
+        arrival_temporal = temporal.get("arrival") or {}
         location_metadata = service.get("locationMetadata", {})
 
         booked = cls._extract_time(departure_temporal.get("scheduleAdvertised"))
-        realtime = cls._extract_time(departure_temporal.get("realtimeActual"))
+        realtime = cls._extract_realtime(departure_temporal)
+        booked_arrival = cls._extract_time(arrival_temporal.get("scheduleAdvertised"))
+        realtime_arrival = cls._extract_realtime(arrival_temporal)
         platform = cls._extract_platform(location_metadata)
         display_as = cls._map_display_as(temporal.get("displayAs"))
         origin = cls._extract_origins(service.get("origin", []))
@@ -83,6 +92,8 @@ class RTTMapperV2:
             serviceUid=service_uid,
             runDate=run_date,
             realtimeDeparture=realtime,
+            gbttBookedArrival=booked_arrival,
+            realtimeArrival=realtime_arrival,
             platform=platform,
             displayAs=display_as,
         )

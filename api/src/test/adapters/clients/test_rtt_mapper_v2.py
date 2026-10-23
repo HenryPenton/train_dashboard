@@ -150,6 +150,50 @@ class TestToDepartureDao:
         assert result.origins == ["Oxford", "London"]
         assert result.destinations == ["Manchester", "Liverpool"]
 
+    def test_maps_arrival_when_present(self):
+        service = _make_v2_service()
+        service["temporalData"]["arrival"] = {
+            "scheduleAdvertised": "2025-10-26T09:28:00+00:00",
+            "realtimeActual": "2025-10-26T09:31:00+00:00",
+        }
+        result = RTTMapperV2.to_departure_dao(service)
+        assert result.gbttBookedArrival == "0928"
+        assert result.realtimeArrival == "0931"
+
+    def test_arrival_absent_is_none(self):
+        service = _make_v2_service()
+        assert "arrival" not in service["temporalData"]
+        result = RTTMapperV2.to_departure_dao(service)
+        assert result.gbttBookedArrival is None
+        assert result.realtimeArrival is None
+
+    def test_arrival_null_is_none(self):
+        service = _make_v2_service()
+        service["temporalData"]["arrival"] = None
+        result = RTTMapperV2.to_departure_dao(service)
+        assert result.gbttBookedArrival is None
+
+    def test_uses_realtime_forecast_when_no_actual(self):
+        service = _make_v2_service(realtime_actual=None)
+        service["temporalData"]["departure"]["realtimeForecast"] = (
+            "2025-10-26T09:38:00Z"
+        )
+        service["temporalData"]["arrival"] = {
+            "scheduleAdvertised": "2025-10-26T09:28:00Z",
+            "realtimeForecast": "2025-10-26T09:34:00Z",
+        }
+        result = RTTMapperV2.to_departure_dao(service)
+        assert result.realtimeDeparture == "0938"
+        assert result.realtimeArrival == "0934"
+
+    def test_prefers_realtime_actual_over_forecast(self):
+        service = _make_v2_service(realtime_actual="2025-10-26T09:35:00Z")
+        service["temporalData"]["departure"]["realtimeForecast"] = (
+            "2025-10-26T09:38:00Z"
+        )
+        result = RTTMapperV2.to_departure_dao(service)
+        assert result.realtimeDeparture == "0935"
+
     def test_handles_no_realtime_actual(self):
         service = _make_v2_service(realtime_actual=None)
         result = RTTMapperV2.to_departure_dao(service)

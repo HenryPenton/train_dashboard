@@ -20,24 +20,18 @@ describe("EinkDepartures", () => {
     mockUseFetch.mockReturnValue(
       ready([
         {
-          scheduledDepartureTime: "10:00",
-          estimatedDepartureTime: "10:05",
+          actual: "10:05",
           status: "Late",
           delay: 5,
           platform: "3",
-          serviceId: "1",
         },
         {
-          scheduledDepartureTime: "10:30",
-          estimatedDepartureTime: "10:30",
+          actual: "10:30",
           status: "Cancelled",
-          serviceId: "2",
         },
         {
-          scheduledDepartureTime: "11:00",
-          estimatedDepartureTime: "11:00",
+          actual: "11:00",
           status: "On time",
-          serviceId: "3",
         },
       ]),
     );
@@ -47,6 +41,19 @@ describe("EinkDepartures", () => {
     expect(screen.getByText("CANCELLED")).toBeInTheDocument();
     expect(screen.getByText("On time")).toBeInTheDocument();
     expect(screen.getByText(/Plat 3/)).toBeInTheDocument();
+  });
+
+  it("marks trains that start here and only prefixes real arrivals", () => {
+    mockUseFetch.mockReturnValue(
+      ready([
+        { actual: "10:00", arrival: "09:58", status: "On time" },
+        { actual: "10:10", arrival: null, status: "On time" },
+      ]),
+    );
+    render(<EinkDepartures {...stations} timeDisplay="arrival" />);
+    expect(screen.getByText("Arr 09:58")).toBeInTheDocument();
+    expect(screen.getByText("10:10")).toBeInTheDocument();
+    expect(screen.getAllByText(/Starts here/)).toHaveLength(1);
   });
 
   it("shows loading, error and empty states", () => {

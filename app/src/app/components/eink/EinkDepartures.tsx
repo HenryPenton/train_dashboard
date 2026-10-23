@@ -2,11 +2,13 @@ import { useMemo } from "react";
 import { APP_CONSTANTS } from "../../constants/app";
 import { useFetch } from "../../hooks/useFetch";
 import type { Departure, Station } from "../sections/TrainDepartures";
+import { DEFAULT_TIME_DISPLAY, type TimeDisplay } from "../../stores/config";
 import { EinkMessage, EinkSection } from "./EinkSection";
 
 type EinkDeparturesProps = {
   fromStation: Station;
   toStation: Station;
+  timeDisplay?: TimeDisplay;
 };
 
 function statusLabel(departure: Departure): string {
@@ -22,6 +24,7 @@ function statusLabel(departure: Departure): string {
 export default function EinkDepartures({
   fromStation,
   toStation,
+  timeDisplay = DEFAULT_TIME_DISPLAY,
 }: EinkDeparturesProps) {
   const url = useMemo(
     () =>
@@ -34,7 +37,9 @@ export default function EinkDepartures({
   const { data, loading, error } = useFetch<Departure[]>(url);
 
   return (
-    <EinkSection title={`${fromStation.stationName} to ${toStation.stationName}`}>
+    <EinkSection
+      title={`${fromStation.stationName} to ${toStation.stationName}`}
+    >
       {loading && <EinkMessage>Loading departures...</EinkMessage>}
       {error && <EinkMessage>Error: {error}</EinkMessage>}
       {!loading && !error && (!data || data.length === 0) && (
@@ -43,20 +48,18 @@ export default function EinkDepartures({
       {!loading && !error && data && data.length > 0 && (
         <ul className="eink-list">
           {data.slice(0, APP_CONSTANTS.MAX_DEPARTURES).map((departure, i) => {
-            const cancelled = departure.status === "Cancelled";
-            const expected =
-              departure.actual || departure.estimatedDepartureTime;
+            const arrival =
+              timeDisplay === "arrival" ? departure.arrival : undefined;
+            const shown = arrival || departure.actual;
             return (
               <li key={i} className="eink-row">
                 <span className="eink-time">
-                  {departure.scheduledDepartureTime}
+                  {arrival ? `Arr ${shown}` : shown}
                 </span>{" "}
                 <span className="eink-status">{statusLabel(departure)}</span>
-                {!cancelled &&
-                  expected &&
-                  expected !== departure.scheduledDepartureTime && (
-                    <span className="eink-detail"> (exp {expected})</span>
-                  )}
+                {!departure.arrival && (
+                  <span className="eink-detail"> Starts here</span>
+                )}
                 {departure.platform && (
                   <span className="eink-detail">
                     {" "}

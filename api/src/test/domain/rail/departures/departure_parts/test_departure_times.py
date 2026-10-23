@@ -21,6 +21,7 @@ class TestRailDepartureTimes:
             "delay": 35,  # 00:05 - 23:30 = 35 minutes
             "status": "Late",
             "actual": "0005",
+            "arrival": "0100",
         }
         assert dep.get_rail_departure_times() == expected
 
@@ -40,6 +41,7 @@ class TestRailDepartureTimes:
             "delay": 0,
             "status": "On time",
             "actual": "0930",
+            "arrival": "1000",
         }
         assert dep.get_rail_departure_times() == expected
 
@@ -71,6 +73,7 @@ class TestRailDepartureTimes:
             "delay": 5,
             "status": "Late",
             "actual": "0935",
+            "arrival": "1005",
         }
         assert dep.get_rail_departure_times() == expected
 
@@ -90,6 +93,7 @@ class TestRailDepartureTimes:
             "delay": 5,
             "status": "Late",
             "actual": "0935",
+            "arrival": "1005",
         }
         assert dep.get_rail_departure_times() == expected
 
@@ -109,6 +113,7 @@ class TestRailDepartureTimes:
             "delay": -1,
             "status": "Early",
             "actual": "0929",
+            "arrival": "0955",
         }
         assert dep.get_rail_departure_times() == expected
 
@@ -128,6 +133,7 @@ class TestRailDepartureTimes:
             "delay": 0,
             "status": "On time",
             "actual": "0930",
+            "arrival": "1000",
         }
         assert dep.get_rail_departure_times() == expected
 
@@ -145,6 +151,7 @@ class TestRailDepartureTimes:
             "delay": 0,
             "status": "On time",
             "actual": "2330",
+            "arrival": None,
         }
         assert dep.get_rail_departure_times() == expected
 
@@ -164,6 +171,7 @@ class TestRailDepartureTimes:
             "delay": 10,
             "status": "Late",
             "actual": "2340",
+            "arrival": "0045",
         }
         assert dep.get_rail_departure_times() == expected
 
@@ -184,6 +192,7 @@ class TestRailDepartureTimes:
             "delay": 0,
             "status": "Cancelled",
             "actual": "0930",
+            "arrival": None,
         }
         assert dep.get_rail_departure_times() == expected
 
@@ -204,6 +213,7 @@ class TestRailDepartureTimes:
             "delay": 0,
             "status": "On time",
             "actual": "0930",
+            "arrival": None,
         }
         assert dep.get_rail_departure_times() == expected
 
@@ -223,6 +233,7 @@ class TestRailDepartureTimes:
             "delay": 0,
             "status": "Cancelled",
             "actual": "0930",
+            "arrival": None,
         }
         assert dep.get_rail_departure_times() == expected
 
@@ -242,6 +253,7 @@ class TestRailDepartureTimes:
             "delay": 0,
             "status": "Cancelled",
             "actual": "0930",
+            "arrival": None,
         }
         assert dep.get_rail_departure_times() == expected
 
@@ -261,5 +273,26 @@ class TestRailDepartureTimes:
             "delay": 5,
             "status": "Late",
             "actual": "0935",
+            "arrival": None,
         }
         assert dep.get_rail_departure_times() == expected
+
+
+class TestArrival:
+    def _dao(self, **kw):
+        return DepartureDAO(
+            gbttBookedDeparture="0930", serviceUid="X", runDate="2025-10-29", **kw
+        )
+
+    def test_realtime_arrival_preferred(self):
+        dep = RailDepartureTimes(
+            self._dao(gbttBookedArrival="0925", realtimeArrival="0928")
+        )
+        assert dep.arrival == "0928"
+
+    def test_scheduled_arrival_when_no_realtime(self):
+        assert RailDepartureTimes(self._dao(gbttBookedArrival="0925")).arrival == "0925"
+
+    def test_no_arrival_when_service_starts_here(self):
+        dep = RailDepartureTimes(self._dao(realtimeDeparture="0934"))
+        assert dep.arrival is None

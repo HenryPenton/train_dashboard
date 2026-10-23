@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useConfigStore } from "../providers/config";
+import type { TimeDisplay } from "../stores/config";
 import { ConfigItem, buildConfigItems } from "../utils/groupAndSortItems";
 import EinkDepartures from "../components/eink/EinkDepartures";
 import EinkArrivals from "../components/eink/EinkArrivals";
@@ -12,12 +13,17 @@ import { EinkMessage } from "../components/eink/EinkSection";
 
 const MIN_EINK_REFRESH_SECONDS = 60;
 
-function renderItem(configItem: ConfigItem, key: string) {
+function renderItem(
+  configItem: ConfigItem,
+  key: string,
+  timeDisplay: TimeDisplay,
+) {
   switch (configItem.type) {
     case "rail_departure":
       return (
         <EinkDepartures
           key={key}
+          timeDisplay={timeDisplay}
           fromStation={{
             stationCode: configItem.item.originCode,
             stationName: configItem.item.origin,
@@ -111,7 +117,7 @@ export default function EinkPage() {
         </EinkMessage>
       )}
       {!configLoading &&
-        items.map((item, i) => renderItem(item, `item-${i}`))}
+        items.map((item, i) => renderItem(item, `item-${i}`, config.time_display))}
 
       <p className="eink-footer">
         {updated && <>Updated {updated}. </>}

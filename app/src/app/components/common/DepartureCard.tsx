@@ -5,13 +5,22 @@ import RouteInfo from "./RouteInfo";
 import DepartureTime from "./DepartureTime";
 import PlatformInfo from "./PlatformInfo";
 import DelayInfo from "./DelayInfo";
+import { DEFAULT_TIME_DISPLAY, type TimeDisplay } from "../../stores/config";
 import { getDepartureStatusBarColor } from "../../utils/colorMappings";
 
 type DepartureCardProps = {
   departure: Departure;
+  timeDisplay?: TimeDisplay;
 };
 
-export default function DepartureCard({ departure }: DepartureCardProps) {
+export default function DepartureCard({
+  departure,
+  timeDisplay = DEFAULT_TIME_DISPLAY,
+}: DepartureCardProps) {
+  const startsHere = !departure.arrival;
+  const showArrival = timeDisplay === "arrival" && !startsHere;
+  const time = showArrival ? departure.arrival! : departure.actual;
+  const effectiveDisplay: TimeDisplay = showArrival ? "arrival" : "departure";
   const CardWrapper = departure.url ? "a" : "div";
   const cardProps = departure.url
     ? {
@@ -28,7 +37,7 @@ export default function DepartureCard({ departure }: DepartureCardProps) {
       <div
         className="group bg-gradient-to-r from-surface-2 to-surface-3 rounded-xl border border-accent-border/30 shadow-lg overflow-hidden"
         role="article"
-        aria-label={`Train departure: service departing at ${departure.scheduledDepartureTime}, status: ${departure.status}`}
+        aria-label={`Train departure: service ${showArrival ? "arriving" : "departing"} at ${time}, status: ${departure.status}`}
       >
         <StatusBar
           backgroundColor={getDepartureStatusBarColor(departure.status)}
@@ -39,6 +48,7 @@ export default function DepartureCard({ departure }: DepartureCardProps) {
             <RouteInfo
               origin={departure.origin}
               destination={departure.destination}
+              startsHere={startsHere}
             />
           )}
 
@@ -46,13 +56,15 @@ export default function DepartureCard({ departure }: DepartureCardProps) {
             <div className="flex flex-col space-y-1">
               <DepartureTime
                 status={departure.status}
-                scheduledTime={departure.scheduledDepartureTime}
-                estimatedTime={departure.estimatedDepartureTime}
-                actualTime={departure.actual}
+                time={time}
+                timeDisplay={effectiveDisplay}
               />
 
               {departure.platform && (
-                <PlatformInfo platform={departure.platform} />
+                <PlatformInfo
+                  platform={departure.platform}
+                  timeDisplay={effectiveDisplay}
+                />
               )}
 
               {typeof departure.delay === "number" &&

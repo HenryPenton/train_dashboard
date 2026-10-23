@@ -40,6 +40,7 @@ def test_get_departures():
         "origin": "London",
         "destination": "Manchester",
         "actual": "1005",
+        "arrival": None,
         "delay": 5,
         "status": "Late",
         "platform": "1",

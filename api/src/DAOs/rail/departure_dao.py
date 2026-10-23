@@ -14,6 +14,8 @@ class DepartureDAO(BaseModel):
     serviceUid: str
     runDate: str
     realtimeDeparture: Optional[str] = None
+    gbttBookedArrival: Optional[str] = None
+    realtimeArrival: Optional[str] = None
     platform: Optional[str] = None
     displayAs: Optional[
         Literal[

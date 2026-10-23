@@ -40,6 +40,10 @@ export const THEMES = ["dark", "light", "retro"] as const;
 export type Theme = (typeof THEMES)[number];
 export const DEFAULT_THEME: Theme = "dark";
 
+export const TIME_DISPLAYS = ["departure", "arrival"] as const;
+export type TimeDisplay = (typeof TIME_DISPLAYS)[number];
+export const DEFAULT_TIME_DISPLAY: TimeDisplay = "departure";
+
 export type ConfigType = {
   tfl_best_routes: BestRoute[];
   rail_departures: DepartureConfig[];
@@ -47,6 +51,7 @@ export type ConfigType = {
   tfl_line_status: TflLineStatusConfig;
   refresh_timer: number;
   theme: Theme;
+  time_display: TimeDisplay;
 };
 
 export type ConfigState = {
@@ -74,6 +79,7 @@ export type ConfigActions = {
   setTflLineStatusEnabled: (enabled: boolean) => void;
   setRefreshTimer: (timer: number) => void;
   setTheme: (theme: Theme) => void;
+  setTimeDisplay: (timeDisplay: TimeDisplay) => void;
   saveConfig: () => Promise<void>;
 };
 
@@ -88,6 +94,7 @@ export const initConfigStore = (): ConfigState => {
       tfl_line_status: { enabled: false, col_2_position: 1, col_3_position: 1, importance: 1 },
       refresh_timer: APP_CONSTANTS.DEFAULT_REFRESH_TIMER,
       theme: DEFAULT_THEME,
+      time_display: DEFAULT_TIME_DISPLAY,
     },
     lastRefreshTimeStamp: "",
   };
@@ -101,6 +108,7 @@ export const defaultInitState: ConfigState = {
     tfl_line_status: { enabled: false, col_2_position: 1, col_3_position: 1, importance: 1 },
     refresh_timer: APP_CONSTANTS.DEFAULT_REFRESH_TIMER,
     theme: DEFAULT_THEME,
+    time_display: DEFAULT_TIME_DISPLAY,
   },
   lastRefreshTimeStamp: "",
 };
@@ -119,6 +127,9 @@ export const createConfigStore = (
           config: {
             ...config,
             theme: THEMES.includes(config.theme) ? config.theme : DEFAULT_THEME,
+            time_display: TIME_DISPLAYS.includes(config.time_display)
+              ? config.time_display
+              : DEFAULT_TIME_DISPLAY,
           },
           lastRefreshTimeStamp: new Date().toISOString(),
         });
@@ -298,6 +309,10 @@ export const createConfigStore = (
     setTheme: (theme) => {
       const state = get();
       set({ config: { ...state.config, theme } });
+    },
+    setTimeDisplay: (timeDisplay) => {
+      const state = get();
+      set({ config: { ...state.config, time_display: timeDisplay } });
     },
     saveConfig: async () => {
       const state = get();

@@ -100,6 +100,7 @@ export default function Home() {
       return (
         <TrainDepartures
           key={key}
+          timeDisplay={config.time_display}
           toStation={{
             stationCode: configItem.item.destinationCode,
             stationName: configItem.item.destination,

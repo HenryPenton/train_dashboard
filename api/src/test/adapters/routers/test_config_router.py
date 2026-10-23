@@ -40,6 +40,7 @@ def test_get_config_success(test_app):
         "tube_departures": [],
         "tfl_line_status": {"enabled": False, "col_2_position": 1, "col_3_position": 1, "importance": 1},
         "theme": "dark",
+        "time_display": "departure",
     }
 
 
@@ -137,3 +138,34 @@ def test_get_config_without_theme_defaults_to_dark(tmp_path):
 def test_set_config_rejects_unknown_theme(test_app):
     response = test_app.post("/config", json={"theme": "neon"})
     assert response.status_code == 422
+
+
+def test_set_config_rejects_unknown_time_display(test_app):
+    response = test_app.post("/config", json={"time_display": "teleport"})
+    assert response.status_code == 422
+
+
+def test_get_config_without_time_display_defaults_to_departure(tmp_path):
+    """An existing config.json written before time_display existed still loads."""
+    import json
+    import logging
+    from src.adapters.file_handlers.json.json_file_read import JSONFileReader
+    from src.adapters.file_handlers.json.json_file_write import JSONFileWriter
+    from src.DAOs.config.config_dao import ConfigDAO
+
+    config_path = tmp_path / "config.json"
+    config_path.write_text(json.dumps({"refresh_timer": 120}))
+
+    app = FastAPI()
+    app.include_router(config_handler.router)
+    app.dependency_overrides[config_handler.get_config_service] = (
+        lambda: config_handler.ConfigService(
+            reader=JSONFileReader[ConfigDAO](config_path),
+            writer=JSONFileWriter(config_path),
+            config_path=config_path,
+            logger=logging.getLogger("test"),
+        )
+    )
+    response = TestClient(app).get("/config")
+    assert response.status_code == 200
+    assert response.json()["time_display"] == "departure"

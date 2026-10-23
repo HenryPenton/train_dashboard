@@ -17,6 +17,7 @@ dependencies = [
 [dependency-groups]
 dev = [
     "coverage",
+    "httpx2>=2.16.0",
     "pytest",
     "pytest-asyncio",
     "pytest-cov",

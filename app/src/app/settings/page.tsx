@@ -13,7 +13,7 @@ import PlaceDetails from "../components/TfL/PlaceDetails";
 import TflStopSidebar, { SidebarItem } from "../components/TfL/TflStopSidebar";
 import ItemList from "../components/settings/ItemList";
 import { useConfigStore } from "../providers/config";
-import { THEMES, type Theme } from "../stores/config";
+import { THEMES, TIME_DISPLAYS, type Theme, type TimeDisplay } from "../stores/config";
 
 const THEME_SWATCHES: Record<
   Theme,
@@ -22,6 +22,11 @@ const THEME_SWATCHES: Record<
   dark: { label: "Dark", bg: "#181818", fg: "#f8f8f2", accent: "#67e8f9" },
   light: { label: "Light", bg: "#f3f4f6", fg: "#1f2933", accent: "#0e7490" },
   retro: { label: "Retro", bg: "#000000", fg: "#ffb000", accent: "#ff8c00" },
+};
+
+const TIME_DISPLAY_LABELS: Record<TimeDisplay, string> = {
+  departure: "Departure",
+  arrival: "Arrival",
 };
 
 export default function Settings() {
@@ -33,6 +38,7 @@ export default function Settings() {
     addTubeDeparture,
     setRefreshTimer,
     setTheme,
+    setTimeDisplay,
     removeDeparture,
     removeRoute,
     removeTubeDeparture,
@@ -462,6 +468,31 @@ export default function Settings() {
                       <span style={{ color: sw.accent }}>On time</span>
                     </span>
                     <span className="mt-2 block text-sm text-fg">{sw.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </SectionCard>
+          {/* Time display */}
+          <SectionCard>
+            <SectionHeading>🕒 Train Times</SectionHeading>
+            <div
+              className="flex flex-wrap gap-4"
+              role="radiogroup"
+              aria-label="Show train times as"
+            >
+              {TIME_DISPLAYS.map((mode) => {
+                const selected = config?.time_display === mode;
+                return (
+                  <button
+                    key={mode}
+                    type="button"
+                    role="radio"
+                    aria-checked={selected}
+                    onClick={() => setTimeDisplay(mode)}
+                    className={`w-32 rounded-lg border-2 p-2 text-left font-mono text-sm text-fg ${selected ? "border-accent" : "border-line"}`}
+                  >
+                    {TIME_DISPLAY_LABELS[mode]}
                   </button>
                 );
               })}

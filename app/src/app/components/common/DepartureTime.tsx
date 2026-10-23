@@ -1,35 +1,32 @@
 import React from "react";
 import { DepartureStatus } from "../sections/TrainDepartures";
+import { DEFAULT_TIME_DISPLAY, type TimeDisplay } from "../../stores/config";
 
 type DepartureTimeProps = {
   status: DepartureStatus;
-  scheduledTime: string;
-  estimatedTime?: string;
-  actualTime?: string;
+  time: string;
+  timeDisplay?: TimeDisplay;
 };
 
 export default function DepartureTime({
   status,
-  scheduledTime,
-  estimatedTime,
-  actualTime,
+  time,
+  timeDisplay = DEFAULT_TIME_DISPLAY,
 }: DepartureTimeProps) {
+  const arrival = timeDisplay === "arrival";
   return (
     <div
       className="text-lg font-bold text-accent-soft"
       role="time"
-      aria-label={`Departure time: ${status === "Cancelled" ? "Cancelled" : actualTime || scheduledTime}`}
+      aria-label={`${arrival ? "Arrival" : "Departure"} time: ${status === "Cancelled" ? "Cancelled" : time}`}
     >
-      <span className="text-muted font-normal">Departs: </span>
+      <span className="text-muted font-normal">
+        {arrival ? "Arrives: " : "Departs: "}
+      </span>
       {status === "Cancelled" ? (
         <span className="text-red-400 line-through">CANCELLED</span>
       ) : (
-        <>
-          {actualTime || scheduledTime}
-          {estimatedTime !== scheduledTime && !actualTime && (
-            <span className="ml-2 text-accent-2">({estimatedTime})</span>
-          )}
-        </>
+        time
       )}
     </div>
   );

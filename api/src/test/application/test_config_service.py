@@ -148,6 +148,7 @@ def test_get_config_happy():
         },
         "refresh_timer": 65,
         "theme": "dark",
+        "time_display": "departure",
     }
     assert result == expected_result
 

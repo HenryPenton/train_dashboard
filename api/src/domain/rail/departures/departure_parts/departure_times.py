@@ -1,3 +1,5 @@
+from typing import Optional
+
 from src.DAOs.rail.departure_dao import DepartureDAO
 from src.shared.utils.time import twenty_four_hour_string_to_minutes
 from src.shared.utils.check_group_of_properties_exist import (
@@ -16,6 +18,12 @@ class RailDepartureTimes:
             self.delay, self.scheduled_departure, self.real_departure
         )
         self.status = self._get_status(self.delay, service.displayAs)
+        self.arrival = self._get_arrival(service)
+
+    @staticmethod
+    def _get_arrival(service: DepartureDAO) -> Optional[str]:
+        # Services starting at this station have no arrival.
+        return service.realtimeArrival or service.gbttBookedArrival
 
     @staticmethod
     def _get_scheduled_departure(service: DepartureDAO) -> str:
@@ -71,4 +79,5 @@ class RailDepartureTimes:
             "delay": self.delay,
             "status": self.status,
             "actual": self.actual,
+            "arrival": self.arrival,
         }

@@ -1,4 +1,6 @@
 from enum import Enum
+from typing import Optional
+
 from pydantic import BaseModel
 
 
@@ -14,6 +16,7 @@ class DepartureDTO(BaseModel):
     delay: int
     status: DepartureStatus
     actual: str
+    arrival: Optional[str] = None
     origin: str
     destination: str
     platform: str

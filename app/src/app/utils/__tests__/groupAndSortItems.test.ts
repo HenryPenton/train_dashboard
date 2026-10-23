@@ -10,6 +10,7 @@ const pos = (c2: number, c3: number, importance: number) => ({
 const config: ConfigType = {
   refresh_timer: 60,
   theme: "dark",
+  time_display: "departure",
   rail_departures: [
     {
       origin: "A",

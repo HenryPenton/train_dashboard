@@ -11,6 +11,7 @@ class DummyRailService:
                     "delay": 5,
                     "status": "Late",
                     "actual": "10:05",
+                    "arrival": "10:00",
                     "origin": "AAA",
                     "destination": "BBB",
                     "platform": "1",
@@ -31,6 +32,7 @@ def test_get_departures():
     assert response.json() == [
         {
             "actual": "10:05",
+            "arrival": "10:00",
             "origin": "AAA",
             "destination": "BBB",
             "platform": "1",
