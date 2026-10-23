@@ -1,0 +1,65 @@
+# Development stack: source is bind-mounted and each service hot-reloads.
+# Run with: docker compose -f docker-compose.dev.yaml up   (or `make dev-up`)
+# Uses the same container names as docker-compose.yaml so SERVER_URL/APP_URL in .env
+# resolve unchanged - don't run both stacks at once.
+services:
+  app:
+    container_name: train_dashboard_app
+    image: node:24-alpine
+    working_dir: /app
+    command: sh -c "npm install -g pnpm && pnpm install --frozen-lockfile && pnpm dev --hostname 0.0.0.0"
+    depends_on:
+      - api
+    env_file:
+      - .env
+    environment:
+      WATCHPACK_POLLING: "true"
+    volumes:
+      - ./app:/app
+      - app_node_modules:/app/node_modules
+      - app_next_cache:/app/.next
+    ports:
+      - "3000:3000"
+
+  api:
+    container_name: train_dashboard_api
+    image: ghcr.io/astral-sh/uv:python3.14-bookworm-slim
+    working_dir: /app
+    entrypoint: []
+    command: sh -c "uv sync --frozen && uv run fastapi dev src/main.py --host 0.0.0.0 --port 8000"
+    env_file:
+      - .env
+    environment:
+      UV_PROJECT_ENVIRONMENT: /venv
+      UV_LINK_MODE: copy
+    volumes:
+      - ./api:/app
+      - ./config:/app/config:rw
+      - api_venv:/venv
+    ports:
+      - "8000:8000"
+
+  # Optional push server
+  push:
+    container_name: train_dashboard_push
+    image: ghcr.io/astral-sh/uv:python3.14-bookworm-slim
+    working_dir: /app
+    entrypoint: []
+    command: sh -c "uv sync --frozen && uv run python -m src.main"
+    env_file:
+      - .env
+    environment:
+      UV_PROJECT_ENVIRONMENT: /venv
+      UV_LINK_MODE: copy
+    volumes:
+      - ./push:/app
+      - ./push-server-logs:/app/push-server-logs:rw
+      - push_venv:/venv
+    depends_on:
+      - api
+
+volumes:
+  app_node_modules:
+  app_next_cache:
+  api_venv:
+  push_venv:

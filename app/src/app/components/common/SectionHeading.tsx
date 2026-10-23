@@ -18,7 +18,7 @@ export default function SectionHeading({
 }: SectionHeadingProps) {
   return (
     <h2
-      className={`text-xl font-semibold mb-4 text-cyan-300 border-b border-cyan-600 pb-2 ${className}`}
+      className={`text-xl font-semibold mb-4 text-accent border-b border-accent-solid pb-2 ${className}`}
       role="heading"
       aria-level={2}
       {...(ariaLabel ? { "aria-label": ariaLabel } : {})}

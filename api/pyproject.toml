@@ -1,0 +1,34 @@
+[project]
+name = "train-time-dashboard-api"
+version = "0.1.0"
+description = "FastAPI backend for the train time dashboard"
+requires-python = ">=3.14"
+dependencies = [
+    "fastapi",
+    "fastapi-cli",
+    "httpx",
+    "pydantic",
+    "pydantic_core",
+    "python-dotenv",
+    "python-multipart",
+    "uvicorn",
+]
+
+[dependency-groups]
+dev = [
+    "coverage",
+    "pytest",
+    "pytest-asyncio",
+    "pytest-cov",
+]
+
+[tool.uv]
+package = false
+
+[tool.coverage.run]
+omit = [
+    "*test*",
+    "*__init__*.py",
+    "src/test/utils/dummy_logger.py",
+    "src/shared/logging/logger_utils.py",
+]

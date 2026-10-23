@@ -16,18 +16,18 @@ export default function DepartureTime({
 }: DepartureTimeProps) {
   return (
     <div
-      className="text-lg font-bold text-cyan-200"
+      className="text-lg font-bold text-accent-soft"
       role="time"
       aria-label={`Departure time: ${status === "Cancelled" ? "Cancelled" : actualTime || scheduledTime}`}
     >
-      <span className="text-gray-400 font-normal">Departs: </span>
+      <span className="text-muted font-normal">Departs: </span>
       {status === "Cancelled" ? (
         <span className="text-red-400 line-through">CANCELLED</span>
       ) : (
         <>
           {actualTime || scheduledTime}
           {estimatedTime !== scheduledTime && !actualTime && (
-            <span className="ml-2 text-yellow-300">({estimatedTime})</span>
+            <span className="ml-2 text-accent-2">({estimatedTime})</span>
           )}
         </>
       )}

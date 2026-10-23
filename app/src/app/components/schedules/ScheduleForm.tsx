@@ -49,12 +49,12 @@ export default function ScheduleForm({
       <form onSubmit={onSubmit} className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="flex flex-col gap-1">
-            <label className="text-cyan-300 font-semibold">Schedule Type</label>
+            <label className="text-accent font-semibold">Schedule Type</label>
             <select
               name="type"
               value={newSchedule.type}
               onChange={onChange}
-              className="bg-[#2a2d35] border border-gray-600 rounded px-3 py-2 text-white focus:border-cyan-500 focus:outline-none"
+              className="bg-surface-2 border border-line rounded px-3 py-2 text-fg-strong focus:border-accent-border focus:outline-none"
             >
               <option value="rail_departure">🚂 Rail Departure</option>
               <option value="tube_line_status">🚇 Tube Line Status</option>
@@ -63,7 +63,7 @@ export default function ScheduleForm({
           </div>
 
           <div className="flex flex-col gap-1">
-            <label className="text-cyan-300 font-semibold">
+            <label className="text-accent font-semibold">
               Time (24-hour format)
               <span className="text-red-400 ml-1">*</span>
             </label>
@@ -73,7 +73,7 @@ export default function ScheduleForm({
               value={newSchedule.time}
               onChange={onChange}
               required
-              className="bg-[#2a2d35] border border-gray-600 rounded px-3 py-2 text-white focus:border-cyan-500 focus:outline-none"
+              className="bg-surface-2 border border-line rounded px-3 py-2 text-fg-strong focus:border-accent-border focus:outline-none"
             />
           </div>
         </div>

@@ -24,7 +24,7 @@ export default function LineStatusCard({
   return (
     <div className="group">
       <div
-        className={`bg-gradient-to-r from-[#2a2d35] to-[#323741] rounded-xl border ${getSeverityBorderColor(severity)}/30 shadow-lg`}
+        className={`bg-gradient-to-r from-surface-2 to-surface-3 rounded-xl border ${getSeverityBorderColor(severity)}/30 shadow-lg`}
         role="article"
         aria-label={`${name} line status: ${statuses && statuses.length > 0 ? statuses.map((s) => s.status).join(", ") : "Unknown"}`}
       >
@@ -33,7 +33,7 @@ export default function LineStatusCard({
         <div className="p-4">
           <div className="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-start">
             <div
-              className="text-lg font-bold text-cyan-200"
+              className="text-lg font-bold text-accent-soft"
               role="heading"
               aria-level={3}
             >

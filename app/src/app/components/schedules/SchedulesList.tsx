@@ -46,7 +46,7 @@ export default function SchedulesList({
         </div>
       )}
       {schedules.schedules.length === 0 ? (
-        <div className="text-gray-400">No schedules configured.</div>
+        <div className="text-muted">No schedules configured.</div>
       ) : (
         <div className="space-y-3">
           {schedules.schedules.map((schedule, index) => (

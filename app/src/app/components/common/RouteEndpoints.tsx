@@ -20,7 +20,7 @@ export default function RouteEndpoints({ from, to }: RouteEndpointsProps) {
             Departure
           </span>
         </div>
-        <span className="text-white font-bold text-lg block ml-7">
+        <span className="text-fg-strong font-bold text-lg block ml-7">
           {from.placeName}
         </span>
       </div>
@@ -32,7 +32,7 @@ export default function RouteEndpoints({ from, to }: RouteEndpointsProps) {
             Destination
           </span>
         </div>
-        <span className="text-white font-bold text-lg block ml-7">
+        <span className="text-fg-strong font-bold text-lg block ml-7">
           {to.placeName}
         </span>
       </div>

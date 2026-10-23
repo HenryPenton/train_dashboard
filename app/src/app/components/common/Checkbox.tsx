@@ -28,7 +28,7 @@ export default function Checkbox({
         aria-describedby={`${id}-label`}
         className="accent-cyan-600 w-4 h-4"
       />
-      <span id={`${id}-label`} className="text-cyan-200">
+      <span id={`${id}-label`} className="text-accent-soft">
         {label}
       </span>
     </label>

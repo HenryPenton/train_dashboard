@@ -1,4 +1,230 @@
 @import "tailwindcss";
+
+/*
+ * Themes. Each theme sets the --t-* variables; Tailwind exposes them as
+ * utilities (bg-page, text-fg, text-accent, border-line, ...) via @theme inline.
+ * The dark theme (default, also used before a theme is applied) reproduces the
+ * original hard-coded colours exactly.
+ */
+:root,
+[data-theme="dark"] {
+  --t-page: #181818;
+  --t-surface: #23262f;
+  --t-surface-2: #2a2d35;
+  --t-surface-3: #323741;
+  --t-surface-0: #1a1d24;
+  --t-surface-input: #1a1d25;
+  --t-surface-deep: #1e2128;
+  --t-surface-hover: #3a3d45;
+  --t-fg: #f8f8f2;
+  --t-fg-strong: #ffffff;
+  --t-fg-soft: var(--color-gray-300);
+  --t-muted: var(--color-gray-400);
+  --t-subtle: #b0b0b0;
+  --t-line: var(--color-gray-600);
+  --t-accent: var(--color-cyan-300);
+  --t-accent-soft: var(--color-cyan-200);
+  --t-accent-strong: var(--color-cyan-400);
+  --t-accent-border: var(--color-cyan-500);
+  --t-accent-solid: var(--color-cyan-600);
+  --t-accent-2: var(--color-yellow-300);
+  --t-accent-2-soft: var(--color-yellow-200);
+  --t-accent-3: var(--color-green-300);
+  --t-title-glow: drop-shadow(0 0 2px white) drop-shadow(0 0 8px #00ffe7);
+  --t-text-glow: none;
+  --t-inset: rgb(0 0 0 / 0.3);
+  --t-inset-soft: rgb(0 0 0 / 0.2);
+  --scroll-track: #2a2d35;
+  --scroll-thumb: #4b5563;
+  --scroll-thumb-hover: #6b7280;
+  --sb-bg: #181a20;
+  --sb-thumb-a: #23262f;
+  --sb-thumb-b: #353945;
+}
+
+[data-theme="light"] {
+  --t-page: #f3f4f6;
+  --t-surface: #ffffff;
+  --t-surface-2: #f1f5f9;
+  --t-surface-3: #e2e8f0;
+  --t-surface-0: #f8fafc;
+  --t-surface-input: #ffffff;
+  --t-surface-deep: #eef2f7;
+  --t-surface-hover: #e2e8f0;
+  --t-fg: #1f2933;
+  --t-fg-strong: #0f172a;
+  --t-fg-soft: #334155;
+  --t-muted: #64748b;
+  --t-subtle: #64748b;
+  --t-line: #cbd5e1;
+  --t-accent: var(--color-cyan-700);
+  --t-accent-soft: var(--color-cyan-800);
+  --t-accent-strong: var(--color-cyan-700);
+  --t-accent-border: var(--color-cyan-600);
+  --t-accent-solid: var(--color-cyan-600);
+  --t-accent-2: var(--color-amber-700);
+  --t-accent-2-soft: var(--color-amber-500);
+  --t-accent-3: var(--color-green-700);
+  --t-title-glow: none;
+  --t-text-glow: none;
+  --scroll-track: #e2e8f0;
+  --scroll-thumb: #94a3b8;
+  --scroll-thumb-hover: #64748b;
+  --sb-bg: #f3f4f6;
+  --sb-thumb-a: #cbd5e1;
+  --sb-thumb-b: #94a3b8;
+  /* Keep status text legible on light surfaces */
+  --color-red-400: var(--color-red-600);
+  --color-green-400: var(--color-green-600);
+  --color-yellow-300: var(--color-yellow-600);
+  --color-yellow-400: var(--color-yellow-600);
+  --color-orange-400: var(--color-orange-600);
+  /* Pale dark-theme text shades -> readable darker shades on light surfaces */
+  --color-cyan-200: var(--color-cyan-800);
+  --color-cyan-300: var(--color-cyan-700);
+  --color-cyan-400: var(--color-cyan-700);
+  --color-purple-200: var(--color-purple-800);
+  --color-purple-300: var(--color-purple-700);
+  --color-purple-400: var(--color-purple-700);
+  --color-blue-200: var(--color-blue-800);
+  --color-blue-300: var(--color-blue-700);
+  --color-blue-400: var(--color-blue-700);
+  --color-indigo-200: var(--color-indigo-800);
+  --color-indigo-300: var(--color-indigo-700);
+  --color-indigo-400: var(--color-indigo-700);
+  --color-pink-200: var(--color-pink-800);
+  --color-pink-300: var(--color-pink-700);
+  --color-pink-400: var(--color-pink-700);
+  --color-emerald-200: var(--color-emerald-800);
+  --color-emerald-300: var(--color-emerald-700);
+  --color-emerald-400: var(--color-emerald-700);
+  --color-green-200: var(--color-green-800);
+  --color-green-300: var(--color-green-700);
+  --color-red-200: var(--color-red-800);
+  --color-red-300: var(--color-red-700);
+  --color-orange-200: var(--color-orange-800);
+  --color-orange-300: var(--color-orange-700);
+  --color-yellow-200: var(--color-yellow-800);
+  --color-lime-200: var(--color-lime-800);
+  --color-lime-300: var(--color-lime-700);
+  --color-lime-400: var(--color-lime-700);
+  --color-amber-200: var(--color-amber-800);
+  --color-amber-300: var(--color-amber-700);
+  --color-amber-400: var(--color-amber-700);
+  --color-gray-200: var(--color-gray-800);
+  --color-gray-300: var(--color-gray-700);
+  --color-gray-400: var(--color-gray-700);
+  --t-inset: rgb(255 255 255 / 0.65);
+  --t-inset-soft: rgb(255 255 255 / 0.5);
+}
+
+/* Retro departure board: black background, amber dot-matrix style monospace */
+[data-theme="retro"] {
+  --t-page: #000000;
+  --t-surface: #0d0a00;
+  --t-surface-2: #1a1200;
+  --t-surface-3: #241a00;
+  --t-surface-0: #080600;
+  --t-surface-input: #120d00;
+  --t-surface-deep: #0a0800;
+  --t-surface-hover: #2e2200;
+  --t-fg: #ffb000;
+  --t-fg-strong: #ffd54a;
+  --t-fg-soft: #ffc233;
+  --t-muted: #b37a00;
+  --t-subtle: #b37a00;
+  --t-line: #7a4f00;
+  --t-accent: #ffcc33;
+  --t-accent-soft: #ffd966;
+  --t-accent-strong: #ffb000;
+  --t-accent-border: #ff8c00;
+  --t-accent-solid: #ff8c00;
+  --t-accent-2: #ff8c00;
+  --t-accent-2-soft: #ff6a00;
+  --t-accent-3: #ffcc33;
+  --t-title-glow: drop-shadow(0 0 6px #ff8c00);
+  --t-text-glow: 0 0 4px rgb(255 140 0 / 0.55);
+  --scroll-track: #1a1200;
+  --scroll-thumb: #7a4f00;
+  --scroll-thumb-hover: #ff8c00;
+  --sb-bg: #000000;
+  --sb-thumb-a: #7a4f00;
+  --sb-thumb-b: #ff8c00;
+  --font-mono: "Courier New", ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* Replace the cool decorative hues with amber/orange */
+  --color-cyan-200: var(--color-amber-200);
+  --color-cyan-300: var(--color-amber-300);
+  --color-cyan-400: var(--color-amber-400);
+  --color-cyan-500: var(--color-amber-500);
+  --color-cyan-600: var(--color-amber-600);
+  --color-cyan-700: var(--color-amber-700);
+  --color-purple-200: var(--color-orange-200);
+  --color-purple-300: var(--color-orange-300);
+  --color-purple-400: var(--color-orange-400);
+  --color-purple-500: var(--color-orange-500);
+  --color-purple-600: var(--color-orange-600);
+  --color-purple-700: var(--color-orange-700);
+  --color-blue-200: var(--color-orange-200);
+  --color-blue-300: var(--color-orange-300);
+  --color-blue-400: var(--color-orange-400);
+  --color-blue-500: var(--color-orange-500);
+  --color-blue-600: var(--color-orange-600);
+  --color-blue-700: var(--color-orange-700);
+  --color-indigo-200: var(--color-orange-200);
+  --color-indigo-300: var(--color-orange-300);
+  --color-indigo-400: var(--color-orange-400);
+  --color-indigo-500: var(--color-orange-500);
+  --color-indigo-600: var(--color-orange-600);
+  --color-indigo-700: var(--color-orange-700);
+  --color-pink-200: var(--color-orange-200);
+  --color-pink-300: var(--color-orange-300);
+  --color-pink-400: var(--color-orange-400);
+  --color-pink-500: var(--color-orange-500);
+  --color-pink-600: var(--color-orange-600);
+  --color-pink-700: var(--color-orange-700);
+  --color-emerald-200: var(--color-amber-200);
+  --color-emerald-300: var(--color-amber-300);
+  --color-emerald-400: var(--color-amber-400);
+  --color-emerald-500: var(--color-amber-500);
+  --color-emerald-600: var(--color-amber-600);
+  --color-emerald-700: var(--color-amber-700);
+}
+
+@theme inline {
+  --color-page: var(--t-page);
+  --color-surface: var(--t-surface);
+  --color-inset: var(--t-inset);
+  --color-inset-soft: var(--t-inset-soft);
+  --color-surface-2: var(--t-surface-2);
+  --color-surface-3: var(--t-surface-3);
+  --color-surface-0: var(--t-surface-0);
+  --color-surface-input: var(--t-surface-input);
+  --color-surface-deep: var(--t-surface-deep);
+  --color-surface-hover: var(--t-surface-hover);
+  --color-fg: var(--t-fg);
+  --color-fg-strong: var(--t-fg-strong);
+  --color-fg-soft: var(--t-fg-soft);
+  --color-muted: var(--t-muted);
+  --color-subtle: var(--t-subtle);
+  --color-line: var(--t-line);
+  --color-accent: var(--t-accent);
+  --color-accent-soft: var(--t-accent-soft);
+  --color-accent-strong: var(--t-accent-strong);
+  --color-accent-border: var(--t-accent-border);
+  --color-accent-solid: var(--t-accent-solid);
+  --color-accent-2: var(--t-accent-2);
+  --color-accent-2-soft: var(--t-accent-2-soft);
+  --color-accent-3: var(--t-accent-3);
+}
+
+.title-glow {
+  filter: var(--t-title-glow);
+}
+
+[data-theme="retro"] main {
+  text-shadow: var(--t-text-glow);
+}
+
 body {
   width: 100%;
   margin: 0;
@@ -8,16 +234,16 @@ body {
 /* Swish modern webkit scrollbars */
 ::-webkit-scrollbar {
   width: 12px;
-  background: #181a20;
+  background: var(--sb-bg);
 }
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #23262f 40%, #353945 100%);
+  background: linear-gradient(135deg, var(--sb-thumb-a) 40%, var(--sb-thumb-b) 100%);
   border-radius: 8px;
-  border: 2px solid #181a20;
+  border: 2px solid var(--sb-bg);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #353945 60%, #23262f 100%);
+  background: linear-gradient(135deg, var(--sb-thumb-b) 60%, var(--sb-thumb-a) 100%);
 }
 ::-webkit-scrollbar-corner {
-  background: #181a20;
+  background: var(--sb-bg);
 }

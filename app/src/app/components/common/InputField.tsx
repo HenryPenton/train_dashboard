@@ -23,7 +23,7 @@ export default function InputField({
 
   return (
     <div className={`flex flex-col gap-1 ${className}`}>
-      <label htmlFor={inputId} className="text-cyan-300 font-semibold">
+      <label htmlFor={inputId} className="text-accent font-semibold">
         {label}
         {required && (
           <span className="text-red-400 ml-1" aria-label="required">
@@ -41,7 +41,7 @@ export default function InputField({
         required={required}
         aria-label={label}
         aria-required={required}
-        className="bg-[#2a2d35] border border-gray-600 rounded px-3 py-2 text-white focus:border-cyan-500 focus:outline-none"
+        className="bg-surface-2 border border-line rounded px-3 py-2 text-fg-strong focus:border-accent-border focus:outline-none"
       />
     </div>
   );

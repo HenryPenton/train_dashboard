@@ -53,11 +53,11 @@ export default function JourneyMetrics({
         <div className="p-4 bg-gradient-to-br from-cyan-500/10 to-blue-500/10 rounded-xl border border-cyan-400/20">
           <div className="flex items-center gap-3">
             <div>
-              <div className="text-cyan-300 text-xs font-medium uppercase tracking-wider">
+              <div className="text-accent text-xs font-medium uppercase tracking-wider">
                 Arrival
               </div>
               <div
-                className="text-white font-bold text-xl"
+                className="text-fg-strong font-bold text-xl"
                 aria-label={`Arrival time: ${formatArrivalTime(arrival)}`}
               >
                 {formatArrivalTime(arrival)}
@@ -72,11 +72,11 @@ export default function JourneyMetrics({
           <div className="p-4 bg-gradient-to-br from-yellow-500/10 to-orange-500/10 rounded-xl border border-yellow-400/20">
             <div className="flex items-center gap-3">
               <div>
-                <div className="text-yellow-300 text-xs font-medium uppercase tracking-wider">
+                <div className="text-accent-2 text-xs font-medium uppercase tracking-wider">
                   Fare
                 </div>
                 <div
-                  className="text-white font-bold text-xl"
+                  className="text-fg-strong font-bold text-xl"
                   aria-label={`Journey fare: £${(fare / 100).toFixed(2)}`}
                 >
                   £{(fare / 100).toFixed(2)}

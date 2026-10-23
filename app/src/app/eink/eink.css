@@ -1,0 +1,97 @@
+/* E-ink view: pure black on white, no colour, no animation, no fixed
+   positioning, no flex gap or CSS variables (old Kindle WebKit friendly). */
+.eink-root {
+  background: #fff;
+  color: #000;
+  min-height: 100%;
+  margin: 0;
+  padding: 16px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 28px;
+  line-height: 1.35;
+  font-weight: normal;
+}
+
+.eink-root * {
+  background-image: none;
+  box-shadow: none;
+  text-shadow: none;
+  transition: none;
+  animation: none;
+  color: #000;
+}
+
+.eink-title {
+  font-size: 36px;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin: 0 0 16px 0;
+  padding-bottom: 8px;
+  border-bottom: 4px solid #000;
+}
+
+.eink-section {
+  margin: 0 0 24px 0;
+  padding: 0 0 12px 0;
+  border-bottom: 2px solid #000;
+}
+
+.eink-section-title {
+  font-size: 32px;
+  font-weight: bold;
+  margin: 0 0 8px 0;
+}
+
+.eink-group {
+  margin: 0 0 12px 0;
+}
+
+.eink-group-title {
+  font-size: 28px;
+  font-weight: bold;
+  margin: 8px 0 4px 0;
+  text-decoration: underline;
+}
+
+.eink-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+ol.eink-list {
+  list-style: decimal;
+  padding-left: 36px;
+}
+
+.eink-row {
+  margin: 0;
+  padding: 6px 0;
+  border-bottom: 1px solid #000;
+}
+
+.eink-time {
+  font-weight: bold;
+}
+
+.eink-status {
+  font-weight: bold;
+}
+
+.eink-detail {
+  font-size: 24px;
+}
+
+.eink-message {
+  margin: 0;
+  font-style: italic;
+}
+
+.eink-footer {
+  font-size: 22px;
+  margin: 8px 0 0 0;
+}
+
+.eink-footer a {
+  text-decoration: underline;
+}

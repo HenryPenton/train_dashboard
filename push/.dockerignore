@@ -101,3 +101,4 @@ venv/
 
 # VS Code
 .vscode/
+.venv/

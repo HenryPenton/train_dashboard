@@ -80,18 +80,18 @@ export default function ScheduleItem({
 
   if (isEditing && editingSchedule) {
     return (
-      <div className="p-4 bg-[#2a2d35] rounded border-l-4 border-cyan-500">
+      <div className="p-4 bg-surface-2 rounded border-l-4 border-accent-border">
         <div className="space-y-4">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">{getScheduleIcon(schedule.type)}</span>
-            <span className="font-semibold text-cyan-200">
+            <span className="font-semibold text-accent-soft">
               {schedule.type.replace("_", " ").toUpperCase()}
             </span>
           </div>
 
           {/* Editable time */}
           <div className="flex flex-col gap-1">
-            <label className="text-cyan-300 font-semibold">
+            <label className="text-accent font-semibold">
               Time (24-hour format)
               <span className="text-red-400 ml-1">*</span>
             </label>
@@ -100,7 +100,7 @@ export default function ScheduleItem({
               value={editingSchedule.time}
               onChange={(e) => onTimeChange(e.target.value)}
               required
-              className="bg-[#1a1d25] border border-gray-600 rounded px-3 py-2 text-white focus:border-cyan-500 focus:outline-none max-w-xs"
+              className="bg-surface-input border border-line rounded px-3 py-2 text-fg-strong focus:border-accent-border focus:outline-none max-w-xs"
             />
           </div>
 
@@ -111,7 +111,7 @@ export default function ScheduleItem({
           />
 
           {/* Station/Place info (read-only) */}
-          <div className="text-gray-300">
+          <div className="text-fg-soft">
             {getScheduleDescription(schedule)}
           </div>
 
@@ -131,21 +131,21 @@ export default function ScheduleItem({
 
   // View mode
   return (
-    <div className="p-4 bg-[#2a2d35] rounded border-l-4 border-cyan-500">
+    <div className="p-4 bg-surface-2 rounded border-l-4 border-accent-border">
       <div className="flex flex-col items-start gap-3">
         <div className="flex items-center gap-2">
           <span className="text-lg">{getScheduleIcon(schedule.type)}</span>
-          <span className="font-semibold text-cyan-200">
+          <span className="font-semibold text-accent-soft">
             {schedule.type.replace("_", " ").toUpperCase()}
           </span>
-          <span className="text-yellow-300">
+          <span className="text-accent-2">
             {schedule.day_of_week
               ? parseDays(schedule.day_of_week).join(", ")
               : "No days selected"}{" "}
             at {schedule.time}
           </span>
         </div>
-        <div className="text-gray-300">{getScheduleDescription(schedule)}</div>
+        <div className="text-fg-soft">{getScheduleDescription(schedule)}</div>
 
         <div className="flex gap-2">
           <Button variant="secondary" onClick={onEdit} disabled={disabled}>

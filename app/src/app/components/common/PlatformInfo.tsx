@@ -7,8 +7,8 @@ type PlatformInfoProps = {
 export default function PlatformInfo({ platform }: PlatformInfoProps) {
   return (
     <div className="text-sm" aria-label={`Departing from platform ${platform}`}>
-      <span className="text-gray-400">Platform: </span>
-      <span className="text-gray-300 font-semibold">{platform}</span>
+      <span className="text-muted">Platform: </span>
+      <span className="text-fg-soft font-semibold">{platform}</span>
     </div>
   );
 }

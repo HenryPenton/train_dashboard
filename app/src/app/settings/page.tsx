@@ -13,6 +13,16 @@ import PlaceDetails from "../components/TfL/PlaceDetails";
 import TflStopSidebar, { SidebarItem } from "../components/TfL/TflStopSidebar";
 import ItemList from "../components/settings/ItemList";
 import { useConfigStore } from "../providers/config";
+import { THEMES, type Theme } from "../stores/config";
+
+const THEME_SWATCHES: Record<
+  Theme,
+  { label: string; bg: string; fg: string; accent: string }
+> = {
+  dark: { label: "Dark", bg: "#181818", fg: "#f8f8f2", accent: "#67e8f9" },
+  light: { label: "Light", bg: "#f3f4f6", fg: "#1f2933", accent: "#0e7490" },
+  retro: { label: "Retro", bg: "#000000", fg: "#ffb000", accent: "#ff8c00" },
+};
 
 export default function Settings() {
   const {
@@ -22,6 +32,7 @@ export default function Settings() {
     addRoute,
     addTubeDeparture,
     setRefreshTimer,
+    setTheme,
     removeDeparture,
     removeRoute,
     removeTubeDeparture,
@@ -292,7 +303,7 @@ export default function Settings() {
                   <span className="font-semibold">
                     {departure.origin} → {departure.destination}
                   </span>
-                  <span className="text-gray-400 ml-2">
+                  <span className="text-muted ml-2">
                     ({departure.originCode} → {departure.destinationCode})
                   </span>
                 </div>
@@ -425,6 +436,35 @@ export default function Settings() {
                 }}
                 placeholder="60"
               />
+            </div>
+          </SectionCard>
+          {/* Theme */}
+          <SectionCard>
+            <SectionHeading>🎨 Theme</SectionHeading>
+            <div className="flex flex-wrap gap-4" role="radiogroup" aria-label="Theme">
+              {THEMES.map((theme) => {
+                const sw = THEME_SWATCHES[theme];
+                const selected = config?.theme === theme;
+                return (
+                  <button
+                    key={theme}
+                    type="button"
+                    role="radio"
+                    aria-checked={selected}
+                    onClick={() => setTheme(theme)}
+                    className={`w-32 rounded-lg border-2 p-2 text-left font-mono ${selected ? "border-accent" : "border-line"}`}
+                  >
+                    <span
+                      className="block rounded px-2 py-3 text-sm font-bold"
+                      style={{ background: sw.bg, color: sw.fg }}
+                    >
+                      12:34{" "}
+                      <span style={{ color: sw.accent }}>On time</span>
+                    </span>
+                    <span className="mt-2 block text-sm text-fg">{sw.label}</span>
+                  </button>
+                );
+              })}
             </div>
           </SectionCard>
           {/* Actions */}

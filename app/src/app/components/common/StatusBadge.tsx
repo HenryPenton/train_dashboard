@@ -120,7 +120,7 @@ function StatusModal({
     >
       <div
         ref={modalRef}
-        className="bg-[#2a2d35] border border-gray-600 rounded-xl shadow-2xl max-w-md w-full p-5 animate-in fade-in zoom-in-95 duration-200"
+        className="bg-surface-2 border border-line rounded-xl shadow-2xl max-w-md w-full p-5 animate-in fade-in zoom-in-95 duration-200"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-between items-start mb-3">
@@ -134,13 +134,13 @@ function StatusModal({
             ref={closeButtonRef}
             type="button"
             onClick={onClose}
-            className="text-gray-400 hover:text-white transition-colors p-1"
+            className="text-muted hover:text-fg-strong transition-colors p-1"
             aria-label="Close"
           >
             <CloseIcon />
           </button>
         </div>
-        <p className="text-gray-300 text-sm leading-relaxed">{reason}</p>
+        <p className="text-fg-soft text-sm leading-relaxed">{reason}</p>
         <button
           type="button"
           onClick={onClose}

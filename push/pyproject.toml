@@ -1,0 +1,27 @@
+[project]
+name = "train-time-dashboard-push"
+version = "0.1.0"
+description = "ntfy push server for the train time dashboard"
+requires-python = ">=3.14"
+dependencies = [
+    "APScheduler",
+    "pydantic",
+    "pydantic_core",
+    "python-dotenv",
+    "python-ntfy",
+    "requests",
+]
+
+[dependency-groups]
+dev = [
+    "coverage",
+    "pytest",
+    "pytest-asyncio",
+    "pytest-cov",
+]
+
+[tool.uv]
+package = false
+
+[tool.coverage.run]
+omit = ["*test*", "*__init__*.py"]

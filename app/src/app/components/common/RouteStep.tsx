@@ -19,7 +19,7 @@ export default function RouteStep({ leg, stepNumber, isLast }: RouteStepProps) {
       }
     > = {
       tube: {
-        text: "text-yellow-300",
+        text: "text-accent-2",
         bg: "from-yellow-500/20 to-orange-500/20",
         border: "border-yellow-400/30",
         glow: "shadow-yellow-400/20",
@@ -31,7 +31,7 @@ export default function RouteStep({ leg, stepNumber, isLast }: RouteStepProps) {
         glow: "shadow-red-400/20",
       },
       walking: {
-        text: "text-green-300",
+        text: "text-accent-3",
         bg: "from-green-500/20 to-emerald-500/20",
         border: "border-green-400/30",
         glow: "shadow-green-400/20",
@@ -69,9 +69,9 @@ export default function RouteStep({ leg, stepNumber, isLast }: RouteStepProps) {
     };
     return (
       modeColorSchemes[mode.toLowerCase()] || {
-        text: "text-cyan-300",
+        text: "text-accent",
         bg: "from-cyan-500/20 to-blue-500/20",
-        border: "border-cyan-400/30",
+        border: "border-accent-strong/30",
         glow: "shadow-cyan-400/20",
       }
     );
@@ -94,7 +94,7 @@ export default function RouteStep({ leg, stepNumber, isLast }: RouteStepProps) {
             {/* Enhanced Step Number */}
             <div className="flex-shrink-0 relative mr-5">
               <div
-                className="w-10 h-10 bg-gradient-to-br from-white to-gray-200 rounded-full flex items-center justify-center text-gray-800 font-bold text-sm shadow-lg relative z-10"
+                className="w-10 h-10 bg-gradient-to-br from-white to-slate-200 rounded-full flex items-center justify-center text-gray-800 font-bold text-sm shadow-lg relative z-10"
                 aria-label={`Step ${stepNumber}`}
               >
                 {stepNumber}
@@ -113,7 +113,7 @@ export default function RouteStep({ leg, stepNumber, isLast }: RouteStepProps) {
                   {leg.line &&
                     leg.mode.toLowerCase() !== "elizabeth-line" &&
                     leg.mode.toLowerCase() !== "tram" && (
-                      <div className="text-gray-300 text-sm font-medium px-2 py-1 bg-black/20 rounded-md w-fit">
+                      <div className="text-fg-soft text-sm font-medium px-2 py-1 bg-inset-soft rounded-md w-fit">
                         {leg.line}
                       </div>
                     )}
@@ -123,14 +123,14 @@ export default function RouteStep({ leg, stepNumber, isLast }: RouteStepProps) {
           </div>
 
           {/* Route Bar */}
-          <div className="w-full bg-black/30 rounded-lg p-2 backdrop-blur-sm">
+          <div className="w-full bg-inset rounded-lg p-2 backdrop-blur-sm">
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col items-start">
                 <div className="text-emerald-300 text-xs font-bold uppercase tracking-wider mb-1">
                   From
                 </div>
                 <div
-                  className="text-white font-bold text-sm"
+                  className="text-fg-strong font-bold text-sm"
                   aria-label={`Departure station: ${leg.departure}`}
                 >
                   {leg.departure}
@@ -142,7 +142,7 @@ export default function RouteStep({ leg, stepNumber, isLast }: RouteStepProps) {
                   To
                 </div>
                 <div
-                  className="text-white font-bold text-sm"
+                  className="text-fg-strong font-bold text-sm"
                   aria-label={`Arrival station: ${leg.arrival}`}
                 >
                   {leg.arrival}

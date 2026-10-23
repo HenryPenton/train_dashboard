@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Literal
 from pydantic import BaseModel
 
 
@@ -43,3 +43,4 @@ class ConfigDAO(BaseModel):
     tube_departures: List[TubeDeparture] = []
     tfl_line_status: TflLineStatus = TflLineStatus()
     refresh_timer: int = 300
+    theme: Literal["dark", "light", "retro"] = "dark"

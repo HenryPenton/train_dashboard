@@ -25,24 +25,24 @@ const PlaceDetails: React.FC<PlaceDetailsProps> = ({
   isInTubeStations = false,
 }) => {
   return (
-    <div className="bg-[#1a1d24] border border-gray-600 rounded-lg p-6 mb-6">
-      <h4 className="text-white font-semibold mb-4 text-lg">
+    <div className="bg-surface-0 border border-line rounded-lg p-6 mb-6">
+      <h4 className="text-fg-strong font-semibold mb-4 text-lg">
         📍 Place Details
       </h4>
       <div className="space-y-3 mb-6">
         <div className="flex flex-col sm:flex-row sm:items-center">
-          <span className="font-medium text-gray-300 w-24 mb-1 sm:mb-0">
+          <span className="font-medium text-fg-soft w-24 mb-1 sm:mb-0">
             Name:
           </span>
-          <span className="text-white font-semibold">
+          <span className="text-fg-strong font-semibold">
             {selectedSidebarItem.CommonName}
           </span>
         </div>
         <div className="flex flex-col sm:flex-row sm:items-center">
-          <span className="font-medium text-gray-300 w-24 mb-1 sm:mb-0">
+          <span className="font-medium text-fg-soft w-24 mb-1 sm:mb-0">
             NaPTAN:
           </span>
-          <span className="text-gray-400 font-mono text-sm">
+          <span className="text-muted font-mono text-sm">
             {selectedSidebarItem.naptanID}
           </span>
         </div>

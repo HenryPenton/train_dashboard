@@ -1,2 +1,0 @@
-[run]
-omit = *test*, *__init__*.py, src/test/utils/dummy_logger.py, src/shared/logging/logger_utils.py

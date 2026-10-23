@@ -1,1 +1,1 @@
-python3.14 -m venv venv && source venv/bin/activate && pip install --upgrade pip && pip install -r requirements.txt
+cd push && uv sync && uv run python -m src.main   # tests: uv run pytest

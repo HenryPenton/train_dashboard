@@ -42,7 +42,7 @@ export default function DaySelector({
       aria-labelledby="day-selector-label"
     >
       {label && (
-        <label id="day-selector-label" className="text-cyan-300 font-semibold">
+        <label id="day-selector-label" className="text-accent font-semibold">
           {label}
         </label>
       )}
@@ -56,7 +56,7 @@ export default function DaySelector({
               className={`cursor-pointer flex items-center justify-center px-3 py-2 rounded border transition-colors ${
                 isSelected
                   ? "bg-cyan-600 border-cyan-400 text-white"
-                  : "bg-[#2a2d35] border-gray-600 text-gray-300 hover:bg-[#3a3d45] hover:border-cyan-500"
+                  : "bg-surface-2 border-line text-fg-soft hover:bg-surface-hover hover:border-accent-border"
               }`}
             >
               <input

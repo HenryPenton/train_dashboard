@@ -57,7 +57,7 @@ export default function ItemList<T>({
         return (
           <div
             key={index}
-            className="p-3 bg-[#2a2d35] rounded space-y-3"
+            className="p-3 bg-surface-2 rounded space-y-3"
           >
             {/* Title and Remove Button */}
             <div className="flex items-center justify-between">

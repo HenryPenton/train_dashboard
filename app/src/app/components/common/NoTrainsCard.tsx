@@ -30,7 +30,7 @@ export default function NoTrainsCard({
 
   return (
     <div
-      className="group bg-gradient-to-r from-[#2a2d35] to-[#323741] rounded-xl border border-cyan-500/30 shadow-lg overflow-hidden"
+      className="group bg-gradient-to-r from-surface-2 to-surface-3 rounded-xl border border-accent-border/30 shadow-lg overflow-hidden"
       role="alert"
       aria-label={`No trains available between ${fromStation.stationName} and ${toStation.stationName}`}
     >
@@ -43,13 +43,13 @@ export default function NoTrainsCard({
           {randomMessage}
         </div>
 
-        <div className="text-gray-400 mb-4">
+        <div className="text-muted mb-4">
           No services currently running between{" "}
-          <span className="text-cyan-400 font-medium">
+          <span className="text-accent-strong font-medium">
             {fromStation.stationName}
           </span>{" "}
           and{" "}
-          <span className="text-cyan-400 font-medium">
+          <span className="text-accent-strong font-medium">
             {toStation.stationName}
           </span>
         </div>
@@ -57,7 +57,7 @@ export default function NoTrainsCard({
         <Link
           target="_blank"
           href={`https://www.realtimetrains.co.uk/search/simple/gb-nr:${fromStation.stationCode}/to/gb-nr:${toStation.stationCode}`}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-cyan-600/20 text-cyan-300 rounded-lg border border-cyan-500/30 hover:bg-cyan-600/30 hover:border-cyan-500/50 transition-all duration-200 group-hover:scale-105"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-cyan-600/20 text-accent rounded-lg border border-accent-border/30 hover:bg-cyan-600/30 hover:border-accent-border/50 transition-all duration-200 group-hover:scale-105"
         >
           <span>Check Real Time Trains</span>
           <span className="text-sm">🔍</span>

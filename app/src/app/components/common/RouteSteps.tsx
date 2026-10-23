@@ -10,7 +10,7 @@ export default function RouteSteps({ legs }: RouteStepsProps) {
   return (
     <div className="relative group">
       <div
-        className="relative p-4 bg-gradient-to-br from-[#2a2d35]/95 via-[#1e2128]/95 to-[#2a2d35]/95 rounded-2xl border border-purple-400/20"
+        className="relative p-4 bg-gradient-to-br from-surface-2/95 via-surface-deep/95 to-surface-2/95 rounded-2xl border border-purple-400/20"
         role="region"
         aria-label="Journey steps breakdown"
       >
@@ -22,7 +22,7 @@ export default function RouteSteps({ legs }: RouteStepsProps) {
               </span>
             </div>
             <h3
-              className="text-white font-bold text-lg"
+              className="text-fg-strong font-bold text-lg"
               role="heading"
               aria-level={3}
             >

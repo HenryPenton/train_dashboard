@@ -52,7 +52,7 @@ export default function TflBestRoute({ from, to }: TflBestRouteProps) {
           <div className="space-y-6">
             {/* Enhanced Journey Header */}
             <div className="relative group">
-              <div className="relative p-4 bg-gradient-to-br from-[#2a2d35]/90 via-[#323741]/90 to-[#2a2d35]/90 rounded-2xl border border-cyan-400/30">
+              <div className="relative p-4 bg-gradient-to-br from-surface-2/90 via-surface-3/90 to-surface-2/90 rounded-2xl border border-accent-strong/30">
                 <RouteEndpoints from={from} to={to} />
                 <JourneyMetrics
                   duration={data.duration}

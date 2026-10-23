@@ -1,15 +1,18 @@
-FROM python:3.14-slim AS build
-RUN python -m venv /venv && \
-    /venv/bin/pip install --upgrade pip setuptools wheel
+FROM python:3.14-slim-bookworm AS build
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+ENV UV_PROJECT_ENVIRONMENT=/venv \
+    UV_LINK_MODE=copy \
+    UV_COMPILE_BYTECODE=1 \
+    UV_PYTHON_DOWNLOADS=never
 
-# Build the virtualenv as a separate step: Only re-execute this step when requirements-lock.txt changes
-FROM build AS build-venv
-COPY requirements-lock.txt /requirements-lock.txt
-RUN /venv/bin/pip install --disable-pip-version-check -r /requirements-lock.txt
+# Build the virtualenv as a separate step: only re-executed when pyproject.toml / uv.lock change
+WORKDIR /app
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen --no-dev --no-install-project
 
-# Copy the virtualenv into the runtime image (same Python as the build stage)
-FROM python:3.14-slim
-COPY --from=build-venv /venv /venv
+# Copy the virtualenv into a slim runtime image (same Python version as the builder)
+FROM python:3.14-slim-bookworm
+COPY --from=build /venv /venv
 COPY . /app
 WORKDIR /app
 

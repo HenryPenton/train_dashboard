@@ -11,25 +11,12 @@ import TflBestRoute from "./components/sections/TflBestRoute";
 import TflLineStatus from "./components/sections/TflLineStatus";
 import SectionCard from "./components/common/SectionCard";
 import SectionHeading from "./components/common/SectionHeading";
+import { ConfigType } from "./stores/config";
 import {
-  BestRoute,
-  DepartureConfig,
-  TflLineStatusConfig,
-  TubeDeparture,
-  ConfigType,
-} from "./stores/config";
-
-type ConfigItem =
-  | { type: "rail_departure"; item: DepartureConfig; col_2_position: number; col_3_position: number; importance: number }
-  | { type: "tfl_best_route"; item: BestRoute; col_2_position: number; col_3_position: number; importance: number }
-  | { type: "tube_departure"; item: TubeDeparture; col_2_position: number; col_3_position: number; importance: number }
-  | {
-      type: "tfl_line_status";
-      item: TflLineStatusConfig;
-      col_2_position: number;
-      col_3_position: number;
-      importance: number;
-    };
+  ConfigItem,
+  buildConfigItems,
+  groupAndSortItems,
+} from "./utils/groupAndSortItems";
 
 const isConfigBlank = (config: ConfigType | null) => {
   if (!config) return true;
@@ -90,41 +77,7 @@ export default function Home() {
     return () => clearInterval(interval);
   }, [config?.refresh_timer, forceRefresh]);
 
-  const allConfigItems: ConfigItem[] = config
-    ? [
-        ...config.rail_departures.map((item) => ({
-          type: "rail_departure" as const,
-          item,
-          col_2_position: item.col_2_position,
-          col_3_position: item.col_3_position,
-          importance: item.importance,
-        })),
-        ...config.tfl_best_routes.map((item) => ({
-          type: "tfl_best_route" as const,
-          item,
-          col_2_position: item.col_2_position,
-          col_3_position: item.col_3_position,
-          importance: item.importance,
-        })),
-        ...config.tube_departures.map((item) => ({
-          type: "tube_departure" as const,
-          item,
-          col_2_position: item.col_2_position,
-          col_3_position: item.col_3_position,
-          importance: item.importance,
-        })),
-      ]
-    : [];
-
-  if (config?.tfl_line_status?.enabled) {
-    allConfigItems.push({
-      type: "tfl_line_status",
-      item: config.tfl_line_status,
-      col_2_position: config.tfl_line_status.col_2_position,
-      col_3_position: config.tfl_line_status.col_3_position,
-      importance: config.tfl_line_status.importance,
-    });
-  }
+  const allConfigItems = buildConfigItems(config);
 
   const getColumnCount = () => {
     switch (screenSize) {
@@ -140,23 +93,7 @@ export default function Home() {
   };
 
   const numColumns = getColumnCount();
-  const columns: ConfigItem[][] = Array.from({ length: numColumns }, () => []);
-
-  // Organize items by column positions based on screen size
-  allConfigItems.forEach((item) => {
-    let columnIndex = 0;
-    if (numColumns === 2) {
-      columnIndex = Math.min(item.col_2_position - 1, 1);
-    } else if (numColumns === 3) {
-      columnIndex = Math.min(item.col_3_position - 1, 2);
-    }
-    columns[columnIndex].push(item);
-  });
-
-  // Sort items within each column by importance
-  columns.forEach(column => {
-    column.sort((a, b) => a.importance - b.importance);
-  });
+  const columns = groupAndSortItems(allConfigItems, numColumns);
 
   const renderConfigItem = (configItem: ConfigItem, key: string) => {
     if (configItem.type === "rail_departure") {
@@ -236,7 +173,7 @@ export default function Home() {
                 Welcome to Train Dashboard!
               </span>
             </SectionHeading>
-            <p className="text-gray-300 text-lg mb-8 leading-relaxed">
+            <p className="text-fg-soft text-lg mb-8 leading-relaxed">
               To get started, you&apos;ll need to configure your train and tube
               routes, departures, and line status preferences in the settings
               page.
@@ -247,7 +184,7 @@ export default function Home() {
             >
               Go to Settings
             </Link>
-            <p className="text-gray-400 text-sm mt-6">
+            <p className="text-muted text-sm mt-6">
               You can access settings anytime by clicking the link in the
               navigation footer.
             </p>

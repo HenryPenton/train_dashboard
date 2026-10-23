@@ -147,6 +147,7 @@ def test_get_config_happy():
             "importance": 1,
         },
         "refresh_timer": 65,
+        "theme": "dark",
     }
     assert result == expected_result
 

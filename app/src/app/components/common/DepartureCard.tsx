@@ -26,7 +26,7 @@ export default function DepartureCard({ departure }: DepartureCardProps) {
   return (
     <CardWrapper {...cardProps}>
       <div
-        className="group bg-gradient-to-r from-[#2a2d35] to-[#323741] rounded-xl border border-cyan-500/30 shadow-lg overflow-hidden"
+        className="group bg-gradient-to-r from-surface-2 to-surface-3 rounded-xl border border-accent-border/30 shadow-lg overflow-hidden"
         role="article"
         aria-label={`Train departure: service departing at ${departure.scheduledDepartureTime}, status: ${departure.status}`}
       >

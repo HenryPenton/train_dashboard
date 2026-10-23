@@ -10,7 +10,7 @@ export default function TflLineCard({ lineName, children }: TflLineCardProps) {
   return (
     <div className="group">
       <div
-        className="bg-gradient-to-r from-[#2a2d35] to-[#323741] rounded-xl border border-cyan-500/30 shadow-lg overflow-hidden"
+        className="bg-gradient-to-r from-surface-2 to-surface-3 rounded-xl border border-accent-border/30 shadow-lg overflow-hidden"
         role="region"
         aria-labelledby={`line-${lineName.replace(/\s+/g, "-").toLowerCase()}-heading`}
       >
@@ -18,7 +18,7 @@ export default function TflLineCard({ lineName, children }: TflLineCardProps) {
 
         <div className="p-4">
           <h2
-            className="text-lg font-bold text-cyan-200 mb-4"
+            className="text-lg font-bold text-accent-soft mb-4"
             id={`line-${lineName.replace(/\s+/g, "-").toLowerCase()}-heading`}
           >
             {lineName}

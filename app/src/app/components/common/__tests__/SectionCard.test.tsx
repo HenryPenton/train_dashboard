@@ -39,7 +39,7 @@ describe("SectionCard", () => {
     expect(sectionRegion).toHaveClass("custom-test-class", "another-class");
 
     // Should still have default classes
-    expect(sectionRegion).toHaveClass("bg-[#23262f]", "p-6");
+    expect(sectionRegion).toHaveClass("bg-surface", "p-6");
   });
 
   it("renders complex nested content correctly", () => {
@@ -87,7 +87,7 @@ describe("SectionCard", () => {
     const sectionRegion = screen.getByRole("region");
 
     // Should have default classes but not throw errors
-    expect(sectionRegion).toHaveClass("bg-[#23262f]", "p-6");
+    expect(sectionRegion).toHaveClass("bg-surface", "p-6");
     expect(sectionRegion).not.toHaveClass("undefined", "null");
   });
 });

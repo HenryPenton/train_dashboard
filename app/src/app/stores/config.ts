@@ -36,12 +36,17 @@ export type TflLineStatusConfig = {
   importance: number;
 };
 
+export const THEMES = ["dark", "light", "retro"] as const;
+export type Theme = (typeof THEMES)[number];
+export const DEFAULT_THEME: Theme = "dark";
+
 export type ConfigType = {
   tfl_best_routes: BestRoute[];
   rail_departures: DepartureConfig[];
   tube_departures: TubeDeparture[];
   tfl_line_status: TflLineStatusConfig;
   refresh_timer: number;
+  theme: Theme;
 };
 
 export type ConfigState = {
@@ -68,6 +73,7 @@ export type ConfigActions = {
   updateTflLineStatusImportance: (importance: number) => void;
   setTflLineStatusEnabled: (enabled: boolean) => void;
   setRefreshTimer: (timer: number) => void;
+  setTheme: (theme: Theme) => void;
   saveConfig: () => Promise<void>;
 };
 
@@ -81,6 +87,7 @@ export const initConfigStore = (): ConfigState => {
       tube_departures: [],
       tfl_line_status: { enabled: false, col_2_position: 1, col_3_position: 1, importance: 1 },
       refresh_timer: APP_CONSTANTS.DEFAULT_REFRESH_TIMER,
+      theme: DEFAULT_THEME,
     },
     lastRefreshTimeStamp: "",
   };
@@ -93,6 +100,7 @@ export const defaultInitState: ConfigState = {
     tube_departures: [],
     tfl_line_status: { enabled: false, col_2_position: 1, col_3_position: 1, importance: 1 },
     refresh_timer: APP_CONSTANTS.DEFAULT_REFRESH_TIMER,
+    theme: DEFAULT_THEME,
   },
   lastRefreshTimeStamp: "",
 };
@@ -108,7 +116,10 @@ export const createConfigStore = (
         if (!res.ok) throw new Error("Failed to fetch config");
         const config = await res.json();
         set({
-          config,
+          config: {
+            ...config,
+            theme: THEMES.includes(config.theme) ? config.theme : DEFAULT_THEME,
+          },
           lastRefreshTimeStamp: new Date().toISOString(),
         });
       } catch (error) {
@@ -283,6 +294,10 @@ export const createConfigStore = (
           refresh_timer: timer,
         },
       });
+    },
+    setTheme: (theme) => {
+      const state = get();
+      set({ config: { ...state.config, theme } });
     },
     saveConfig: async () => {
       const state = get();

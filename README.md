@@ -91,19 +91,23 @@ pnpm dev
 - **Backend:**
 ```sh
 cd api
-python3.14 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-fastapi dev src/main.py
+uv sync
+uv run fastapi dev src/main.py
 ```
 
 - **Push Server:**
 ```sh
 cd push
-python3.14 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-python src/main.py
+uv sync
+uv run python -m src.main
+```
+
+Python services use [uv](https://docs.astral.sh/uv/) (`pyproject.toml` + `uv.lock`). Alternatively, use the root `Makefile` (run `make help` for all targets):
+
+```sh
+make install   # pnpm install + uv sync for api and push
+make dev-app   # / dev-api / dev-push
+make test      # test-app, test-api, test-push
 ```
 
 3. **Usage:**
@@ -184,14 +188,14 @@ Comprehensive test suite using `pytest` with coverage reporting:
 ```sh
 cd api
 # Run all tests
-pytest
+uv run pytest
 
 # Run with coverage
-pytest --cov=src --cov-report=html
+uv run pytest --cov=src --cov-report=html
 
 # Run specific test modules
-pytest src/test/domain/tfl/arrivals/
-pytest src/test/application/test_tfl_service.py
+uv run pytest src/test/domain/tfl/arrivals/
+uv run pytest src/test/application/test_tfl_service.py
 ```
 
 ### Push Server (Python)
@@ -201,11 +205,11 @@ Background service tests with `pytest`:
 ```sh
 cd push
 # Run all tests with coverage
-pytest --cov=src --cov-report=html
+uv run pytest --cov=src --cov-report=html
 
 # Test specific components
-pytest src/test/formatters/
-pytest src/test/jobs/
+uv run pytest src/test/formatters/
+uv run pytest src/test/jobs/
 ```
 
 ### Frontend (Next.js/React)

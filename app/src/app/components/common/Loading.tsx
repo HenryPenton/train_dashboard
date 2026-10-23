@@ -7,7 +7,7 @@ interface LoadingProps {
 export default function Loading({ message = "Loading..." }: LoadingProps) {
   return (
     <div
-      className="text-cyan-300 animate-pulse flex items-center gap-2"
+      className="text-accent animate-pulse flex items-center gap-2"
       role="status"
       aria-label={message}
     >
