@@ -1,6 +1,6 @@
 [project]
 name = "train-time-dashboard-api"
-version = "0.1.0"
+version = "2.1.0"
 description = "FastAPI backend for the train time dashboard"
 requires-python = ">=3.14"
 dependencies = [
