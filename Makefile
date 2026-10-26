@@ -1,7 +1,9 @@
 .DEFAULT_GOAL := help
 
+BUMP := $(filter major minor patch,$(MAKECMDGOALS))
+
 .PHONY: dev-up dev-down help install dev-app dev-api dev-push test test-app test-api test-push \
-        lint format docker-build up down logs clean
+        lint format version major minor patch docker-build up down logs clean
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  \033[36m%-14s\033[0m %s\n", $$1, $$2}'
@@ -36,6 +38,13 @@ lint: ## Lint the app
 
 format: ## Format the app (prettier)
 	pnpm --dir app format
+
+version: ## Bump version (make version major|minor|patch), commit and tag vX.Y.Z
+	@test -n "$(BUMP)" || { echo "usage: make version major|minor|patch" >&2; exit 1; }
+	scripts/bump.sh $(BUMP)
+
+major minor patch:
+	@:
 
 docker-build: ## Build the app, api and push docker images
 	docker build -t train-dashboard-app ./app
