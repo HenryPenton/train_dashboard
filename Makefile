@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := help
 
 .PHONY: dev-up dev-down help install dev-app dev-api dev-push test test-app test-api test-push \
-        lint format docker-build up down logs clean
+        lint format major minor patch docker-build up down logs clean
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  \033[36m%-14s\033[0m %s\n", $$1, $$2}'
@@ -36,6 +36,15 @@ lint: ## Lint the app
 
 format: ## Format the app (prettier)
 	pnpm --dir app format
+
+major: ## Bump major version across app/api/push, commit and tag vX.Y.Z
+	scripts/bump.sh major
+
+minor: ## Bump minor version across app/api/push, commit and tag vX.Y.Z
+	scripts/bump.sh minor
+
+patch: ## Bump patch version across app/api/push, commit and tag vX.Y.Z
+	scripts/bump.sh patch
 
 docker-build: ## Build the app, api and push docker images
 	docker build -t train-dashboard-app ./app
